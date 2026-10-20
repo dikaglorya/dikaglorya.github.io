@@ -1,9 +1,14 @@
 node_modules/
 dist/
 .astro/
+.vercel/
 .taste-skill/
 .test-output/
 anti-slop/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
 .DS_Store
 *.log
 .env

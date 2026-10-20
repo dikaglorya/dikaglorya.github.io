@@ -32,7 +32,7 @@ export const site = {
   lang: 'en',
   ogImage: '/og-default.png',
   ogImageAlt:
-    'ObitoGlory social preview identifying DikaGlorya as an independent developer and linking the website brand to practical software work.',
+    'Masked portrait of DikaGlorya on a dark ObitoGlory social card with the wordmark and the line "Useful software, built by DikaGlorya."',
   profileImage: '/profile-portrait.jpg',
   availability: 'Open for selected projects',
   availabilityNote: 'Telegram is the fastest way to reach me.',

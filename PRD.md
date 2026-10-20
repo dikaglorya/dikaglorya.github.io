@@ -174,10 +174,10 @@ A Vercel Open Graph snapshot supplied on 2026-10-20 showed inconsistent homepage
 
 Current homepage metadata:
 
-| Field | Recommended value |
+| Field | Current value |
 | --- | --- |
-| Title | `Jasa Website & Bot di Kendal, Jawa Tengah | DikaCode` |
-| Description | `DikaCode membuat website, bot Telegram, WhatsApp, dan Discord, serta tools automasi untuk bisnis, UMKM, dan personal brand di Kendal dan seluruh Indonesia.` |
+| Title | `DikaGlorya | ObitoGlory, Independent Developer` |
+| Description | `The official portfolio of DikaGlorya, also known as DikaCode. ObitoGlory is the home for practical software, developer tools, web projects, and technical notes.` |
 | Open Graph site name | `ObitoGlory` |
 | Canonical URL | `https://obitoglory.tech/` |
 | Open Graph image | `https://obitoglory.tech/og-default.png` (1200 × 630) |

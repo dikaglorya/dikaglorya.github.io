@@ -17,7 +17,7 @@ You may know the work under a different name: **DikaCode** is the developer iden
 
 **Currently**
 
-- Running [obitoglory.tech](https://obitoglory.tech), the canonical site for the work, built as fully static Astro with typed content data, self-hosted fonts, and link and accessibility checks in CI. Source: [dikaglorya/dikaglorya.github.io](https://github.com/dikaglorya/dikaglorya.github.io)
+- Running [obitoglory.tech](https://obitoglory.tech), the canonical site for the work, built as fully static Astro with typed content data, self-hosted fonts, and link checks in CI. Local axe and Playwright checks cover accessibility and responsive behavior. Source: [dikaglorya/dikaglorya.github.io](https://github.com/dikaglorya/dikaglorya.github.io)
 - Writing technical notes in the [ObitoGlory journal](https://obitoglory.tech/journal/), each one tied to implementation you can inspect in a repository
 - Preparing the first public project releases with working documentation and honest limitations
 

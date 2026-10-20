@@ -269,11 +269,11 @@ const homeSchema = {
       <div>
         <h2 id="follow-title">Follow the work.</h2>
         <p>
-          Project updates land on this site first. The official profiles below are verified
-          from this domain and point at the same person behind the name.
+          Project updates land on this site first. GitHub and Telegram are the verified
+          contact channels; the social profiles below are the accounts this site links to.
         </p>
       </div>
-      <ul class="profile-links mono" aria-label="Official public profiles">
+      <ul class="profile-links mono" aria-label="Public profiles">
         {socialLinks.map((link) => (
           <li>
             <a href={link.href} rel="me noopener noreferrer" target="_blank" data-outbound={link.label.toLowerCase()}>

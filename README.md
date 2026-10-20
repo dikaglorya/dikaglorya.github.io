@@ -61,7 +61,7 @@ astro preview stop
 | `npm run test:links` | Check internal links, assets, anchors, and sitemap URLs in `dist/` |
 | `npm run test:a11y` | Run axe-core WCAG checks against a running preview |
 | `npm run test:visual` | Capture responsive screenshots and test menu/filter/contact interactions |
-| `npm run brand` | Regenerate the 1200×630 OG card, the 180×180 touch icon, and the 512×512 social avatar |
+| `npm run brand` | Regenerate the 1200×630 OG card, the 180×180 touch icon, and the 512×512 social avatar; use `node scripts/generate-brand.mjs --repo <name> --tagline "<text>"` for a 1280×720 repository preview |
 | `npm test` | Typecheck, build, then check links |
 
 `test:a11y` and `test:visual` expect a server at `http://127.0.0.1:4321` by default. Start one in another terminal:
@@ -169,7 +169,7 @@ The choice is documented so it is a decision, not an omission:
 
 - Nothing on the site measures visitors: no analytics scripts, cookies, fingerprinting, or third-party trackers. The footer line "No analytics or tracking." is a factual claim; if measurement is ever added, update that line in the same change.
 - Post-deploy baseline: Google Search Console (once domain access is verified) for organic queries and impressions, and GitHub Insights for stars, forks, and repository traffic on the site repository. These count public artifacts, not individuals.
-- Outbound links carry `data-outbound` attributes (`github`, `telegram`, `instagram`, `tiktok`, `project-live`) in Footer, ContactBlock, About, and project pages. The attribute is inert today; it exists so a privacy-conscious click counter can wire events later without rewriting markup.
+- Outbound links carry `data-outbound` attributes (`github`, `telegram`, `instagram`, `tiktok`, `project-live`) in Footer, ContactBlock, the home Follow section, About, and project pages. The attribute is inert today; it exists so a privacy-conscious click counter can wire events later without rewriting markup.
 - If visit-level measurement is ever connected, pick a cookieless, no-fingerprinting approach (for example self-hosted analytics on an owned server), document the provider and what it stores in this section, and keep the payload small enough to stay honest about privacy.
 - Monthly review after launch: organic search visits and queries, referring domains, project page visits, outbound clicks, article engagement, and genuine feedback. Evidence decides where the next effort goes; numbers do not manage themselves.
 - Visitor, star, download, or adoption numbers are never published on the site unless they are genuine and their source is stated next to them.
@@ -178,7 +178,7 @@ The choice is documented so it is a decision, not an omission:
 
 - Canonical URLs use `https://obitoglory.tech`.
 - Open Graph and Twitter card metadata are generated in `src/layouts/BaseLayout.astro`.
-- JSON-LD covers the Person, WebSite, project pages, services, and contact page.
+- JSON-LD covers the Person, WebSite, project pages, services, contact page, and journal articles.
 - Every indexable page has a skip link, semantic landmarks, one `h1`, visible focus states, and reduced-motion handling.
 - The mobile menu uses a native `<dialog>` with Escape handling and focus return.
 - Axe checks cover WCAG 2.0/2.1/2.2 A and AA tags at desktop, tablet, mobile, and 320px widths.
