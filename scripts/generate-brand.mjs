@@ -150,13 +150,13 @@ const html = `<!doctype html>
     <div class="card">
       <header>
         <div class="wordmark">obitoglory<span>.</span></div>
-        <div class="handle">DikaGlorya / independent developer<br />Kendal, Indonesia</div>
+        <div class="handle">DikaOfc / DikaGlorya / DikaCode<br />Developer di Kendal, Indonesia</div>
       </header>
       <div class="body">
         <main>
-          <p class="eyebrow">Websites / bots / AI tools / security automation</p>
-          <h1>Useful software,<br />built by DikaGlorya<span>.</span></h1>
-          <p class="sub">ObitoGlory is the home for practical software, developer tools, and technical notes.</p>
+          <p class="eyebrow">Website / bot / AI tools / security automation</p>
+          <h1>Software berguna,<br />dibuat oleh DikaOfc<span>.</span></h1>
+          <p class="sub">Portofolio DikaGlorya, dikenal sebagai DikaOfc dan DikaCode. / Practical software by an independent developer in Kendal.</p>
         </main>
         <figure class="portrait">
           <img src="data:image/jpeg;base64,${portrait}" alt="Masked portrait of DikaGlorya" />

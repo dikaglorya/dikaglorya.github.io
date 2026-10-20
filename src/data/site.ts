@@ -35,7 +35,7 @@ export const site = {
   lang: 'id',
   ogImage: '/og-default.png',
   ogImageAlt:
-    'Masked portrait of DikaGlorya on a dark ObitoGlory social card with the wordmark and the line "Useful software, built by DikaGlorya."',
+    'Masked portrait of DikaGlorya on a dark ObitoGlory social card naming DikaOfc, with the line "Software berguna, dibuat oleh DikaOfc."',
   profileImage: '/profile-portrait.jpg',
   availability: 'Open for selected projects',
   availabilityNote: 'Telegram is the fastest way to reach me.',
