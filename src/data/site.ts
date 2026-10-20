@@ -1,12 +1,24 @@
 export const site = {
   name: 'ObitoGlory',
   shortName: 'obitoglory',
-  legalName: 'DikaCode',
-  alternateNames: ['DikaCode', 'DikaOfc', 'ObitoGlory'],
+  personName: 'DikaGlorya',
+  developerName: 'DikaCode',
+  // Structured-data aliases: only names that are genuinely used and explained
+  // as aliases of this person on /about. "Dika Kendal" stays a location-related
+  // prose name on /about; it is not claimed as an entity alias here (PRD rule:
+  // include an alias only when it is genuinely used and its relationship is
+  // explained on the site).
+  alternateNames: [
+    'DikaGlory',
+    'DikaCode',
+    'DikaOfc',
+    'Dika Developer',
+    'ObitoGlory',
+  ],
   url: 'https://obitoglory.tech',
-  title: 'ObitoGlory | Independent developer in Kendal, Indonesia',
+  title: 'DikaGlorya | ObitoGlory, Independent Developer',
   description:
-    'Portfolio and services of ObitoGlory (DikaCode / DikaOfc), an independent developer in Kendal, Indonesia building websites, bots, AI tools, and security automation.',
+    'The official portfolio of DikaGlorya, also known as DikaCode. ObitoGlory is the home for practical software, developer tools, web projects, and technical notes.',
   email: 'dikasukasukaa@gmail.com',
   telegram: 'dikaacode',
   telegramUrl: 'https://t.me/dikaacode',
@@ -16,12 +28,12 @@ export const site = {
   tiktok: 'https://www.tiktok.com/@dikasecx',
   location: 'Kendal, Central Java, Indonesia',
   locationShort: 'Kendal, ID',
-  coordinates: '6.9°S 110.2°E',
   locale: 'en_US',
   lang: 'en',
   ogImage: '/og-default.png',
   ogImageAlt:
-    'ObitoGlory, independent developer in Kendal, Indonesia. Websites, bots, AI tools, and security automation.',
+    'ObitoGlory social preview identifying DikaGlorya as an independent developer and linking the website brand to practical software work.',
+  profileImage: '/profile-portrait.jpg',
   availability: 'Open for selected projects',
   availabilityNote: 'Telegram is the fastest way to reach me.',
 } as const;

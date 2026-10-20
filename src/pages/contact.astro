@@ -10,11 +10,12 @@ const schema = {
   url: 'https://obitoglory.tech/contact/',
   mainEntity: {
     '@type': 'Person',
-    name: 'DikaCode',
-    alternateName: ['DikaOfc', 'ObitoGlory'],
+    '@id': `${site.url}/#person`,
+    name: site.personName,
+    alternateName: site.alternateNames,
     url: site.url,
     email: `mailto:${site.email}`,
-    sameAs: [site.telegramUrl, site.github, site.instagram, site.tiktok],
+    sameAs: [site.github],
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Kendal',
@@ -27,7 +28,7 @@ const schema = {
 
 <BaseLayout
   title="Contact | ObitoGlory"
-  description="Contact ObitoGlory (DikaCode / DikaOfc) for website, bot, tool, or system repair projects. Telegram @dikaacode or email dikasukasukaa@gmail.com."
+  description="Contact DikaGlorya for website, bot, developer tool, or system repair projects through the official channels listed on ObitoGlory."
   schema={schema}
 >
   <section class="page-hero page-hero--contact" aria-labelledby="contact-title">
@@ -190,7 +191,7 @@ const schema = {
         </div>
 
         <p class="mono muted">
-          {site.location} / {site.coordinates}
+          {site.location}
         </p>
       </aside>
     </div>

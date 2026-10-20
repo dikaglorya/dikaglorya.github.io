@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
+
+interface Props {
+  class?: string;
+  sizes?: string;
+  caption?: string;
+  index?: string;
+  priority?: boolean;
+}
+
+const {
+  class: className = '',
+  sizes = '(max-width: 900px) 300px, 360px',
+  caption = 'DikaGlorya / developer',
+  index = 'Portrait 01',
+  priority = false,
+} = Astro.props;
+---
+
+<figure class:list={['portrait-frame', className]}>
+  <div class="portrait-frame__media">
+    <Image
+      src={portrait}
+      alt="Masked portrait of DikaGlorya; the face is deliberately obscured by a question mark."
+      widths={[320, 480, 640]}
+      sizes={sizes}
+      quality={82}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+    />
+  </div>
+  <figcaption class="portrait-frame__caption mono">
+    <span>{caption}</span>
+    <span>{index}</span>
+  </figcaption>
+</figure>

@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
+import { articles } from '../data/articles';
 import { projects } from '../data/projects';
 import { site } from '../data/site';
 
-const staticPaths = ['/', '/projects/', '/about/', '/services/', '/contact/'];
+const staticPaths = ['/', '/projects/', '/journal/', '/about/', '/services/', '/contact/'];
 
 const escapeXml = (value: string) =>
   value
@@ -16,6 +17,7 @@ export const GET: APIRoute = () => {
   const paths = [
     ...staticPaths,
     ...projects.map((project) => `/projects/${project.slug}/`),
+    ...articles.map((article) => `/journal/${article.slug}/`),
   ];
 
   const urls = paths

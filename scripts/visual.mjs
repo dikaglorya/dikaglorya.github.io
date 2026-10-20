@@ -10,6 +10,15 @@ const pages = [
   { name: 'home', path: '/' },
   { name: 'projects', path: '/projects/' },
   { name: 'project-dikaroute', path: '/projects/dikaroute/' },
+  { name: 'journal', path: '/journal/' },
+  {
+    name: 'journal-article',
+    path: '/journal/small-static-portfolio-architecture/',
+  },
+  {
+    name: 'journal-contact-article',
+    path: '/journal/static-contact-form-mailto-handoff/',
+  },
   { name: 'about', path: '/about/' },
   { name: 'services', path: '/services/' },
   { name: 'contact', path: '/contact/' },

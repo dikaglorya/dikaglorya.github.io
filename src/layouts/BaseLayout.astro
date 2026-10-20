@@ -39,9 +39,11 @@ const ogImageAlt = site.ogImageAlt;
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'DikaCode',
+  '@id': `${site.url}/#person`,
+  name: site.personName,
   alternateName: site.alternateNames,
   url: site.url,
+  image: new URL(site.profileImage, Astro.site).href,
   jobTitle: 'Independent developer',
   description: site.description,
   email: `mailto:${site.email}`,
@@ -58,21 +60,20 @@ const personSchema = {
     'Security automation',
     'Android development',
   ],
-  sameAs: socialLinks.map((link) => link.href),
+  sameAs: [site.github],
 };
 
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
+  '@id': `${site.url}/#website`,
   name: site.name,
-  alternateName: site.alternateNames,
+  alternateName: ['obitoglory.tech'],
   url: site.url,
   description: site.description,
   inLanguage: 'en',
   author: {
-    '@type': 'Person',
-    name: 'DikaCode',
-    url: site.url,
+    '@id': `${site.url}/#person`,
   },
 };
 
@@ -91,15 +92,16 @@ const pageSchemas = [
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#08090b" />
     <meta name="color-scheme" content="dark" />
-    <meta name="author" content="ObitoGlory" />
+    <meta name="author" content={site.personName} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
     {!noindex && <link rel="canonical" href={canonicalURL} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap.xml" />
+    {socialLinks.map((link) => <link rel="me" href={link.href} />)}
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.name} />

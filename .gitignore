@@ -3,6 +3,7 @@ dist/
 .astro/
 .taste-skill/
 .test-output/
+anti-slop/
 .DS_Store
 *.log
 .env

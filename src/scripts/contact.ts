@@ -16,12 +16,20 @@ const setStatus = (message: string, isError = false, fallbackLink?: HTMLAnchorEl
 
 if (form) {
   const params = new URLSearchParams(window.location.search);
+  const serviceAliases: Record<string, string> = {
+    perbaikan: 'repairs',
+    lainnya: 'other',
+  };
   const requestedService = params.get('service');
-  if (serviceSelect && requestedService) {
+  const normalizedService = requestedService
+    ? (serviceAliases[requestedService] ?? requestedService)
+    : null;
+
+  if (serviceSelect && normalizedService) {
     const option = Array.from(serviceSelect.options).find(
-      (item) => item.value === requestedService,
+      (item) => item.value === normalizedService,
     );
-    if (option) serviceSelect.value = requestedService;
+    if (option) serviceSelect.value = normalizedService;
   }
 
   form.addEventListener('submit', (event) => {

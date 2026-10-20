@@ -13,7 +13,8 @@ const year = new Date().getFullYear();
           obitoglory<span class="dot">.</span>
         </a>
         <p class="footer__desc">
-          The work and services of DikaCode / DikaOfc, an independent developer.
+          DikaGlorya's work, published under the DikaCode developer identity. ObitoGlory is the
+          canonical portfolio.
         </p>
       </div>
 
@@ -25,7 +26,7 @@ const year = new Date().getFullYear();
 
       <div class="footer__social">
         {socialLinks.map((link) => (
-          <a href={link.href} rel={`noopener noreferrer ${link.rel}`} target="_blank">
+          <a href={link.href} rel={`noopener noreferrer ${link.rel}`} target="_blank" data-outbound={link.label.toLowerCase()}>
             {link.label}
           </a>
         ))}
@@ -34,8 +35,8 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="footer__bottom mono">
-      <p>© {year} ObitoGlory. DikaCode / DikaOfc.</p>
-      <p>Built with Astro. No tracking.</p>
+      <p>© {year} ObitoGlory. DikaGlorya / DikaCode.</p>
+      <p>Built with Astro. No analytics or tracking.</p>
       <p><a href="#top">Back to top</a></p>
     </div>
   </div>

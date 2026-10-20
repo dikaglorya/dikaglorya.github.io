@@ -1,6 +1,6 @@
 export const facts = [
   { label: 'Base', value: 'Kendal, Central Java, Indonesia' },
-  { label: 'School', value: 'SMK Bhinneka Patebon' },
+  { label: 'Identity', value: 'DikaGlorya / DikaCode' },
   { label: 'Focus', value: 'AI, security automation, web development' },
   { label: 'Currently', value: 'AI gateway, bot automation, and Termux tools' },
 ] as const;

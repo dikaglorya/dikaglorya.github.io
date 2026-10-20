@@ -1,0 +1,81 @@
+---
+import ContactBlock from '../../components/ContactBlock.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { articles, type Article } from '../../data/articles';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const canonical = `${site.url}/journal/${article.slug}/`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  '@id': canonical,
+  headline: article.title,
+  description: article.description,
+  datePublished: article.date,
+  dateModified: article.date,
+  mainEntityOfPage: canonical,
+  author: { '@id': `${site.url}/#person` },
+  publisher: { '@id': `${site.url}/#website` },
+  keywords: article.tags.join(', '),
+};
+---
+
+<BaseLayout
+  title={`${article.title} | ObitoGlory`}
+  description={article.description}
+  type="article"
+  schema={schema}
+>
+  <article>
+    <header class="page-hero journal-hero">
+      <div class="container">
+        <nav class="breadcrumb mono" aria-label="Breadcrumb">
+          <a href="/journal/">Journal</a>
+          <span class="breadcrumb__sep" aria-hidden="true">/</span>
+          <span aria-current="page">Article</span>
+        </nav>
+        <p class="page-hero__eyebrow mono">Technical note / {site.personName}</p>
+        <h1>{article.title}</h1>
+        <p class="page-hero__lead">{article.description}</p>
+        <div class="page-hero__meta mono">
+          <time datetime={article.date}>{article.date}</time>
+          <span>{article.readingTime} min read</span>
+          <span>{article.tags.join(' / ')}</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="container journal-article">
+      {article.sections.map((section) => (
+        <section class="journal-section">
+          <h2>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          {section.code && (
+            <pre class="journal-code" tabindex="0" aria-label={`Code example: ${section.heading}`}>
+              <code>{section.code}</code>
+            </pre>
+          )}
+        </section>
+      ))}
+      <p class="journal-source mono">
+        This note describes the implementation in this website repository. Claims about search
+        rankings, performance benchmarks, or project adoption are not made.
+      </p>
+      <a class="link" href="/journal/">Back to all technical notes</a>
+    </div>
+  </article>
+
+  <ContactBlock id="article-contact-title" title="Want to discuss this implementation?" />
+</BaseLayout>

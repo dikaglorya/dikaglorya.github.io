@@ -1,5 +1,6 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
+import PortraitFrame from '../components/PortraitFrame.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import RouteDiagram from '../components/RouteDiagram.astro';
 import SectionHead from '../components/SectionHead.astro';
@@ -7,8 +8,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Arrow from '../components/Arrow.astro';
 import { facts } from '../data/facts';
 import { projects } from '../data/projects';
-import { site } from '../data/site';
-import { technologyGroups } from '../data/technologies';
+import { site, socialLinks } from '../data/site';
+import { currentFocus, technologyGroups } from '../data/technologies';
+import { articles } from '../data/articles';
 
 const featured = projects.find((project) => project.slug === 'dikaroute');
 const selected = projects.filter((project) => project.slug !== 'dikaroute').slice(0, 5);
@@ -35,9 +37,11 @@ const homeSchema = {
   url: site.url,
   mainEntity: {
     '@type': 'Person',
-    name: 'DikaCode',
-    alternateName: ['DikaOfc', 'ObitoGlory'],
+    '@id': `${site.url}/#person`,
+    name: site.personName,
+    alternateName: site.alternateNames,
     url: site.url,
+    image: new URL(site.profileImage, site.url).href,
     jobTitle: 'Independent developer',
     address: {
       '@type': 'PostalAddress',
@@ -49,26 +53,39 @@ const homeSchema = {
 };
 ---
 
-<BaseLayout schema={homeSchema}>
+<BaseLayout
+  title={site.title}
+  description={site.description}
+  schema={homeSchema}
+>
   <section class="hero" aria-labelledby="hero-title">
     <div class="container">
-      <div class="hero__body">
-        <p class="hero__eyebrow mono">Independent developer / ObitoGlory</p>
-        <h1 class="hero__title" id="hero-title">
-          <span class="line"><span>Websites, bots,</span></span>
-          <span class="line"><span>and tools that work<span class="hero__stop">.</span></span></span>
-        </h1>
-        <p class="hero__copy">
-          I build websites, Telegram bots, AI gateways, and small tools. Each one is tested
-          until it works, then handed over with the scope agreed upfront.
-        </p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="/projects/">See all projects</a>
-          <a class="btn" href="/contact/">Get in touch</a>
-        </div>
-        <div class="hero__meta mono">
-          <span>{site.location}</span>
-          <span>{site.availability}</span>
+      <div class="hero__grid">
+        <PortraitFrame
+          class="hero__portrait"
+          sizes="(max-width: 1120px) 320px, 420px"
+          caption="DikaGlorya / developer"
+          index="ObitoGlory"
+          priority
+        />
+        <div class="hero__body">
+          <p class="hero__eyebrow mono">Independent developer / Kendal, Indonesia</p>
+          <h1 class="hero__title" id="hero-title">
+            <span class="line"><span>DikaGlorya<span class="hero__stop">.</span></span></span>
+            <span class="line"><span>ObitoGlory.</span></span>
+          </h1>
+          <p class="hero__copy">
+            I'm DikaGlorya, also known as DikaCode. ObitoGlory is my home for practical software,
+            developer tools, web projects, and technical experiments.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="/projects/">See all projects</a>
+            <a class="btn" href="/about/">About the identity</a>
+          </div>
+          <div class="hero__meta mono">
+            <span>{site.location}</span>
+            <span>{site.availability}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -95,7 +112,7 @@ const homeSchema = {
       {featured && (
         <article class="featured">
           <div class="featured__copy">
-            <p class="featured__label mono">Featured / {featured.type}</p>
+            <p class="featured__label mono">Case study / source not public / {featured.type}</p>
             <h3>{featured.name}</h3>
             <p>{featured.summary}</p>
             <p class="mono">{featured.stack.join(' / ')}</p>
@@ -114,6 +131,47 @@ const homeSchema = {
       <div class="project-list">
         {selected.map((project, index) => (
           <ProjectRow project={project} index={index + 2} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight-2" aria-labelledby="focus-title">
+    <div class="container">
+      <SectionHead
+        id="focus-title"
+        title="Current focus"
+        meta="Topics being explored; these are not claims of released products."
+      />
+      <ul class="focus-list">
+        {currentFocus.map((item, index) => (
+          <li>
+            <span class="mono">{String(index + 1).padStart(2, '0')}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight-2" aria-labelledby="journal-title">
+    <div class="container">
+      <SectionHead
+        id="journal-title"
+        title="Technical notes"
+        meta="Implementation details and lessons from the work."
+        link={{ href: '/journal/', label: 'All notes' }}
+      />
+      <div class="journal-list">
+        {articles.slice(0, 2).map((article) => (
+          <article class="journal-card">
+            <p class="mono journal-card__meta">
+              {article.date} / {article.readingTime} min read
+            </p>
+            <h3><a href={`/journal/${article.slug}/`}>{article.title}</a></h3>
+            <p>{article.description}</p>
+            <a class="link" href={`/journal/${article.slug}/`}>Read the note</a>
+          </article>
         ))}
       </div>
     </div>
@@ -185,13 +243,12 @@ const homeSchema = {
       <div class="about-grid__body">
         <h2 id="about-title">One person, from first sketch to handover.</h2>
         <p>
-          DikaCode, also known as DikaOfc and ObitoGlory, is an independent developer from
-          Kendal, Central Java. Websites, bots, and tools are built from scratch, tested, and
-          maintained until they run.
+          DikaGlorya builds under the developer identity DikaCode. ObitoGlory is the website
+          brand: one place for the projects, honest notes, and official links.
         </p>
         <div class="about-actions">
           <a class="btn" href="/about/">
-            About Dika <Arrow class="about-arrow" />
+            About DikaGlorya <Arrow class="about-arrow" />
           </a>
         </div>
       </div>
@@ -204,6 +261,27 @@ const homeSchema = {
           </div>
         ))}
       </dl>
+    </div>
+  </section>
+
+  <section class="section section--tight-2" aria-labelledby="follow-title">
+    <div class="container follow-grid">
+      <div>
+        <h2 id="follow-title">Follow the work.</h2>
+        <p>
+          Project updates land on this site first. The official profiles below are verified
+          from this domain and point at the same person behind the name.
+        </p>
+      </div>
+      <ul class="profile-links mono" aria-label="Official public profiles">
+        {socialLinks.map((link) => (
+          <li>
+            <a href={link.href} rel="me noopener noreferrer" target="_blank" data-outbound={link.label.toLowerCase()}>
+              {link.label} <span>{link.handle}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 

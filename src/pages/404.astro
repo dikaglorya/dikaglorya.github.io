@@ -1,4 +1,5 @@
 ---
+import PortraitFrame from '../components/PortraitFrame.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -21,6 +22,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <a class="btn" href="/projects/">Browse projects</a>
         </div>
       </div>
+      <PortraitFrame
+        class="not-found__portrait"
+        sizes="(max-width: 900px) 240px, 280px"
+        index="404 / Portrait"
+      />
     </div>
   </section>
 </BaseLayout>

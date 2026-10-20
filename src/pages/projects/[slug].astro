@@ -37,10 +37,7 @@ const schema = {
   description: project.summary,
   url: `https://obitoglory.tech/projects/${project.slug}/`,
   author: {
-    '@type': 'Person',
-    name: 'DikaCode',
-    alternateName: 'DikaOfc',
-    url: site.url,
+    '@id': `${site.url}/#person`,
   },
   keywords: project.stack.join(', '),
   genre: project.category,
@@ -107,6 +104,17 @@ const schema = {
           </ul>
         </section>
 
+        <section class="project-section">
+          <h2>Availability and limitations</h2>
+          <p>
+            {project.link
+              ? `A public link is available: ${project.link.label}.`
+              : 'The source code and a public demo are not linked for this project.'}
+            This page documents the described scope, but without a public source or demo a
+            visitor cannot independently inspect or run the implementation.
+          </p>
+        </section>
+
         {project.slug === 'dikaroute' && (
           <figure class="project-figure">
             <RouteDiagram />
@@ -148,14 +156,14 @@ const schema = {
             <dd class="spec__value">{project.stack.join(', ')}</dd>
           </div>
           <div class="spec__row">
-            <dt class="spec__label mono">Access</dt>
-            <dd class="spec__value">{project.link ? 'Public' : 'Not public'}</dd>
+            <dt class="spec__label mono">Source</dt>
+            <dd class="spec__value">Not public</dd>
           </div>
           {project.link && (
             <div class="spec__row">
               <dt class="spec__label mono">Live</dt>
               <dd class="spec__value">
-                <a href={project.link.href} rel="noopener noreferrer" target="_blank">
+                <a href={project.link.href} rel="noopener noreferrer" target="_blank" data-outbound="project-live">
                   {project.link.label}
                 </a>
               </dd>

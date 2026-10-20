@@ -1,5 +1,6 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
+import PortraitFrame from '../components/PortraitFrame.astro';
 import SectionHead from '../components/SectionHead.astro';
 import StackGrid from '../components/StackGrid.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -10,13 +11,15 @@ import { currentFocus } from '../data/technologies';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
-  name: 'About DikaCode / DikaOfc',
+  name: 'About ObitoGlory',
   url: 'https://obitoglory.tech/about/',
   mainEntity: {
     '@type': 'Person',
-    name: 'DikaCode',
-    alternateName: ['DikaOfc', 'ObitoGlory'],
+    '@id': `${site.url}/#person`,
+    name: site.personName,
+    alternateName: site.alternateNames,
     url: site.url,
+    image: new URL(site.profileImage, site.url).href,
     jobTitle: 'Independent developer',
     description:
       'An independent developer from Kendal, Central Java, building websites, bots, AI tools, and security automation.',
@@ -31,14 +34,14 @@ const schema = {
 ---
 
 <BaseLayout
-  title="About | ObitoGlory"
-  description="About ObitoGlory (DikaCode / DikaOfc), an independent developer from Kendal, Central Java, focused on AI, security automation, and web development."
+  title="About DikaGlorya | ObitoGlory"
+  description="Meet DikaGlorya, also known as DikaCode. Learn how the DikaGlory, DikaOfc, Dika Developer, Dika Kendal, and ObitoGlory names relate to one independent developer."
   type="profile"
   schema={schema}
 >
   <section class="page-hero page-hero--about" aria-labelledby="about-title">
     <div class="container">
-      <p class="page-hero__eyebrow mono">About / ObitoGlory</p>
+      <p class="page-hero__eyebrow mono">About / DikaGlorya</p>
       <h1 id="about-title">One developer, start to handover.</h1>
       <p class="page-hero__lead">
         The work covers websites, bots, AI tools, and security automation. One person handles
@@ -47,7 +50,7 @@ const schema = {
       </p>
       <div class="page-hero__meta mono">
         <span>{site.location}</span>
-        <span>DikaCode / DikaOfc / ObitoGlory</span>
+        <span>Personal identity / developer name / website brand</span>
       </div>
     </div>
   </section>
@@ -57,15 +60,39 @@ const schema = {
       <div class="profile-body">
         <h2 id="profile-title">Not a big company. One person taking the work seriously.</h2>
         <p>
-          DikaCode, also known as DikaOfc and ObitoGlory, is an independent developer from
-          Kendal, Central Java, and a student at SMK Bhinneka Patebon.
+          DikaGlorya is an independent developer from Kendal, Central Java. DikaCode is the
+          developer name used for software work; ObitoGlory is the name of this website and
+          portfolio.
         </p>
         <p>
-          The focus sits in AI, security automation, bug hunting, and web development. From
-          Telegram bots and AI gateways to pentesting tools, everything is built by hand,
-          tested, and polished until it can actually be used.
+          DikaGlory, DikaOfc, Dika Developer, and Dika Kendal are other names or descriptions
+          associated with the same person where they are actually used. They are not separate
+          people or separate brands. This site is the canonical place to find the work and the
+          official links.
         </p>
       </div>
+      <PortraitFrame
+        class="profile-portrait"
+        sizes="(max-width: 900px) 320px, 360px"
+      />
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="identity-title">
+    <div class="container">
+      <SectionHead
+        id="identity-title"
+        title="One person, a few public names."
+        meta="Names are listed with their actual context, not as separate profiles."
+      />
+      <dl class="identity-list">
+        <div><dt>DikaGlorya</dt><dd>Primary personal identity.</dd></div>
+        <div><dt>DikaCode</dt><dd>Developer identity used for software work.</dd></div>
+        <div><dt>ObitoGlory</dt><dd>Website and portfolio brand.</dd></div>
+        <div><dt>DikaGlory / DikaOfc</dt><dd>Other public names used for the same person.</dd></div>
+        <div><dt>Dika Developer</dt><dd>Professional description, not another person.</dd></div>
+        <div><dt>Dika Kendal</dt><dd>Location-related name; Kendal is the stated base.</dd></div>
+      </dl>
     </div>
   </section>
 
@@ -121,20 +148,20 @@ const schema = {
 
   <section class="section--tight" aria-labelledby="profiles-title">
     <div class="container">
-      <SectionHead id="profiles-title" title="Elsewhere" meta="Verified public profiles." />
+      <SectionHead id="profiles-title" title="Elsewhere" meta="Public links used by this site." />
       <ul class="profile-links mono">
         <li>
-          <a href={site.github} rel="me noopener noreferrer" target="_blank">
+          <a href={site.github} rel="me noopener noreferrer" target="_blank" data-outbound="github">
             GitHub <span>@{site.githubHandle}</span>
           </a>
         </li>
         <li>
-          <a href={site.telegramUrl} rel="me">
+          <a href={site.telegramUrl} rel="me" data-outbound="telegram">
             Telegram <span>@{site.telegram}</span>
           </a>
         </li>
         <li>
-          <a href={site.instagram} rel="me noopener noreferrer" target="_blank">
+          <a href={site.instagram} rel="me noopener noreferrer" target="_blank" data-outbound="instagram">
             Instagram <span>@xxcdicka</span>
           </a>
         </li>

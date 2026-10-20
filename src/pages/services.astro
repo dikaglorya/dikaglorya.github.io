@@ -23,10 +23,7 @@ const schema = {
         name: service.name,
         description: service.description,
         provider: {
-          '@type': 'Person',
-          name: 'DikaCode',
-          alternateName: 'DikaOfc',
-          url: site.url,
+          '@id': `${site.url}/#person`,
         },
         areaServed: {
           '@type': 'Country',
@@ -40,7 +37,7 @@ const schema = {
 
 <BaseLayout
   title="Services | ObitoGlory"
-  description="Website development, bots, custom tools, and system repair from ObitoGlory (DikaCode / DikaOfc). Ongoing prices written down from real starting points, scope agreed before work starts."
+  description="Website development, bots, custom tools, and system repair from DikaGlorya, working under the DikaCode identity. Scope and pricing are agreed before work starts."
   schema={schema}
 >
   <section class="page-hero page-hero--services" aria-labelledby="services-title">
