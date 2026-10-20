@@ -1,0 +1,69 @@
+---
+import { site } from '../data/site';
+
+export function getStaticPaths() {
+  const redirects = [
+    { legacy: 'proyek', target: '/projects/', label: 'Work' },
+    { legacy: 'tentang', target: '/about/', label: 'About' },
+    { legacy: 'layanan', target: '/services/', label: 'Services' },
+    { legacy: 'layanan/website', target: '/services/#website', label: 'Website service' },
+    { legacy: 'layanan/bot', target: '/services/#bot', label: 'Bot service' },
+    { legacy: 'layanan/tools', target: '/services/#tools', label: 'Tools service' },
+    { legacy: 'layanan/perbaikan', target: '/services/#repairs', label: 'Maintenance service' },
+    { legacy: 'harga', target: '/services/#pricing', label: 'Pricing' },
+    { legacy: 'kontak', target: '/contact/', label: 'Contact' },
+    { legacy: 'faq', target: '/services/#faq', label: 'FAQ' },
+  ];
+
+  return redirects.map(({ legacy, target, label }) => ({
+    params: { legacy },
+    props: { target, label },
+  }));
+}
+
+interface Props {
+  target: string;
+  label: string;
+}
+
+const { target, label } = Astro.props;
+const targetURL = new URL(target, site.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={targetURL} />
+    <title>Moved to {label} | ObitoGlory</title>
+    <style>
+      body {
+        display: grid;
+        min-height: 100svh;
+        margin: 0;
+        place-items: center;
+        background: #08090b;
+        color: #e4eaf2;
+        font-family: system-ui, sans-serif;
+      }
+      main {
+        max-width: 36rem;
+        padding: 2rem;
+      }
+      a {
+        color: #8ec9dc;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>This old page has moved to <a href={target}>{label}</a>.</p>
+    </main>
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target);
+    </script>
+  </body>
+</html>

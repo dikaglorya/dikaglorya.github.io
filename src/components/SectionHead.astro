@@ -1,0 +1,31 @@
+---
+import Arrow from './Arrow.astro';
+
+interface Props {
+  title: string;
+  id?: string;
+  meta?: string;
+  link?: {
+    href: string;
+    label: string;
+  };
+}
+
+const { title, id, meta, link } = Astro.props;
+---
+
+  <div class="section-head">
+    <h2 id={id}>{title}</h2>
+    {(meta || link) && (
+      <div class="section-head__meta">
+        {meta && <p class="mono">{meta}</p>}
+        {link && (
+          <p>
+            <a href={link.href} class="link">
+              {link.label} <Arrow />
+            </a>
+          </p>
+        )}
+      </div>
+    )}
+  </div>

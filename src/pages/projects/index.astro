@@ -1,0 +1,113 @@
+---
+import ContactBlock from '../../components/ContactBlock.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projectCategories, projects } from '../../data/projects';
+import { site } from '../../data/site';
+
+const categoryCounts = projectCategories.map((category) => ({
+  category,
+  count: projects.filter((project) => project.category === category).length,
+}));
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Selected work, ObitoGlory',
+  description:
+    'Case studies of AI, bot, web, Android, and developer tool projects from DikaCode / DikaOfc.',
+  url: 'https://obitoglory.tech/projects/',
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: projects.length,
+    itemListElement: projects.map((project, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `https://obitoglory.tech/projects/${project.slug}/`,
+      name: project.name,
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title="Projects | ObitoGlory"
+  description="Case studies of AI gateway, bot automation, website, Android, and developer tool projects from ObitoGlory (DikaCode / DikaOfc) in Kendal, Indonesia."
+  schema={schema}
+>
+  <section class="page-hero page-hero--projects" aria-labelledby="projects-title">
+    <div class="container">
+      <p class="page-hero__eyebrow mono">Portfolio / index</p>
+      <h1 id="projects-title">Selected work</h1>
+      <p class="page-hero__lead">
+        A collection of projects, tools, and experiments, each documented as a short technical
+        case study.
+      </p>
+      <div class="page-hero__meta mono">
+        <span>{`${projects.length} projects`}</span>
+        <span>{`${projectCategories.length} categories`}</span>
+        <span>{site.locationShort}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-label="Project list">
+    <div class="container">
+      <div class="filter-bar" data-js-only role="group" aria-label="Filter projects">
+        <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">
+          All ({projects.length})
+        </button>
+        {categoryCounts.map((item) => (
+          <button class="filter-btn" type="button" data-filter={item.category} aria-pressed="false">
+            {item.category} ({item.count})
+          </button>
+        ))}
+      </div>
+
+      <p class="filter-count mono" data-project-count aria-live="polite">
+        {`${projects.length} projects shown`}
+      </p>
+
+      <div class="project-list">
+        <div class="project-list__head mono" aria-hidden="true">
+          <span>No.</span>
+          <span>Project</span>
+          <span>Type</span>
+          <span>Stack</span>
+          <span>Detail</span>
+        </div>
+        {projects.map((project, index) => (
+          <ProjectRow project={project} index={index + 1} />
+        ))}
+      </div>
+
+      <div class="empty-state" data-empty-state hidden>
+        <p>No projects in this category.</p>
+        <p>
+          <button class="link" type="button" data-filter="all">Show all projects</button>
+        </p>
+      </div>
+
+      <div class="projects-note mono">
+        <p>Project repositories are private. The GitHub profile is the public account.</p>
+        <a
+          class="link"
+          href="https://github.com/dikaglorya"
+          rel="me noopener noreferrer"
+          target="_blank"
+        >
+          github.com/dikaglorya
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <ContactBlock
+    id="projects-contact-title"
+    title="Missing the project you had in mind?"
+  />
+
+  <script>
+    import '../../scripts/projects';
+  </script>
+</BaseLayout>

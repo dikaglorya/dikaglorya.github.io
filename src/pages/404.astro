@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="404 | ObitoGlory"
+  description="Page not found."
+  noindex
+>
+  <section class="not-found" aria-labelledby="not-found-title">
+    <div class="container not-found__grid">
+      <div class="not-found__body">
+        <p class="not-found__code mono" aria-hidden="true">404</p>
+        <h1 id="not-found-title">This page doesn't exist.</h1>
+        <p>
+          It may have been moved, the link could be wrong, or the page was never built. Start
+          from the project index or go back to the beginning.
+        </p>
+        <div class="not-found__actions">
+          <a class="btn btn--primary" href="/">Back to home</a>
+          <a class="btn" href="/projects/">Browse projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

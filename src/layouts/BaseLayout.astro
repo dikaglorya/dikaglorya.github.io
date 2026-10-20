@@ -1,0 +1,143 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/newsreader/wght.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '../styles/global.css';
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { site, socialLinks } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  bodyClass?: string;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  image = site.ogImage,
+  type = 'website',
+  noindex = false,
+  schema,
+  bodyClass = '',
+} = Astro.props;
+
+const isFile = /\.[a-z0-9]+$/i.test(Astro.url.pathname);
+const canonicalPath =
+  isFile || Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonicalURL = new URL(canonicalPath, Astro.site);
+const imageURL = new URL(image, Astro.site);
+const ogImageAlt = site.ogImageAlt;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'DikaCode',
+  alternateName: site.alternateNames,
+  url: site.url,
+  jobTitle: 'Independent developer',
+  description: site.description,
+  email: `mailto:${site.email}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Kendal',
+    addressRegion: 'Central Java',
+    addressCountry: 'ID',
+  },
+  knowsAbout: [
+    'Web development',
+    'Telegram bots',
+    'AI gateways',
+    'Security automation',
+    'Android development',
+  ],
+  sameAs: socialLinks.map((link) => link.href),
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  alternateName: site.alternateNames,
+  url: site.url,
+  description: site.description,
+  inLanguage: 'en',
+  author: {
+    '@type': 'Person',
+    name: 'DikaCode',
+    url: site.url,
+  },
+};
+
+const pageSchemas = [
+  personSchema,
+  websiteSchema,
+  ...(Array.isArray(schema) ? schema : schema ? [schema] : []),
+];
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#08090b" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="author" content="ObitoGlory" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {!noindex && <link rel="canonical" href={canonicalURL} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={imageURL} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content={site.locale} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
+    {pageSchemas.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
+
+    <slot name="head" />
+  </head>
+  <body id="top" class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/ui';
+    </script>
+  </body>
+</html>

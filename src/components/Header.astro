@@ -1,0 +1,70 @@
+---
+import { mainNavigation } from '../data/navigation';
+import { site } from '../data/site';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label="ObitoGlory home">
+      <span class="wordmark__name">obitoglory<span class="wordmark__dot">.</span></span>
+    </a>
+
+    <nav class="site-nav" aria-label="Main">
+      {mainNavigation.map((item) => (
+        <a
+          class="site-nav__link"
+          href={item.href}
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <a class="header-contact" href="/contact/">Get in touch</a>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls="mobile-menu"
+        data-menu-open
+      >
+        Menu
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog class="mobile-menu" id="mobile-menu" data-menu aria-labelledby="mobile-menu-title">
+  <div class="mobile-menu__inner">
+    <div class="mobile-menu__bar">
+      <a class="wordmark" href="/" aria-label="ObitoGlory home">
+        <span class="wordmark__name">obitoglory<span class="wordmark__dot">.</span></span>
+      </a>
+      <h2 id="mobile-menu-title" class="sr-only">Menu</h2>
+      <button class="mobile-menu__close" type="button" data-menu-close>Close</button>
+    </div>
+
+    <nav class="mobile-menu__nav" aria-label="Mobile">
+      {mainNavigation.map((item) => (
+        <a
+          class="mobile-menu__link"
+          href={item.href}
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+          <span aria-hidden="true">{item.href}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="mobile-menu__foot">
+      <p class="status">{site.availability}</p>
+      <a class="btn btn--primary" href="/contact/">Get in touch</a>
+    </div>
+  </div>
+</dialog>

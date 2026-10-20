@@ -1,0 +1,149 @@
+---
+import ContactBlock from '../components/ContactBlock.astro';
+import SectionHead from '../components/SectionHead.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { faqs } from '../data/faqs';
+import { processSteps } from '../data/facts';
+import { services } from '../data/services';
+import { site } from '../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Services, ObitoGlory',
+  url: 'https://obitoglory.tech/services/',
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: services.length,
+    itemListElement: services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        provider: {
+          '@type': 'Person',
+          name: 'DikaCode',
+          alternateName: 'DikaOfc',
+          url: site.url,
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'Indonesia',
+        },
+      },
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title="Services | ObitoGlory"
+  description="Website development, bots, custom tools, and system repair from ObitoGlory (DikaCode / DikaOfc). Ongoing prices written down from real starting points, scope agreed before work starts."
+  schema={schema}
+>
+  <section class="page-hero page-hero--services" aria-labelledby="services-title">
+    <div class="container">
+      <p class="page-hero__eyebrow mono">Services / capabilities</p>
+      <h1 id="services-title">Practical software, built with care.</h1>
+      <p class="page-hero__lead">
+        Websites, bots, tools, and repair work for systems that already exist. Built from
+        scratch, tested, and maintained until it runs. Starting prices are written down in the
+        open; the exact quote comes after the scope is agreed.
+      </p>
+      <div class="page-hero__meta mono">
+        <span>{`${services.length} services`}</span>
+        <span>{site.availability}</span>
+        <span>{`Telegram @${site.telegram}`}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" id="pricing" aria-label="Service list">
+    <div class="container">
+      {services.map((service, index) => (
+        <section
+          class="service-row"
+          id={service.slug}
+          aria-labelledby={`${service.slug}-title`}
+        >
+          <div class="service-row__index mono" aria-hidden="true">{`0${index + 1}`}</div>
+
+          <div class="service-row__body">
+            <h2 id={`${service.slug}-title`}>{service.name}</h2>
+            <p class="service-row__lead">{service.description}</p>
+            <div class="service-row__cols">
+              <div>
+                <h3 class="service-row__label mono">Possible deliverables</h3>
+                <ul class="includes">
+                  {service.includes.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+                {service.platforms && (
+                  <p class="mono muted service-row__platforms">
+                    Platforms: {service.platforms.join(' / ')}
+                  </p>
+                )}
+              </div>
+              <div>
+                <h3 class="service-row__label mono">Scope limits</h3>
+                <ul class="includes">
+                  {service.limits.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+                <p class="mono muted service-row__platforms">
+                  From {service.priceFrom} / {service.priceNote}
+                </p>
+              </div>
+            </div>
+            <a class="link" href={`/contact/?service=${service.slug}`}>
+              Discuss this service
+            </a>
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="process-title">
+    <div class="container">
+      <SectionHead
+        id="process-title"
+        title="Engagement process"
+        meta="Four steps, without surprises in the middle of the project."
+      />
+      <ol class="process-steps">
+        {processSteps.map((step, index) => (
+          <li>
+            <span class="mono">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section--tight" id="faq" aria-labelledby="faq-title">
+    <div class="container">
+      <SectionHead
+        id="faq-title"
+        title="Common questions"
+        meta="What usually gets asked before a project starts."
+      />
+      <div class="faq-list">
+        {faqs.map((faq) => (
+          <details class="faq-item">
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ContactBlock id="services-contact-title" title="Ready to start? Tell me what you need first." />
+</BaseLayout>

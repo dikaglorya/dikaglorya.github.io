@@ -1,0 +1,146 @@
+---
+import ContactBlock from '../components/ContactBlock.astro';
+import SectionHead from '../components/SectionHead.astro';
+import StackGrid from '../components/StackGrid.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { principles } from '../data/facts';
+import { site } from '../data/site';
+import { currentFocus } from '../data/technologies';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About DikaCode / DikaOfc',
+  url: 'https://obitoglory.tech/about/',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'DikaCode',
+    alternateName: ['DikaOfc', 'ObitoGlory'],
+    url: site.url,
+    jobTitle: 'Independent developer',
+    description:
+      'An independent developer from Kendal, Central Java, building websites, bots, AI tools, and security automation.',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kendal',
+      addressRegion: 'Central Java',
+      addressCountry: 'ID',
+    },
+  },
+};
+---
+
+<BaseLayout
+  title="About | ObitoGlory"
+  description="About ObitoGlory (DikaCode / DikaOfc), an independent developer from Kendal, Central Java, focused on AI, security automation, and web development."
+  type="profile"
+  schema={schema}
+>
+  <section class="page-hero page-hero--about" aria-labelledby="about-title">
+    <div class="container">
+      <p class="page-hero__eyebrow mono">About / ObitoGlory</p>
+      <h1 id="about-title">One developer, start to handover.</h1>
+      <p class="page-hero__lead">
+        The work covers websites, bots, AI tools, and security automation. One person handles
+        the build from the first sketch to the handover, with the scope agreed before anything
+        starts.
+      </p>
+      <div class="page-hero__meta mono">
+        <span>{site.location}</span>
+        <span>DikaCode / DikaOfc / ObitoGlory</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-label="Introduction">
+    <div class="container profile-grid">
+      <div class="profile-body">
+        <h2 id="profile-title">Not a big company. One person taking the work seriously.</h2>
+        <p>
+          DikaCode, also known as DikaOfc and ObitoGlory, is an independent developer from
+          Kendal, Central Java, and a student at SMK Bhinneka Patebon.
+        </p>
+        <p>
+          The focus sits in AI, security automation, bug hunting, and web development. From
+          Telegram bots and AI gateways to pentesting tools, everything is built by hand,
+          tested, and polished until it can actually be used.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="principles-title">
+    <div class="container">
+      <SectionHead
+        id="principles-title"
+        title="Working approach"
+        meta="Three rules applied before touching a new project."
+      />
+      <ul class="principle-list">
+        {principles.map((principle, index) => (
+          <li class="principle">
+            <span class="principle__index mono" aria-hidden="true">{`0${index + 1}`}</span>
+            <div>
+              <h3>{principle.title}</h3>
+              <p>{principle.body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="focus-title">
+    <div class="container">
+      <SectionHead
+        id="focus-title"
+        title="Current interests"
+        meta="What is being worked on and learned right now."
+      />
+      <ul class="focus-list">
+        {currentFocus.map((item, index) => (
+          <li>
+            <span class="mono">{String(index + 1).padStart(2, '0')}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="stack-title">
+    <div class="container">
+      <SectionHead
+        id="stack-title"
+        title="Technology and tools"
+        meta="Grouped by purpose, not scored."
+      />
+      <StackGrid />
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="profiles-title">
+    <div class="container">
+      <SectionHead id="profiles-title" title="Elsewhere" meta="Verified public profiles." />
+      <ul class="profile-links mono">
+        <li>
+          <a href={site.github} rel="me noopener noreferrer" target="_blank">
+            GitHub <span>@{site.githubHandle}</span>
+          </a>
+        </li>
+        <li>
+          <a href={site.telegramUrl} rel="me">
+            Telegram <span>@{site.telegram}</span>
+          </a>
+        </li>
+        <li>
+          <a href={site.instagram} rel="me noopener noreferrer" target="_blank">
+            Instagram <span>@xxcdicka</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <ContactBlock id="about-contact-title" title="Want to talk about a system or a project?" />
+</BaseLayout>

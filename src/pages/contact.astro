@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { services } from '../data/services';
+import { site } from '../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contact ObitoGlory',
+  url: 'https://obitoglory.tech/contact/',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'DikaCode',
+    alternateName: ['DikaOfc', 'ObitoGlory'],
+    url: site.url,
+    email: `mailto:${site.email}`,
+    sameAs: [site.telegramUrl, site.github, site.instagram, site.tiktok],
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kendal',
+      addressRegion: 'Central Java',
+      addressCountry: 'ID',
+    },
+  },
+};
+---
+
+<BaseLayout
+  title="Contact | ObitoGlory"
+  description="Contact ObitoGlory (DikaCode / DikaOfc) for website, bot, tool, or system repair projects. Telegram @dikaacode or email dikasukasukaa@gmail.com."
+  schema={schema}
+>
+  <section class="page-hero page-hero--contact" aria-labelledby="contact-title">
+    <div class="container">
+      <h1 id="contact-title">Let's talk about the work.</h1>
+      <p class="page-hero__lead">
+        For project inquiries, collaboration, or technical discussions. You do not need to
+        commit yet; an open discussion is welcome.
+      </p>
+      <div class="page-hero__meta mono">
+        <span class="status">{site.availability}</span>
+        <span>{site.location}</span>
+        <span>Telegram is fastest</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-label="Contact methods">
+    <div class="container contact-layout">
+      <div class="contact-form-wrap">
+        <h2>Project brief</h2>
+        <p>
+          Fill in the brief. Name, email, service, and message are required. The button below
+          opens your email application with the brief prefilled. Nothing is sent to a server
+          by this site.
+        </p>
+
+        <form
+          class="contact-form"
+          action={`mailto:${site.email}`}
+          method="post"
+          enctype="text/plain"
+          novalidate
+          data-contact-form
+          data-contact-email={site.email}
+        >
+          <div class="form-row">
+            <div class="form-field">
+              <label for="name">
+                Name <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="form-field">
+              <label for="email">
+                Email <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="service">
+                Service <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <select id="service" name="service" required>
+                <option value="">Choose a service</option>
+                {services.map((service) => (
+                  <option value={service.slug}>{service.name}</option>
+                ))}
+                <option value="other">Something else / not sure yet</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="budget">Budget</label>
+              <select id="budget" name="budget">
+                <option value="Not decided yet">Not decided yet</option>
+                <option value="Under Rp500k">Under Rp500k</option>
+                <option value="Rp500k to Rp1m">Rp500k to Rp1m</option>
+                <option value="Rp1m to Rp3m">Rp1m to Rp3m</option>
+                <option value="Above Rp3m">Above Rp3m</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="message">
+              What you need <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="6"
+              placeholder="Example: a landing page for an AC repair service, own domain ready, aiming to launch next month."
+              required
+            ></textarea>
+          </div>
+
+          <button class="btn btn--primary" type="submit">Open the brief in your email</button>
+
+          <p class="form-note">
+            This form uses <span class="mono">mailto:</span>. Pressing the button opens your
+            email application. If nothing opens, email the address directly:
+            <a class="link" href={`mailto:${site.email}`}>{site.email}</a>.
+          </p>
+
+          <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+        </form>
+      </div>
+
+      <aside class="contact-aside" aria-label="Direct contact">
+        <h2>Direct channels</h2>
+        <ul class="channel-list">
+          <li>
+            <a href={site.telegramUrl} rel="me">Telegram</a>
+            <span>@{site.telegram}</span>
+          </li>
+          <li>
+            <a href={`mailto:${site.email}`}>Email</a>
+            <span>{site.email}</span>
+          </li>
+          <li>
+            <a href={site.github} rel="me noopener noreferrer" target="_blank">GitHub</a>
+            <span>@{site.githubHandle}</span>
+          </li>
+          <li>
+            <a href={site.instagram} rel="me noopener noreferrer" target="_blank">Instagram</a>
+            <span>@xxcdicka</span>
+          </li>
+        </ul>
+
+        <button
+          class="btn btn--small"
+          type="button"
+          data-copy-email={site.email}
+        >
+          Copy email
+        </button>
+        <p class="form-note" role="status" aria-live="polite" data-copy-status></p>
+
+        <div class="next-steps">
+          <h3>After you send it</h3>
+          <ol>
+            <li>
+              <div>
+                <strong>The brief gets read.</strong>
+                <span>Usually answered through Telegram or email.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>Scope gets clarified.</strong>
+                <span>Features, platform, revisions, and limits are discussed first.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>A quote comes back.</strong>
+                <span>Price, timeline, and how the work is written out clearly.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <strong>The project starts once agreed.</strong>
+                <span>A 50% deposit to begin, the rest after delivery and approval.</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <p class="mono muted">
+          {site.location} / {site.coordinates}
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    import '../scripts/contact';
+  </script>
+</BaseLayout>

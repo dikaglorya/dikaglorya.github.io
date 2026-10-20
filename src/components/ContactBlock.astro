@@ -1,0 +1,33 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  id?: string;
+}
+
+const {
+  title = 'Have something worth building?',
+  id = 'contact-heading',
+} = Astro.props;
+---
+
+<section class="contact-block" aria-labelledby={id}>
+  <div class="container contact-block__inner">
+    <div class="contact-block__main">
+      <h2 class="contact-block__title" id={id}>{title}</h2>
+      <p class="contact-block__copy">
+        For project inquiries, collaboration, or technical discussions.
+      </p>
+      <a class="btn btn--primary" href="/contact/">Get in touch</a>
+    </div>
+
+    <div class="contact-block__details mono">
+      <p>{site.availability} / {site.locationShort}</p>
+      <p class="contact-block__links">
+        <a href={site.telegramUrl} rel="me">Telegram @{site.telegram}</a>
+        <a href={site.github} rel="me noopener noreferrer" target="_blank">GitHub @{site.githubHandle}</a>
+      </p>
+    </div>
+  </div>
+</section>

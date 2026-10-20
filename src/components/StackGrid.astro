@@ -1,0 +1,16 @@
+---
+import { technologyGroups } from '../data/technologies';
+---
+
+<div class="stack-grid">
+  {technologyGroups.map((group) => (
+    <div class="stack-group">
+      <h3>{group.title}</h3>
+      <ul>
+        {group.items.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>

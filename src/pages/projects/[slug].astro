@@ -1,0 +1,177 @@
+---
+import ContactBlock from '../../components/ContactBlock.astro';
+import RouteDiagram from '../../components/RouteDiagram.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getNextProject, projects, type Project } from '../../data/projects';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const nextProject = getNextProject(project.slug);
+const paddedOrder = String(project.order).padStart(2, '0');
+const service =
+  project.category === 'Web'
+    ? 'website'
+    : project.category === 'Android'
+      ? 'tools'
+      : project.category === 'Developer tools'
+        ? 'tools'
+        : project.category === 'Security & automation'
+          ? 'repairs'
+          : 'bot';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.name,
+  description: project.summary,
+  url: `https://obitoglory.tech/projects/${project.slug}/`,
+  author: {
+    '@type': 'Person',
+    name: 'DikaCode',
+    alternateName: 'DikaOfc',
+    url: site.url,
+  },
+  keywords: project.stack.join(', '),
+  genre: project.category,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: site.name,
+    url: site.url,
+  },
+};
+---
+
+<BaseLayout
+  title={`${project.name} | ObitoGlory`}
+  description={project.summary}
+  type="article"
+  schema={schema}
+>
+  <article>
+    <header class="project-hero">
+      <div class="container">
+        <nav class="breadcrumb mono" aria-label="Breadcrumb">
+          <a href="/projects/">Projects</a>
+          <span class="breadcrumb__sep" aria-hidden="true">/</span>
+          <span aria-current="page">{project.name}</span>
+        </nav>
+
+        <div class="project-hero__meta mono">
+          <span>Project {paddedOrder}</span>
+          <span>{project.type}</span>
+          <span>{project.category}</span>
+        </div>
+
+        <h1 class="project-hero__title">{project.name}</h1>
+        <p class="project-hero__tagline">{project.tagline}</p>
+
+        <div class="project-hero__actions">
+          <a class="btn btn--primary" href={`/contact/?service=${service}`}>
+            Discuss a project like this
+          </a>
+          <a class="btn" href="/projects/">All projects</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="container project-layout">
+      <div class="project-content">
+        <section class="project-section">
+          <h2>Overview</h2>
+          <p>{project.summary}</p>
+        </section>
+
+        <section class="project-section">
+          <h2>The problem</h2>
+          <p>{project.problem}</p>
+        </section>
+
+        <section class="project-section">
+          <h2>What was built</h2>
+          <p>{project.approach}</p>
+          <ul class="feature-list">
+            {project.features.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </section>
+
+        {project.slug === 'dikaroute' && (
+          <figure class="project-figure">
+            <RouteDiagram />
+            <figcaption class="mono">
+              Conceptual diagram: one request enters, DikaRoute picks an available provider, and
+              falls back automatically when a provider fails.
+            </figcaption>
+          </figure>
+        )}
+
+        {project.note && (
+          <div class="project-note">
+            <p><strong>Note:</strong> {project.note}</p>
+          </div>
+        )}
+
+        {!project.link && (
+          <div class="project-note">
+            <p>
+              <strong>Source:</strong> this project is not public. Ask for a walkthrough if you
+              want to see how it was built.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <aside class="project-aside" aria-label="Project details">
+        <dl class="spec">
+          <div class="spec__row">
+            <dt class="spec__label mono">Type</dt>
+            <dd class="spec__value">{project.type}</dd>
+          </div>
+          <div class="spec__row">
+            <dt class="spec__label mono">Category</dt>
+            <dd class="spec__value">{project.category}</dd>
+          </div>
+          <div class="spec__row">
+            <dt class="spec__label mono">Stack</dt>
+            <dd class="spec__value">{project.stack.join(', ')}</dd>
+          </div>
+          <div class="spec__row">
+            <dt class="spec__label mono">Access</dt>
+            <dd class="spec__value">{project.link ? 'Public' : 'Not public'}</dd>
+          </div>
+          {project.link && (
+            <div class="spec__row">
+              <dt class="spec__label mono">Live</dt>
+              <dd class="spec__value">
+                <a href={project.link.href} rel="noopener noreferrer" target="_blank">
+                  {project.link.label}
+                </a>
+              </dd>
+            </div>
+          )}
+        </dl>
+      </aside>
+    </div>
+
+    <div class="container">
+      <a class="next-project" href={`/projects/${nextProject.slug}/`}>
+        <span class="mono">Next project</span>
+        <span class="next-project__name">{nextProject.name}</span>
+      </a>
+    </div>
+  </article>
+
+  <ContactBlock id="project-contact-title" title="Need a system like this?" />
+</BaseLayout>
