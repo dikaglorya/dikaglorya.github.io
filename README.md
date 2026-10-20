@@ -186,7 +186,7 @@ The choice is documented so it is a decision, not an omission:
 
 ## Deployment
 
-The repository is set up for GitHub Pages as a user site at the apex domain. It has not been pushed or deployed from this workspace, so the apex domain may still serve the previous site until the first Pages deployment and DNS cutover.
+The repository is set up for GitHub Pages as a user site. The root `index.html` is a lightweight branded gateway for `dikaglorya.github.io` branch-based publishing: it identifies DikaGlorya and sends visitors to the canonical portfolio at `obitoglory.tech`. The Astro build in `src/pages/index.astro` is the full homepage and is deployed from `dist/` by GitHub Actions.
 
 1. In GitHub, open **Settings → Pages**.
 2. Set **Source** to **GitHub Actions**.
