@@ -108,12 +108,20 @@ const schema = {
         <section class="project-section">
           <h2>Availability and limitations / Ketersediaan dan batasan</h2>
           <BilingualCopy
-            en={`${project.link
-              ? `A public link is available: ${project.link.label}.`
-              : 'The source code and a public demo are not linked for this project.'} This page documents the described scope, but without a public source or demo a visitor cannot independently inspect or run the implementation.`}
-            id={`${project.link
-              ? `Tautan publik tersedia: ${project.link.label}.`
-              : 'Kode sumber dan demo publik belum ditautkan untuk proyek ini.'} Halaman ini menjelaskan ruang lingkup yang dimaksud; tanpa source atau demo publik, pengunjung belum dapat memeriksa atau menjalankan implementasinya sendiri.`}
+            en={
+              project.link?.kind === 'package'
+                ? `A published package is available: ${project.link.label}. Installing it lets you run the implementation yourself. The source repository is not linked, so the internals still cannot be read here.`
+                : project.link
+                  ? `A public link is available: ${project.link.label}. The source repository is not linked, so the internals cannot be read here.`
+                  : 'The source code and a public demo are not linked for this project. This page documents the described scope, but without a public source or demo a visitor cannot independently inspect or run the implementation.'
+            }
+            id={
+              project.link?.kind === 'package'
+                ? `Paket publik tersedia: ${project.link.label}. Dengan memasangnya, implementasinya bisa dijalankan sendiri. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
+                : project.link
+                  ? `Tautan publik tersedia: ${project.link.label}. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
+                  : 'Kode sumber dan demo publik belum ditautkan untuk proyek ini. Halaman ini menjelaskan ruang lingkup yang dimaksud; tanpa source atau demo publik, pengunjung belum dapat memeriksa atau menjalankan implementasinya sendiri.'
+            }
           />
         </section>
 
@@ -121,8 +129,8 @@ const schema = {
           <figure class="project-figure">
             <RouteDiagram />
             <figcaption class="mono">
-              Conceptual diagram: one request enters, DikaRoute picks an available provider, and
-              falls back automatically when a provider fails.
+              Konsep: satu request, satu provider yang tersedia, fallback otomatis jika gagal.
+              / Concept: one request, one available provider, automatic fallback on failure.
             </figcaption>
           </figure>
         )}
@@ -163,7 +171,7 @@ const schema = {
           </div>
           {project.link && (
             <div class="spec__row">
-              <dt class="spec__label mono">Live</dt>
+              <dt class="spec__label mono">{project.link.kind === 'package' ? 'Package' : 'Live'}</dt>
               <dd class="spec__value">
                 <a href={project.link.href} rel="noopener noreferrer" target="_blank" data-outbound="project-live">
                   {project.link.label}

@@ -9,6 +9,10 @@ export type ProjectLink = {
   href: string;
   label: string;
   external: boolean;
+  // "live" means a running instance you can open. "package" means a published
+  // artifact you can install. They are not interchangeable, so the page labels
+  // them differently instead of calling every link "Live".
+  kind?: 'live' | 'package';
 };
 
 export type Project = {
@@ -60,6 +64,13 @@ export const projects: Project[] = [
     stack: ['TypeScript', 'Node.js', 'OpenAI API'],
     featured: true,
     order: 1,
+    link: {
+      href: 'https://www.npmjs.com/package/dikaroute',
+      label: 'dikaroute on npm',
+      external: true,
+      kind: 'package',
+    },
+    note: 'The published package is installable, but the GitHub repository it points at is no longer public, so this page is the only place the design is written down.',
   },
   {
     slug: 'pentesterbot',

@@ -111,6 +111,15 @@ The site is bilingual on the same URL: Indonesian and English sit next to each o
 
 Each project in `src/data/projects.ts` needs a unique `slug`, `name`, `category`, `type`, `tagline`, `summary`, `problem`, `approach`, `features`, and `stack`. The `link` field is optional and must only contain a URL that has been checked. Repository links are intentionally omitted until they can be verified; project pages state that the source is not public and offer a walkthrough on request.
 
+`link.kind` decides how the link is described, and the two values are not interchangeable:
+
+| `kind` | Meaning | Rendered as |
+| --- | --- | --- |
+| `live` (default) | a running instance you can open | spec label `Live` |
+| `package` | a published artifact you can install | spec label `Package` |
+
+Only DikaRoute has a verified public artifact today: the `dikaroute` npm package. Its npm metadata lists the maintainer `dikacode` with the same contact address used in `site.email`, and its homepage field points at `obitoglory.tech`, so the package can be claimed. The GitHub repository that package metadata points at returns 404, so no repository link is published. Do not add a `package` link for any other project until the registry entry can be checked the same way.
+
 The old slugs are preserved:
 
 ```text
@@ -232,7 +241,8 @@ Open the failed or previous run in the **Actions** tab. Re-run the last known-go
 - There are no fabricated testimonials, client logos, download counts, uptime claims, or project screenshots on the site.
 - Prices are starting points from the existing public content, not final quotes. Confirm scope before publishing a price change.
 - The old `dikaofc` GitHub links are not reused. The current profile is `https://github.com/dikaglorya`.
-- The GitHub profile currently has one public repository, `dikaglorya.github.io` (this site repository). No project repository links are published because those repositories have not been verified.
+- The GitHub profile currently has one public repository, `dikaglorya.github.io` (this site repository). No project repository links are published because those repositories have not been verified. The `github.com/dikaofc` account that older links point at returns 404, so it is not linked from the site.
+- The `dikaroute` npm package is the only verified public artifact for a project. Its registry metadata lists the maintainer `dikacode` with the site contact address, so it is linked from the DikaRoute page as a `package` link. The `kendalscript` npm package has the same maintainer but no case study here, so it is not referenced.
 - The structured-data alias list (`site.alternateNames`) deliberately excludes "Dika Kendal": the name is explained on /about as location-related, but it is not established enough through real use to claim as an entity alias (PRD rule: include an alias only when it is genuinely used and explained). Add it to the list only if the owner confirms real usage.
 - The Instagram (`xxcdicka`) and TikTok (`dikasecx`) handles come from the owner's previous site data. They appear in `rel="me"` links; verify the accounts belong to DikaGlorya and remove them from `src/data/site.ts` if they do not. Schema `sameAs` stays GitHub-only until those accounts are re-verified.
 - `docs/github-profile-README.md` is a draft for the GitHub profile README at github.com/dikaglorya. The live profile still carries an older version, so treat the draft as pending until it is pasted in. Keep only claims you can verify, and re-check every link before publishing.

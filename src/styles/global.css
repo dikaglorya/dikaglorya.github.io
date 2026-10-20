@@ -991,79 +991,241 @@ summary {
   min-height: 44px;
 }
 
-/* Route diagram (SVG classes) */
-
-.route-diagram--mobile {
-  display: none;
-}
-
-@media (max-width: 700px) {
-  .route-diagram--desktop {
-    display: none;
-  }
-
-  .route-diagram--mobile {
-    display: block;
-  }
-}
-
 .route-diagram {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.8fr) 48px minmax(150px, 1fr) 48px minmax(200px, 1.45fr);
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  height: auto;
+  padding: clamp(16px, 2.5vw, 28px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse at 52% 46%, rgb(155 215 229 / 7%), transparent 48%),
+    var(--surface);
 }
 
 .route-diagram__node {
-  fill: var(--surface-raised);
-  stroke: var(--control-border);
-  stroke-width: 1;
-  rx: 3;
+  display: flex;
+  min-width: 0;
+  min-height: 112px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  background: var(--surface-raised);
 }
 
-.route-diagram__core {
-  fill: var(--bg);
-  stroke: var(--accent);
-  stroke-width: 1.2;
-  rx: 3;
+.route-diagram__client {
+  min-height: 94px;
 }
 
-.route-diagram__line {
-  fill: none;
-  stroke: var(--border-strong);
-  stroke-width: 1.2;
+.route-diagram__gateway {
+  min-height: 126px;
+  border-color: var(--accent);
+  background: linear-gradient(145deg, rgb(155 215 229 / 8%), transparent 75%), var(--bg);
 }
 
-.route-diagram__line--accent {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.2;
+.route-diagram__index,
+.route-diagram__providers-heading {
+  color: var(--muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
 }
 
-.route-diagram__arrow {
-  fill: var(--border-strong);
+.route-diagram__node strong {
+  color: var(--text);
+  font-size: 1rem;
 }
 
-.route-diagram__arrow--accent {
-  fill: var(--accent);
+.route-diagram__gateway strong {
+  color: var(--accent);
+  font-size: 1.15rem;
 }
 
-.route-diagram__text,
-.route-diagram__text--accent {
+.route-diagram__node > span:last-child {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.route-diagram__connector {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.route-diagram__connector > span:first-child {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.route-diagram__connector > span:first-child::after {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+  content: '';
+  transform: rotate(45deg);
+}
+
+.route-diagram__connector-label {
+  color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  fill: var(--text);
-}
-
-.route-diagram__text--accent {
-  fill: var(--accent);
-}
-
-.route-diagram__small,
-.route-diagram__label {
-  font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 0.55rem;
   letter-spacing: 0.04em;
-  fill: var(--muted);
+  text-align: center;
+}
+
+.route-diagram__connector--branch > span:first-child {
+  background: repeating-linear-gradient(90deg, var(--accent) 0 4px, transparent 4px 8px);
+}
+
+.route-diagram__providers {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.route-diagram__providers-heading {
+  margin-bottom: 2px;
+}
+
+.route-diagram__provider {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+}
+
+.route-diagram__provider--fallback {
+  border-style: dashed;
+  border-color: var(--accent);
+}
+
+.route-diagram__provider-mark {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.route-diagram__provider--fallback .route-diagram__provider-mark {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.route-diagram__provider strong,
+.route-diagram__provider small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.route-diagram__provider strong {
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.route-diagram__provider small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.62rem;
+  line-height: 1.35;
+}
+
+.route-diagram__state {
+  color: var(--muted);
+  font-size: 0.55rem;
+}
+
+.route-diagram__provider--fallback .route-diagram__state {
+  color: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .route-diagram {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .route-diagram__node,
+  .route-diagram__client,
+  .route-diagram__gateway {
+    min-height: 0;
+    padding: 14px;
+  }
+
+  .route-diagram__connector {
+    min-height: 30px;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .route-diagram__connector > span:first-child {
+    width: 1px;
+    height: 18px;
+    background: var(--border-strong);
+  }
+
+  .route-diagram__connector > span:first-child::after {
+    top: auto;
+    right: -3px;
+    bottom: 0;
+    transform: rotate(135deg);
+  }
+
+  .route-diagram__connector-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .route-diagram__providers {
+    gap: 7px;
+  }
+
+  .route-diagram__provider {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .route-diagram__provider strong {
+    font-size: 0.82rem;
+  }
+
+  .route-diagram__provider small {
+    font-size: 0.7rem;
+  }
+
+  .route-diagram__state {
+    font-size: 0.6rem;
+  }
 }
 
 /* What I build: three columns with numbered index. */
