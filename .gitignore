@@ -1,5 +1,6 @@
 node_modules/
 dist/
+out/
 .astro/
 .vercel/
 .taste-skill/
@@ -14,3 +15,8 @@ test-results/
 .env
 .env.*
 !.env.example
+
+# Sensitive legacy exports and PHP diagnostics
+database.sql
+config.php
+phpinfo.php
