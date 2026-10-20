@@ -35,25 +35,25 @@ I'm based in Kendal, Indonesia, and open for selected projects. / Saya tinggal d
 
 An OpenAI-compatible gateway that puts several AI providers behind one endpoint. Requests are routed automatically, and when a provider fails or rate-limits, the request falls through to the next one.
 
-`TypeScript` `Node.js` `OpenAI API` — [case study](https://dikaglorya.github.io/projects/dikaroute/)
+`TypeScript` `Node.js` `OpenAI API`: [case study](https://dikaglorya.github.io/projects/dikaroute/)
 
 ### ObitoBuff CLI
 
 A terminal AI coding agent with sub-agents for finding files, editing, running bash, research, and code review. Runs fully locally against your own models, with no backend.
 
-`TypeScript` `Bun` `OpenAI-compatible API` — [case study](https://dikaglorya.github.io/projects/obitobuff/)
+`TypeScript` `Bun` `OpenAI-compatible API`: [case study](https://dikaglorya.github.io/projects/obitobuff/)
 
 ### PentesterBot
 
 A Telegram bot that runs recon and vulnerability scanning workflows from inside a chat.
 
-`JavaScript` `Node.js` `Telegram Bot API` — [case study](https://dikaglorya.github.io/projects/pentesterbot/)
+`JavaScript` `Node.js` `Telegram Bot API`: [case study](https://dikaglorya.github.io/projects/pentesterbot/)
 
 ### TelegramBot AI
 
 A Telethon userbot that replies to chats with AI, learns your writing style, keeps long-term memory, and transcribes voice notes.
 
-`Python` `Telethon` `OpenAI-compatible API` — [case study](https://dikaglorya.github.io/projects/telegrambot-ai/)
+`Python` `Telethon` `OpenAI-compatible API`: [case study](https://dikaglorya.github.io/projects/telegrambot-ai/)
 
 Also documented: **Freebuff Patch**, running Freebuff on Termux without proot, and **RemoteUniversalDevice**, an Android remote for smart TVs. See the [full project list](https://dikaglorya.github.io/projects/).
 

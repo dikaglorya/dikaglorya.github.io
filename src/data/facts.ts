@@ -16,7 +16,7 @@ export const principles = [
     title: 'Built by hand, tested until it works.',
     titleId: 'Dibuat dan diuji sampai berfungsi.',
     body: 'Every project is built from scratch, tested, and polished. Not a template stuck on and abandoned.',
-    bodyId: 'Setiap proyek dibuat dari awal, diuji, dan dirapikan—bukan sekadar memasang template lalu ditinggalkan.',
+    bodyId: 'Setiap proyek dibuat dari awal, diuji, dan dirapikan, bukan sekadar memasang template lalu ditinggalkan.',
   },
   {
     title: 'Scope and price are agreed up front.',

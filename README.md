@@ -97,6 +97,16 @@ All public content is typed and centralized. Paired Indonesian/English strings l
 | `src/data/facts.ts` | About facts, principles, and the four-step process |
 | `src/data/faqs.ts` | FAQ questions and answers |
 
+### Bilingual copy
+
+The site is bilingual on the same URL: Indonesian and English sit next to each other, not on separate routes. This is a deliberate choice, not an unfinished translation.
+
+- `BilingualCopy.astro` renders two lines: English in the normal text color, Indonesian below it in `--muted` at `0.92em`, each wrapped in `lang="en"` / `lang="id"` so screen readers and search engines can tell them apart. The `EN` / `ID` markers are `aria-hidden`; they are a visual cue only.
+- Data files carry paired fields (`body` / `bodyId`, `name` / `nameId`, `summary` / `summaryId`). Both must be written by hand. Do not machine-translate: the Indonesian line is what local searches match, and a mechanical translation matches nothing anyone types.
+- There is one canonical URL per page, so no `hreflang` alternate set is needed or emitted. Emitting `hreflang` for the same URL in two languages would be wrong.
+- Page titles and descriptions combine both languages where the page targets Indonesian search intent (home, services, contact, projects, journal). `/about` leads in English. Titles stay under the point where Google truncates them.
+- Mixed-language copy is not a ranking trick. It exists because the same visitor group searches in both languages: Indonesian for local service intent ("jasa website Kendal"), English for technical intent. It will not make the site rank for a name on its own; the name still has to appear in real, linked, referenced places.
+
 ### Projects
 
 Each project in `src/data/projects.ts` needs a unique `slug`, `name`, `category`, `type`, `tagline`, `summary`, `problem`, `approach`, `features`, and `stack`. The `link` field is optional and must only contain a URL that has been checked. Repository links are intentionally omitted until they can be verified; project pages state that the source is not public and offer a walkthrough on request.
@@ -225,7 +235,7 @@ Open the failed or previous run in the **Actions** tab. Re-run the last known-go
 - The GitHub profile currently has one public repository, `dikaglorya.github.io` (this site repository). No project repository links are published because those repositories have not been verified.
 - The structured-data alias list (`site.alternateNames`) deliberately excludes "Dika Kendal": the name is explained on /about as location-related, but it is not established enough through real use to claim as an entity alias (PRD rule: include an alias only when it is genuinely used and explained). Add it to the list only if the owner confirms real usage.
 - The Instagram (`xxcdicka`) and TikTok (`dikasecx`) handles come from the owner's previous site data. They appear in `rel="me"` links; verify the accounts belong to DikaGlorya and remove them from `src/data/site.ts` if they do not. Schema `sameAs` stays GitHub-only until those accounts are re-verified.
-- `docs/github-profile-README.md` is a ready-to-paste draft for the GitHub profile README (github.com/dikaglorya). Keep only claims you can verify; adjust the links before publishing.
+- `docs/github-profile-README.md` is the source of the live GitHub profile README at github.com/dikaglorya. Keep the two in sync: edit the draft, then paste it into the profile repository. Keep only claims you can verify, and re-check every link before publishing.
 - The project diagram is conceptual, not a screenshot of a running dashboard.
 
 ## License

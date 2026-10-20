@@ -30,9 +30,13 @@ export const site = {
   tiktok: 'https://www.tiktok.com/@dikasecx',
   location: 'Kendal, Central Java, Indonesia',
   locationShort: 'Kendal, ID',
+  // The document language follows the prose that carries the page: English is
+  // written first and runs longer, Indonesian sits under it in BilingualCopy and
+  // is marked with lang="id". og:locale stays Indonesian because the audience and
+  // the social card are Indonesian-first.
   locale: 'id_ID',
   alternateLocale: 'en_US',
-  lang: 'id',
+  lang: 'en',
   ogImage: '/og-default.png',
   ogImageAlt:
     'Masked portrait of DikaGlorya on a dark ObitoGlory social card naming DikaOfc, with the line "Software berguna, dibuat oleh DikaOfc."',
