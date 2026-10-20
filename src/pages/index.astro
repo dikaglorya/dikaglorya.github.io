@@ -1,5 +1,6 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
+import HeroScene from '../components/HeroScene.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import RouteDiagram from '../components/RouteDiagram.astro';
@@ -61,26 +62,29 @@ const homeSchema = {
   <section class="hero" aria-labelledby="hero-title">
     <div class="container">
       <div class="hero__grid">
-        <PortraitFrame
-          class="hero__portrait"
-          sizes="(max-width: 1120px) 320px, 420px"
-          caption="DikaGlorya, developer"
-          index="ObitoGlory"
-          priority
-        />
+        <div class="hero__visual">
+          <HeroScene />
+          <PortraitFrame
+            class="hero__portrait"
+            sizes="(max-width: 1120px) 250px, 280px"
+            caption="DikaGlorya, developer"
+            index="ObitoGlory"
+            priority
+          />
+        </div>
         <div class="hero__body">
           <p class="hero__eyebrow mono">Developer independen · Kendal, Indonesia</p>
           <h1 class="hero__title" id="hero-title">
-            <span class="line"><span>DikaGlorya<span class="hero__stop">.</span></span></span>
-            <span class="line"><span>ObitoGlory.</span></span>
+            <span class="line"><span>Website, bot,</span></span>
+            <span class="line"><span>dan tools developer.</span></span>
           </h1>
           <p class="hero__copy">
-            Saya DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode. ObitoGlory adalah rumah
-            untuk karya software, developer tools, proyek web, dan eksperimen teknis.
+            Saya DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode. Saya membuat software dari
+            Kendal; ObitoGlory memuat proyek, catatan teknis, dan eksperimen yang saya kerjakan.
           </p>
           <div class="hero__actions">
             <a class="btn btn--primary" href="/projects/">Lihat proyek</a>
-            <a class="btn" href="/about/">Tentang saya</a>
+            <a class="btn" href="/contact/">Hubungi saya</a>
           </div>
           <div class="hero__meta mono">
             <span>{site.location}</span>

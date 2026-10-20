@@ -130,6 +130,16 @@ const schema = {
           </div>
         )}
 
+        {project.slug === 'pentesterbot' && (
+          <div class="project-note">
+            <p>
+              <strong>Penggunaan etis dan legal:</strong> gunakan hanya pada sistem milikmu atau
+              sistem yang secara eksplisit telah memberi izin untuk diuji. Pastikan izin mencakup
+              target dan metode yang digunakan.
+            </p>
+          </div>
+        )}
+
         {!project.link && (
           <div class="project-note">
             <p>

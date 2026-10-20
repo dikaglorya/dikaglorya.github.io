@@ -52,52 +52,91 @@ const schema = {
 
   <section class="section--tight" aria-label="Daftar proyek">
     <div class="container">
-      <div class="filter-bar" role="group" aria-label="Filter proyek">
-        <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">
-          Semua ({projects.length})
-        </button>
-        {categoryCounts.map((item) => (
-          <button class="filter-btn" type="button" data-filter={item.category} aria-pressed="false">
-            {item.category} ({item.count})
-          </button>
-        ))}
-      </div>
+      <div class="finder-layout">
+        <aside class="finder-sidebar" aria-label="Kategori proyek">
+          <p class="finder-sidebar__title mono">Lokasi</p>
+          <div class="filter-bar" role="group" aria-label="Filter proyek">
+            <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">
+              Semua ({projects.length})
+            </button>
+            {categoryCounts.map((item) => (
+              <button class="filter-btn" type="button" data-filter={item.category} aria-pressed="false">
+                {item.category} ({item.count})
+              </button>
+            ))}
+          </div>
+        </aside>
 
-      <p class="filter-count mono" data-project-count aria-live="polite">
-        {`${projects.length} proyek ditampilkan`}
-      </p>
+        <div class="finder-main">
+          <div class="finder-toolbar">
+            <label class="finder-search">
+              <span class="sr-only">Cari proyek</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3" /><path d="m15.5 15.5 4.2 4.2" /></svg>
+              <input type="search" placeholder="Cari proyek..." autocomplete="off" data-project-search />
+            </label>
+            <div class="finder-view" role="group" aria-label="Tampilan proyek">
+              <button type="button" aria-label="Tampilan daftar" aria-pressed="true" data-project-view="list">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" /></svg>
+              </button>
+              <button type="button" aria-label="Tampilan ikon" aria-pressed="false" data-project-view="grid">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg>
+              </button>
+            </div>
+          </div>
 
-      <div class="project-list">
-        <div class="project-list__head mono" aria-hidden="true">
-          <span>No.</span>
-          <span>Proyek</span>
-          <span>Jenis</span>
-          <span>Teknologi</span>
-          <span>Detail</span>
+          <p class="filter-count mono" data-project-count aria-live="polite">
+            {`${projects.length} proyek ditampilkan`}
+          </p>
+
+          <div class="project-list" data-project-list>
+            <div class="project-list__head mono" aria-hidden="true">
+              <span>No.</span>
+              <span>Proyek</span>
+              <span>Jenis</span>
+              <span>Teknologi</span>
+              <span>Detail</span>
+            </div>
+            {projects.map((project, index) => (
+              <ProjectRow project={project} index={index + 1} />
+            ))}
+          </div>
+
+          <div class="empty-state" data-empty-state hidden>
+            <p>Tidak ada proyek dalam kategori ini.</p>
+            <p>
+              <button class="link" type="button" data-filter="all">Tampilkan semua proyek</button>
+            </p>
+          </div>
+
+          <div class="projects-note mono">
+            <p>Kode sumber belum dipublikasikan. Lihat profil GitHub untuk kode yang memang tersedia.</p>
+            <a
+              class="link"
+              href="https://github.com/dikaglorya"
+              rel="me noopener noreferrer"
+              target="_blank"
+            >
+              github.com/dikaglorya
+            </a>
+          </div>
         </div>
-        {projects.map((project, index) => (
-          <ProjectRow project={project} index={index + 1} />
-        ))}
       </div>
 
-      <div class="empty-state" data-empty-state hidden>
-        <p>Tidak ada proyek dalam kategori ini.</p>
-        <p>
-          <button class="link" type="button" data-filter="all">Tampilkan semua proyek</button>
-        </p>
-      </div>
-
-      <div class="projects-note mono">
-        <p>Kode sumber belum dipublikasikan. Lihat profil GitHub untuk kode yang memang tersedia.</p>
-        <a
-          class="link"
-          href="https://github.com/dikaglorya"
-          rel="me noopener noreferrer"
-          target="_blank"
-        >
-          github.com/dikaglorya
-        </a>
-      </div>
+      <dialog class="quick-look" data-quick-look aria-labelledby="quick-look-title">
+        <div class="quick-look__bar">
+          <span class="quick-look__title mono">Pratinjau cepat</span>
+          <button type="button" aria-label="Tutup Quick Look" data-quick-look-close>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <div class="quick-look__body">
+          <p class="mono" data-quick-look-category></p>
+          <h2 id="quick-look-title" data-quick-look-title></h2>
+          <p data-quick-look-summary></p>
+          <p class="mono" data-quick-look-stack></p>
+          <a class="btn btn--primary" href="/projects/" data-quick-look-link>Lihat detail</a>
+        </div>
+      </dialog>
     </div>
   </section>
 

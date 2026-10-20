@@ -1,22 +1,35 @@
 ---
 import { mainNavigation } from '../data/navigation';
-import { site } from '../data/site';
+import { articles } from '../data/articles';
+import { projects } from '../data/projects';
+import { site, socialLinks } from '../data/site';
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const activePage = mainNavigation.find((item) => isCurrent(item.href))?.label ?? 'Kontak';
+const searchItems = [
+  ...mainNavigation,
+  { href: '/contact/', label: 'Kontak' },
+  ...projects.map((project) => ({ href: `/projects/${project.slug}/`, label: project.name })),
+  ...articles.map((article) => ({ href: `/journal/${article.slug}/`, label: article.title })),
+  ...socialLinks.map((link) => ({ href: link.href, label: `${link.label} ${link.handle}` })),
+  { href: `mailto:${site.email}`, label: site.email },
+];
 ---
 
 <header class="site-header" data-header>
-  <div class="container site-header__inner">
+  <div class="site-header__inner">
     <a class="wordmark" href="/" aria-label="ObitoGlory, beranda">
       <span class="wordmark__name">obitoglory<span class="wordmark__dot">.</span></span>
     </a>
 
+    <span class="menu-bar__page mono" aria-current="page">{activePage}</span>
+
     <nav class="site-nav" aria-label="Navigasi utama">
       {mainNavigation.map((item) => (
-        <a
-          class="site-nav__link"
-          href={item.href}
+          <a
+            class="site-nav__link"
+            href={item.href}
           aria-current={isCurrent(item.href) ? 'page' : undefined}
         >
           {item.label}
@@ -26,6 +39,12 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 
     <div class="header-actions">
       <a class="header-contact" href="/contact/">Kontak</a>
+      <button class="spotlight-trigger" type="button" data-spotlight-open>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3" /><path d="m15.5 15.5 4.2 4.2" /></svg>
+        <span class="sr-only">Cari</span>
+        <span class="spotlight-shortcut mono">⌘ K</span>
+      </button>
+      <time class="menu-bar__clock mono" data-live-clock></time>
       <button
         class="menu-toggle"
         type="button"
@@ -33,11 +52,59 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
         aria-controls="mobile-menu"
         data-menu-open
       >
-        Buka menu
+        <span class="sr-only">Buka menu</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
       </button>
     </div>
   </div>
 </header>
+
+<nav class="app-dock" aria-label="Navigasi aplikasi">
+  {mainNavigation.map((item, index) => (
+    <a
+      class="dock-item"
+      href={item.href}
+      aria-label={item.label}
+      aria-current={isCurrent(item.href) ? 'page' : undefined}
+      data-dock-item
+    >
+      <span class="dock-icon" aria-hidden="true">
+        {index === 0 ? (
+          <svg viewBox="0 0 32 32"><path d="m5 14 11-9 11 9v12H5z" /><path d="M12 26v-8h8v8" /></svg>
+        ) : index === 1 ? (
+          <svg viewBox="0 0 32 32"><path d="M5 8h9l2 3h11v14H5z" /><path d="M5 13h22" /></svg>
+        ) : index === 2 ? (
+          <svg viewBox="0 0 32 32"><path d="M7 5h18v22H7z" /><path d="M11 11h10M11 16h10M11 21h7" /></svg>
+        ) : index === 3 ? (
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="11" r="5" /><path d="M6 27c1-6 4.5-9 10-9s9 3 10 9" /></svg>
+        ) : (
+          <svg viewBox="0 0 32 32"><path d="M6 9h20M6 16h20M6 23h20" /><circle cx="11" cy="9" r="2" /><circle cx="21" cy="16" r="2" /><circle cx="14" cy="23" r="2" /></svg>
+        )}
+      </span>
+      <span class="dock-item__label">{item.label}</span>
+      {isCurrent(item.href) && <span class="dock-item__active" aria-hidden="true" />}
+    </a>
+  ))}
+</nav>
+
+<dialog class="spotlight" data-spotlight aria-labelledby="spotlight-title">
+  <div class="spotlight__inner">
+    <h2 class="sr-only" id="spotlight-title">Cari halaman, proyek, dan tautan</h2>
+    <label class="spotlight__search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3" /><path d="m15.5 15.5 4.2 4.2" /></svg>
+      <input type="search" placeholder="Cari proyek, jurnal, halaman..." autocomplete="off" data-spotlight-input />
+      <kbd>ESC</kbd>
+    </label>
+    <ul class="spotlight__results" data-spotlight-results>
+      {searchItems.map((item) => (
+        <li data-search-item data-search-label={item.label.toLowerCase()}>
+          <a href={item.href}>{item.label}<span aria-hidden="true">↗</span></a>
+        </li>
+      ))}
+    </ul>
+    <p class="spotlight__empty" data-spotlight-empty hidden>Tidak ada hasil.</p>
+  </div>
+</dialog>
 
 <dialog class="mobile-menu" id="mobile-menu" data-menu aria-labelledby="mobile-menu-title">
   <div class="mobile-menu__inner">

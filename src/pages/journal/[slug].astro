@@ -17,6 +17,15 @@ interface Props {
 
 const { article } = Astro.props;
 const canonical = `${site.url}/journal/${article.slug}/`;
+const articleIndex = articles.findIndex((item) => item.slug === article.slug);
+const nextArticle = articles[articleIndex + 1];
+const sectionId = (heading: string) =>
+  heading
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -40,6 +49,7 @@ const schema = {
   schema={schema}
 >
   <article>
+    <div class="journal-progress" aria-hidden="true"><span data-reading-progress></span></div>
     <header class="page-hero journal-hero">
       <div class="container">
         <nav class="breadcrumb mono" aria-label="Remah roti">
@@ -58,27 +68,62 @@ const schema = {
       </div>
     </header>
 
-    <div class="container journal-article">
-      {article.sections.map((section) => (
-        <section class="journal-section">
-          <h2>{section.heading}</h2>
-          {section.paragraphs.map((paragraph) => (
-            <p>{paragraph}</p>
-          ))}
-          {section.code && (
-            <pre class="journal-code" tabindex="0" aria-label={`Contoh kode: ${section.heading}`}>
-              <code>{section.code}</code>
-            </pre>
+    <div class="container journal-reading">
+      <aside class="journal-toc" aria-label="Navigasi catatan">
+        <p class="mono journal-toc__title">Dalam catatan ini</p>
+        <nav aria-label="Daftar isi artikel">
+          <ol>
+            {article.sections.map((section, index) => (
+              <li>
+                <a href={`#${sectionId(section.heading)}`}>
+                  <span class="mono">{String(index + 1).padStart(2, '0')}</span>
+                  {section.heading}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+        <p class="mono journal-toc__status" data-reading-status aria-live="polite">Mulai membaca</p>
+      </aside>
+
+      <div class="journal-article" data-journal-article>
+        {article.sections.map((section) => (
+          <section class="journal-section" id={sectionId(section.heading)}>
+            <h2>{section.heading}</h2>
+            {section.paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+            {section.code && (
+              <div class="journal-code-wrap">
+                <pre class="journal-code" tabindex="0" aria-label={`Contoh kode: ${section.heading}`}>
+                  <code>{section.code}</code>
+                </pre>
+                <button class="journal-code-copy" type="button" data-copy-code aria-label="Salin contoh kode">
+                  Salin
+                </button>
+              </div>
+            )}
+          </section>
+        ))}
+        <p class="journal-source mono">
+          Catatan ini menjelaskan implementasi di repositori website ini. Tidak ada klaim tentang
+          peringkat pencarian, benchmark performa, atau adopsi proyek.
+        </p>
+        <nav class="journal-next" aria-label="Navigasi artikel">
+          <a class="link" href="/journal/">Semua catatan</a>
+          {nextArticle && (
+            <a class="journal-next__link" href={`/journal/${nextArticle.slug}/`}>
+              <span class="mono">Catatan berikutnya</span>
+              <span>{nextArticle.title}</span>
+            </a>
           )}
-        </section>
-      ))}
-      <p class="journal-source mono">
-        Catatan ini menjelaskan implementasi di repositori website ini. Tidak ada klaim tentang
-        peringkat pencarian, benchmark performa, atau adopsi proyek.
-      </p>
-      <a class="link" href="/journal/">Kembali ke semua catatan</a>
+        </nav>
+      </div>
     </div>
   </article>
 
   <ContactBlock id="article-contact-title" title="Mau diskusi soal implementasi ini?" />
+  <script>
+    import '../../scripts/journal-reader';
+  </script>
 </BaseLayout>

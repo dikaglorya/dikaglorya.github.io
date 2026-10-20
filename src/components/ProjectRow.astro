@@ -16,6 +16,9 @@ const paddedIndex = String(index).padStart(2, '0');
   href={`/projects/${project.slug}/`}
   data-project-item
   data-category={project.category}
+  data-project-name={project.name}
+  data-project-summary={project.summary}
+  data-project-stack={project.stack.join(' · ')}
 >
   <span class="project-row__index mono" aria-hidden="true">{paddedIndex}</span>
   <span class="project-row__body">

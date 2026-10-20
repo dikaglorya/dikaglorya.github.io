@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import sharp from 'sharp';
 
 const baseURL = process.env.BASE_URL ?? 'http://127.0.0.1:4321';
 const output = path.join(process.cwd(), '.test-output', 'screenshots');
@@ -38,6 +39,7 @@ const browser = await chromium.launch({ headless: true });
 for (const viewport of viewports) {
   const context = await browser.newContext({
     viewport: { width: viewport.width, height: viewport.height },
+    colorScheme: 'dark',
     reducedMotion: 'no-preference',
   });
 
@@ -91,6 +93,13 @@ for (const viewport of viewports) {
         h1Font: h1Style?.fontFamily ?? '',
         h1Size: h1Style?.fontSize ?? '',
         h1Color: h1Style?.color ?? '',
+        heroScene: (() => {
+          const root = document.querySelector('[data-hero-scene]');
+          const canvas = root?.querySelector('canvas');
+          return root && canvas
+            ? { ready: root.dataset.sceneReady === 'true', width: canvas.width, height: canvas.height }
+            : null;
+        })(),
       };
     });
 
@@ -108,6 +117,24 @@ for (const viewport of viewports) {
 
     if (!metrics.h1Text) {
       issues.push(`${pageInfo.name} @ ${viewport.name}: missing h1`);
+    }
+
+    if (pageInfo.path === '/') {
+      if (!metrics.heroScene?.ready || metrics.heroScene.width === 0 || metrics.heroScene.height === 0) {
+        issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero scene did not initialize`);
+      } else {
+        const canvasImage = await page.locator('[data-hero-canvas]').screenshot();
+        const { data, info } = await sharp(canvasImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+        let coloredPixels = 0;
+        for (let index = 0; index < data.length; index += 3) {
+          const high = Math.max(data[index], data[index + 1], data[index + 2]);
+          const low = Math.min(data[index], data[index + 1], data[index + 2]);
+          if (high - low > 24 && high < 245) coloredPixels += 1;
+        }
+        if (coloredPixels < 500) {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero canvas appears blank (${info.width}x${info.height})`);
+        }
+      }
     }
 
     for (const error of consoleErrors) {
@@ -135,7 +162,10 @@ for (const viewport of viewports) {
 
 // Mobile menu behavior.
 {
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    colorScheme: 'dark',
+  });
   const page = await context.newPage();
   await page.goto(`${baseURL}/`, { waitUntil: 'networkidle' });
   const opener = page.locator('[data-menu-open]');
@@ -154,7 +184,10 @@ for (const viewport of viewports) {
 
 // Project filters.
 {
-  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    colorScheme: 'dark',
+  });
   const page = await context.newPage();
   await page.goto(`${baseURL}/projects/`, { waitUntil: 'networkidle' });
   await page.locator('button[data-filter="Web"]').click();
@@ -173,12 +206,34 @@ for (const viewport of viewports) {
   await page.waitForTimeout(100);
   const allCount = await page.locator('[data-project-item]:visible').count();
   if (allCount !== 10) issues.push(`project filter: All shows ${allCount} projects, expected 10`);
+
+  await page.locator('[data-project-search]').fill('DikaRoute');
+  const searchCount = await page.locator('[data-project-item]:visible').count();
+  if (searchCount !== 2) issues.push(`project search: DikaRoute shows ${searchCount} projects, expected 2`);
+  await page.locator('[data-project-search]').fill('');
+
+  await page.locator('[data-project-view="grid"]').click();
+  const view = await page.locator('[data-project-list]').getAttribute('data-view');
+  const gridPressed = await page.locator('[data-project-view="grid"]').getAttribute('aria-pressed');
+  if (view !== 'grid' || gridPressed !== 'true') issues.push('project view: grid toggle did not activate');
+
+  const firstProject = page.locator('[data-project-item]').first();
+  await firstProject.focus();
+  await page.keyboard.press('Space');
+  const quickLookTitle = await page.locator('[data-quick-look-title]').textContent();
+  if (!quickLookTitle?.includes('DikaRoute')) issues.push(`Quick Look: unexpected title "${quickLookTitle}"`);
+  await page.keyboard.press('Escape');
+  const quickLookClosed = await page.locator('[data-quick-look]').evaluate((dialog) => !dialog.hasAttribute('open'));
+  if (!quickLookClosed) issues.push('Quick Look: Escape did not close preview');
   await context.close();
 }
 
 // Contact page selection and copy.
 {
-  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    colorScheme: 'dark',
+  });
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const page = await context.newPage();
   await page.goto(`${baseURL}/contact/?service=bot`, { waitUntil: 'networkidle' });
@@ -189,6 +244,29 @@ for (const viewport of viewports) {
   const copyStatus = await page.locator('[data-copy-status]').textContent();
   if (!copyStatus?.includes('disalin')) {
     issues.push(`contact: copy email did not report success (got "${copyStatus}")`);
+  }
+  await context.close();
+}
+
+// System light preference should switch the shared shell without overflow.
+{
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    colorScheme: 'light',
+    reducedMotion: 'reduce',
+  });
+  const page = await context.newPage();
+  await page.goto(`${baseURL}/`, { waitUntil: 'networkidle' });
+  const appearance = await page.evaluate(() => ({
+    background: getComputedStyle(document.body).backgroundColor,
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  if (appearance.background !== 'rgb(238, 243, 244)') {
+    issues.push(`light appearance: unexpected body background ${appearance.background}`);
+  }
+  if (appearance.scrollWidth > appearance.innerWidth + 1) {
+    issues.push('light appearance: horizontal overflow at 390px');
   }
   await context.close();
 }
