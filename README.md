@@ -235,7 +235,7 @@ Open the failed or previous run in the **Actions** tab. Re-run the last known-go
 - The GitHub profile currently has one public repository, `dikaglorya.github.io` (this site repository). No project repository links are published because those repositories have not been verified.
 - The structured-data alias list (`site.alternateNames`) deliberately excludes "Dika Kendal": the name is explained on /about as location-related, but it is not established enough through real use to claim as an entity alias (PRD rule: include an alias only when it is genuinely used and explained). Add it to the list only if the owner confirms real usage.
 - The Instagram (`xxcdicka`) and TikTok (`dikasecx`) handles come from the owner's previous site data. They appear in `rel="me"` links; verify the accounts belong to DikaGlorya and remove them from `src/data/site.ts` if they do not. Schema `sameAs` stays GitHub-only until those accounts are re-verified.
-- `docs/github-profile-README.md` is the source of the live GitHub profile README at github.com/dikaglorya. Keep the two in sync: edit the draft, then paste it into the profile repository. Keep only claims you can verify, and re-check every link before publishing.
+- `docs/github-profile-README.md` is a draft for the GitHub profile README at github.com/dikaglorya. The live profile still carries an older version, so treat the draft as pending until it is pasted in. Keep only claims you can verify, and re-check every link before publishing.
 - The project diagram is conceptual, not a screenshot of a running dashboard.
 
 ## License
