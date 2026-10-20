@@ -51,8 +51,8 @@ const schema = {
       <div class="contact-form-wrap">
         <h2>Brief proyek</h2>
         <p>
-          Nama, email, layanan, dan pesan wajib diisi. Tombol akan membuka aplikasi email dengan
-          brief terisi; website ini tidak mengirim data ke server.
+          Nama, email, layanan, dan pesan wajib diisi. Tombol menyiapkan brief berformat HTML dan
+          menyalinnya, lalu kamu tempel di Gmail. Website ini tidak mengirim data ke server.
         </p>
 
         <form
@@ -63,6 +63,8 @@ const schema = {
           novalidate
           data-contact-form
           data-contact-email={site.email}
+          data-site-name={site.name}
+          data-site-location={site.location}
         >
           <div class="form-row">
             <div class="form-field">
@@ -117,15 +119,42 @@ const schema = {
             ></textarea>
           </div>
 
-          <button class="btn btn--primary" type="submit">Buka brief di email</button>
+          <button class="btn btn--primary" type="submit">Siapkan brief email</button>
 
           <p class="form-note">
-            Form ini menggunakan <span class="mono">mailto:</span> dan membuka aplikasi email.
-            Jika tidak terbuka, kirim langsung ke
-            <a class="link" href={`mailto:${site.email}`}>{site.email}</a>.
+            Brief disalin ke clipboard, bukan dikirim. Di Gmail, tempel dengan Ctrl+V (Windows)
+            atau Cmd+V (Mac). Kalau clipboard diblokir, pakai tautan aplikasi email yang berisi
+            versi teks biasa.
           </p>
 
           <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+
+          <div class="brief-ready" data-brief-ready hidden>
+            <h3 tabindex="-1" data-brief-ready-title>Brief siap</h3>
+            <p
+              class="brief-ready__status"
+              role="status"
+              aria-live="polite"
+              data-brief-copy-status
+            ></p>
+            <div class="brief-ready__actions">
+              <a
+                class="btn btn--primary"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-brief-gmail
+              >
+                Buka Gmail
+              </a>
+              <button class="btn" type="button" data-brief-copy>Salin ulang</button>
+              <a class="btn btn--small" href="#" data-brief-mailto>Aplikasi email lain</a>
+            </div>
+            <p class="form-note">
+              Gmail terbuka dengan penerima dan subjek yang sudah terisi. Badan email masih kosong,
+              jadi tempel brief di sana sebelum mengirim.
+            </p>
+          </div>
         </form>
       </div>
 

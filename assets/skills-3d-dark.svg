@@ -1,0 +1,286 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1200 520" role="img" aria-labelledby="svg-title svg-desc">
+<title id="svg-title">Dika Glorya — 3D tech stack</title>
+<desc id="svg-desc">Nine isometric tech tiles for JavaScript, TypeScript, Python, React, Node.js, Docker, Git, SQL and Linux, floating above soft ground shadows.</desc>
+<defs>
+
+<radialGradient id="skills-aura" cx="50%" cy="50%" r="60%">
+    <stop offset="0" stop-color="#7c3aed" stop-opacity="0.3"/>
+    <stop offset="0.55" stop-color="#38bdf8" stop-opacity="0.08"/>
+    <stop offset="1" stop-color="#0d1117" stop-opacity="0"/>
+  </radialGradient>
+<filter id="icon-glow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+    <feFlood flood-color="#00f5ff" flood-opacity="0.7" result="tint"/>
+    <feComposite in="tint" in2="blur" operator="in" result="glow"/>
+    <feMerge>
+      <feMergeNode in="glow"/>
+      <feMergeNode in="glow"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+<filter id="tile-soft" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="10"/>
+  </filter>
+<linearGradient id="tile-js" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f7df1e" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#f7df1e" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-ts" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3178c6" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#3178c6" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-py" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#38bdf8" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#38bdf8" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-react" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#61dafb" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#61dafb" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-node" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#5fbf5a" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#5fbf5a" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-docker" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2496ed" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#2496ed" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-git" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f05032" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#f05032" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-sql" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#a78bfa" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#a78bfa" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<linearGradient id="tile-linux" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f6c453" stop-opacity="0.48"/>
+    <stop offset="0.55" stop-color="#f6c453" stop-opacity="0.2"/>
+    <stop offset="1" stop-color="#16223c" stop-opacity="0.96"/>
+  </linearGradient>
+<filter id="beam-fade" x="-20%" y="-20%" width="140%" height="140%">
+  <feGaussianBlur stdDeviation="8"/>
+</filter>
+<linearGradient id="beam-grad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#00f5ff" stop-opacity="0"/>
+    <stop offset="0.55" stop-color="#00f5ff" stop-opacity="0.22"/>
+    <stop offset="1" stop-color="#00f5ff" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<style><![CDATA[
+text { font-family: 'Segoe UI', Ubuntu, 'Helvetica Neue', Arial, sans-serif; }
+.mono { font-family: 'Courier New', 'DejaVu Sans Mono', monospace; }
+
+.tile { animation: tileFloat 5.4s ease-in-out infinite; }
+@keyframes tileFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.tile-shadow { transform-box: fill-box; transform-origin: center; animation: shadowBreathe 5.4s ease-in-out infinite; }
+@keyframes shadowBreathe { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(0.82); opacity: 0.45; } }
+.beam { animation: beam 6s ease-in-out infinite; }
+@keyframes beam { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.28; } }
+.cube-a { animation: cubeFloat 10s ease-in-out infinite; }
+.cube-b { animation: cubeFloat 13s ease-in-out -5s infinite; }
+@keyframes cubeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile, .tile-shadow, .beam, .cube-a, .cube-b { animation: none !important; }
+}
+]]></style>
+<g class="anim">
+  <ellipse cx="600" cy="250" rx="560" ry="260" fill="url(#skills-aura)"/>
+  <rect class="beam" style="animation-delay:0s" x="198" y="120" width="84" height="150" fill="url(#beam-grad)" filter="url(#beam-fade)"/><rect class="beam" style="animation-delay:-0.7s" x="398" y="120" width="84" height="150" fill="url(#beam-grad)" filter="url(#beam-fade)"/><rect class="beam" style="animation-delay:-1.4s" x="598" y="120" width="84" height="150" fill="url(#beam-grad)" filter="url(#beam-fade)"/><rect class="beam" style="animation-delay:-2.1s" x="798" y="120" width="84" height="150" fill="url(#beam-grad)" filter="url(#beam-fade)"/><rect class="beam" style="animation-delay:-2.8s" x="998" y="120" width="84" height="150" fill="url(#beam-grad)" filter="url(#beam-fade)"/>
+
+  <g class="mono" text-anchor="middle" font-size="10.5" letter-spacing="3" fill="#93a1bd">
+    <text x="600" y="48">09 MODULES · ONE STACK</text>
+    <line x1="430" y1="68" x2="560" y2="68" stroke="#233252" stroke-opacity="0.8"/>
+    <line x1="640" y1="68" x2="770" y2="68" stroke="#233252" stroke-opacity="0.8"/>
+    <path d="M600,62 l5,6 -5,6 -5,-6 Z" fill="#00f5ff" opacity="0.8"/>
+  </g>
+
+  <g class="cube-a"><g opacity="0.5">
+  <path d="M104,336 L128,360 L104,384 L80,360 Z" fill="#7c3aed"/>
+  <path d="M80,360 L104,384 L104,404.4 L80,380.4 Z" fill="#0a1120"/>
+  <path d="M128,360 L104,384 L104,404.4 L128,380.4 Z" fill="#101a2e"/>
+  <path d="M104,336 L128,360 L104,384 L80,360 Z M80,360 L104,384 L104,404.4 L80,380.4 Z M128,360 L104,384 L104,404.4 L128,380.4 Z" fill="none" stroke="#7c3aed" stroke-width="0.8" stroke-linejoin="round"/>
+</g></g>
+  <g class="cube-b"><g opacity="0.45">
+  <path d="M1108,150 L1126,168 L1108,186 L1090,168 Z" fill="#00f5ff"/>
+  <path d="M1090,168 L1108,186 L1108,201.3 L1090,183.3 Z" fill="#0a1120"/>
+  <path d="M1126,168 L1108,186 L1108,201.3 L1126,183.3 Z" fill="#101a2e"/>
+  <path d="M1108,150 L1126,168 L1108,186 L1090,168 Z M1090,168 L1108,186 L1108,201.3 L1090,183.3 Z M1126,168 L1108,186 L1108,201.3 L1126,183.3 Z" fill="none" stroke="#00f5ff" stroke-width="0.8" stroke-linejoin="round"/>
+</g></g>
+
+  <g class="tile-shadow" style="animation-delay:-0.2s">
+  <ellipse cx="240" cy="323" rx="69.12" ry="13" fill="#f7df1e" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="240" cy="323" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-0.2s">
+  <path d="M144,245 L240,293 L240,317 L144,269 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M336,245 L240,293 L240,317 L336,269 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M240,197 L336,245 L240,293 L144,245 Z" fill="url(#tile-js)" stroke="#f7df1e" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M240,207 L318,245 L240,283 L162,245 Z" fill="none" stroke="#f7df1e" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M152,248 L240,296" stroke="#f7df1e" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(240 233)" filter="url(#icon-glow)"><g>
+  <rect x="-14" y="-14" width="28" height="28" rx="5" fill="#f7df1e"/>
+  <text x="0" y="1" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="800" fill="#111318">JS</text>
+</g></g>
+  <text x="240" y="271" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">JavaScript</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-1.1s">
+  <ellipse cx="440" cy="323" rx="69.12" ry="13" fill="#3178c6" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="440" cy="323" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-1.1s">
+  <path d="M344,245 L440,293 L440,317 L344,269 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M536,245 L440,293 L440,317 L536,269 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M440,197 L536,245 L440,293 L344,245 Z" fill="url(#tile-ts)" stroke="#3178c6" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M440,207 L518,245 L440,283 L362,245 Z" fill="none" stroke="#3178c6" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M352,248 L440,296" stroke="#3178c6" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(440 233)" filter="url(#icon-glow)"><g>
+  <rect x="-14" y="-14" width="28" height="28" rx="5" fill="#3178c6"/>
+  <text x="0" y="1" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="800" fill="#ffffff">TS</text>
+</g></g>
+  <text x="440" y="271" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">TypeScript</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-2s">
+  <ellipse cx="640" cy="323" rx="69.12" ry="13" fill="#38bdf8" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="640" cy="323" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-2s">
+  <path d="M544,245 L640,293 L640,317 L544,269 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M736,245 L640,293 L640,317 L736,269 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M640,197 L736,245 L640,293 L544,245 Z" fill="url(#tile-py)" stroke="#38bdf8" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M640,207 L718,245 L640,283 L562,245 Z" fill="none" stroke="#38bdf8" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M552,248 L640,296" stroke="#38bdf8" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(640 233)" filter="url(#icon-glow)"><g fill="none" stroke-width="3.2" stroke-linecap="round">
+  <path d="M-10,-2 v-5 a4,4 0 0 1 4,-4 h7 a4,4 0 0 1 4,4 v3 a4,4 0 0 1 -4,4 h-6 a4,4 0 0 0 -4,4 v4" stroke="#3776ab"/>
+  <path d="M10,2 v5 a4,4 0 0 1 -4,4 h-7 a4,4 0 0 1 -4,-4 v-3 a4,4 0 0 1 4,-4 h6 a4,4 0 0 0 4,-4 v-4" stroke="#ffd43b"/>
+  <circle cx="-4.5" cy="-7" r="1.5" fill="#e6edf3" stroke="none"/>
+  <circle cx="4.5" cy="7" r="1.5" fill="#1f2328" stroke="none"/>
+</g></g>
+  <text x="640" y="271" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">Python</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-2.9s">
+  <ellipse cx="840" cy="323" rx="69.12" ry="13" fill="#61dafb" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="840" cy="323" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-2.9s">
+  <path d="M744,245 L840,293 L840,317 L744,269 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M936,245 L840,293 L840,317 L936,269 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M840,197 L936,245 L840,293 L744,245 Z" fill="url(#tile-react)" stroke="#61dafb" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M840,207 L918,245 L840,283 L762,245 Z" fill="none" stroke="#61dafb" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M752,248 L840,296" stroke="#61dafb" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(840 233)" filter="url(#icon-glow)"><g fill="none" stroke="#61dafb" stroke-width="1.8">
+  <ellipse rx="15" ry="5.6"/>
+  <ellipse rx="15" ry="5.6" transform="rotate(60)"/>
+  <ellipse rx="15" ry="5.6" transform="rotate(120)"/>
+  <circle r="2.4" fill="#61dafb" stroke="none"/>
+</g></g>
+  <text x="840" y="271" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">React</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-3.8s">
+  <ellipse cx="1040" cy="323" rx="69.12" ry="13" fill="#5fbf5a" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="1040" cy="323" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-3.8s">
+  <path d="M944,245 L1040,293 L1040,317 L944,269 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M1136,245 L1040,293 L1040,317 L1136,269 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M1040,197 L1136,245 L1040,293 L944,245 Z" fill="url(#tile-node)" stroke="#5fbf5a" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M1040,207 L1118,245 L1040,283 L962,245 Z" fill="none" stroke="#5fbf5a" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M952,248 L1040,296" stroke="#5fbf5a" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(1040 233)" filter="url(#icon-glow)"><g>
+  <path d="M0,-14 L12.2,-7 L12.2,7 L0,14 L-12.2,7 L-12.2,-7 Z" fill="#5fbf5a" fill-opacity="0.16" stroke="#5fbf5a" stroke-width="1.8"/>
+  <path d="M-4.5,-3.5 h9 v7 h-9 z" fill="none" stroke="#5fbf5a" stroke-width="1.6"/>
+  <circle cx="6" cy="6" r="2" fill="#5fbf5a"/>
+</g></g>
+  <text x="1040" y="271" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">Node.js</text>
+</g>
+  <g class="tile-shadow" style="animation-delay:-0.6s">
+  <ellipse cx="340" cy="456" rx="69.12" ry="13" fill="#2496ed" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="340" cy="456" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-0.6s">
+  <path d="M244,378 L340,426 L340,450 L244,402 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M436,378 L340,426 L340,450 L436,402 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M340,330 L436,378 L340,426 L244,378 Z" fill="url(#tile-docker)" stroke="#2496ed" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M340,340 L418,378 L340,416 L262,378 Z" fill="none" stroke="#2496ed" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M252,381 L340,429" stroke="#2496ed" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(340 366)" filter="url(#icon-glow)"><g>
+  <path d="M-14,4 h26 a8,8 0 0 1 -8,8 h-9 a9,9 0 0 1 -9,-8z" fill="#2496ed" fill-opacity="0.18" stroke="#2496ed" stroke-width="1.7"/>
+  <rect x="-11" y="-2" width="6" height="5" rx="1" fill="#2496ed"/>
+  <rect x="-4" y="-2" width="6" height="5" rx="1" fill="#2496ed"/>
+  <rect x="3" y="-2" width="6" height="5" rx="1" fill="#2496ed"/>
+  <rect x="-4" y="-8" width="6" height="5" rx="1" fill="#2496ed"/>
+  <path d="M13,1 c3,-2 5,0 6,1" fill="none" stroke="#2496ed" stroke-width="1.7" stroke-linecap="round"/>
+</g></g>
+  <text x="340" y="404" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">Docker</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-1.6s">
+  <ellipse cx="540" cy="456" rx="69.12" ry="13" fill="#f05032" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="540" cy="456" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-1.6s">
+  <path d="M444,378 L540,426 L540,450 L444,402 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M636,378 L540,426 L540,450 L636,402 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M540,330 L636,378 L540,426 L444,378 Z" fill="url(#tile-git)" stroke="#f05032" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M540,340 L618,378 L540,416 L462,378 Z" fill="none" stroke="#f05032" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M452,381 L540,429" stroke="#f05032" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(540 366)" filter="url(#icon-glow)"><g fill="none" stroke="#f05032" stroke-width="2">
+  <circle cx="-8" cy="8" r="3.2" fill="#f05032"/>
+  <circle cx="8" cy="-8" r="3.2" fill="#f05032"/>
+  <circle cx="8" cy="8" r="3.2" fill="#f05032"/>
+  <path d="M-8,5 V-2 a5,5 0 0 1 5,-5 h8"/>
+  <path d="M8,-5 V5"/>
+</g></g>
+  <text x="540" y="404" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">Git</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-2.5s">
+  <ellipse cx="740" cy="456" rx="69.12" ry="13" fill="#a78bfa" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="740" cy="456" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-2.5s">
+  <path d="M644,378 L740,426 L740,450 L644,402 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M836,378 L740,426 L740,450 L836,402 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M740,330 L836,378 L740,426 L644,378 Z" fill="url(#tile-sql)" stroke="#a78bfa" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M740,340 L818,378 L740,416 L662,378 Z" fill="none" stroke="#a78bfa" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M652,381 L740,429" stroke="#a78bfa" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(740 366)" filter="url(#icon-glow)"><g fill="none" stroke="#a78bfa" stroke-width="1.8">
+  <ellipse cx="0" cy="-9" rx="11" ry="4"/>
+  <path d="M-11,-9 V8 a11,4 0 0 0 22,0 V-9"/>
+  <path d="M-11,0 a11,4 0 0 0 22,0"/>
+  <path d="M-11,8 a11,4 0 0 0 22,0"/>
+</g></g>
+  <text x="740" y="404" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">SQL</text>
+</g>
+<g class="tile-shadow" style="animation-delay:-3.4s">
+  <ellipse cx="940" cy="456" rx="69.12" ry="13" fill="#f6c453" opacity="0.1" filter="url(#tile-soft)"/>
+  <ellipse cx="940" cy="456" rx="74.88" ry="17" fill="#000000" opacity="0.55" filter="url(#tile-soft)"/>
+</g>
+<g class="tile" style="animation-delay:-3.4s">
+  <path d="M844,378 L940,426 L940,450 L844,402 Z" fill="#0a1120" stroke="#182440" stroke-width="0.8"/>
+  <path d="M1036,378 L940,426 L940,450 L1036,402 Z" fill="#101a2e" stroke="#182440" stroke-width="0.8"/>
+  <path d="M940,330 L1036,378 L940,426 L844,378 Z" fill="url(#tile-linux)" stroke="#f6c453" stroke-opacity="0.65" stroke-width="1.3"/>
+  <path d="M940,340 L1018,378 L940,416 L862,378 Z" fill="none" stroke="#f6c453" stroke-opacity="0.22" stroke-width="0.9"/>
+  <path d="M852,381 L940,429" stroke="#f6c453" stroke-opacity="0.5" stroke-width="1.2"/>
+  <g transform="translate(940 366)" filter="url(#icon-glow)"><g>
+  <ellipse cx="0" cy="1" rx="10" ry="13" fill="#1f2328" stroke="#f6c453" stroke-width="1.2"/>
+  <ellipse cx="0" cy="4" rx="6.2" ry="8" fill="#f8fafc"/>
+  <circle cx="-4" cy="-6" r="2.2" fill="#f8fafc"/>
+  <circle cx="4" cy="-6" r="2.2" fill="#f8fafc"/>
+  <circle cx="-4" cy="-6" r="0.9" fill="#1f2328"/>
+  <circle cx="4" cy="-6" r="0.9" fill="#1f2328"/>
+  <path d="M-4,-2 L0,0 L4,-2 Z" fill="#f6c453"/>
+  <path d="M-5,13 l-4,3 M5,13 l4,3" stroke="#f6c453" stroke-width="2.2" stroke-linecap="round"/>
+</g></g>
+  <text x="940" y="404" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="0.3" fill="#07101f">Linux</text>
+</g>
+
+</g>
+</svg>

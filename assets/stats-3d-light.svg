@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1200 470" role="img" aria-labelledby="svg-title svg-desc">
+<title id="svg-title">Dika Glorya — language fingerprint</title>
+<desc id="svg-desc">An isometric 3D bar chart with six glowing bars growing from a perspective floor plate, showing animated percentage counters.</desc>
+<defs>
+<radialGradient id="stats-aura" cx="50%" cy="50%" r="60%">
+    <stop offset="0" stop-color="#8250df" stop-opacity="0.12"/>
+    <stop offset="0.5" stop-color="#0891b2" stop-opacity="0.07"/>
+    <stop offset="1" stop-color="#eef2ff" stop-opacity="0"/>
+  </radialGradient>
+<linearGradient id="stats-floor" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0891b2" stop-opacity="0.1"/>
+    <stop offset="0.55" stop-color="#8250df" stop-opacity="0.06"/>
+    <stop offset="1" stop-color="#eef2ff" stop-opacity="0"/>
+  </linearGradient>
+<linearGradient id="floor-edge" x1="80" y1="350" x2="1120" y2="350" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#0891b2" stop-opacity="0"/>
+    <stop offset="0.2" stop-color="#0891b2" stop-opacity="0.55"/>
+    <stop offset="0.5" stop-color="#8250df" stop-opacity="0.35"/>
+    <stop offset="0.8" stop-color="#d1242f" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#d1242f" stop-opacity="0"/>
+  </linearGradient>
+<filter id="bar-bloom" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
+<filter id="stats-soft" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="9"/>
+  </filter>
+<clipPath id="stats-floor-clip"><path d="M600,226 L1120,350 L600,474 L80,350 Z"/></clipPath>
+<linearGradient id="bar-ts" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0969da" stop-opacity="0.88"/>
+    <stop offset="0.6" stop-color="#0969da" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.55"/>
+  </linearGradient>
+<linearGradient id="bar-js" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#a16207" stop-opacity="0.88"/>
+    <stop offset="0.6" stop-color="#a16207" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.55"/>
+  </linearGradient>
+<linearGradient id="bar-py" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0891b2" stop-opacity="0.88"/>
+    <stop offset="0.6" stop-color="#0891b2" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.55"/>
+  </linearGradient>
+<linearGradient id="bar-sql" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#8250df" stop-opacity="0.88"/>
+    <stop offset="0.6" stop-color="#8250df" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.55"/>
+  </linearGradient>
+<linearGradient id="bar-sh" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#4d7c0f" stop-opacity="0.88"/>
+    <stop offset="0.6" stop-color="#4d7c0f" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.55"/>
+  </linearGradient>
+<linearGradient id="bar-go" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#d1242f" stop-opacity="0.88"/>
+    <stop offset="0.6" stop-color="#d1242f" stop-opacity="0.45"/>
+    <stop offset="1" stop-color="#c7d2fe" stop-opacity="0.55"/>
+  </linearGradient>
+</defs>
+<style><![CDATA[
+text { font-family: 'Segoe UI', Ubuntu, 'Helvetica Neue', Arial, sans-serif; }
+.mono { font-family: 'Courier New', 'DejaVu Sans Mono', monospace; }
+.bar-clip { transform-box: fill-box; transform-origin: center bottom; animation: growBar 7s cubic-bezier(0.16, 0.84, 0.24, 1) infinite; }
+@keyframes growBar { 0% { transform: scaleY(0); } 28% { transform: scaleY(1); } 92% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+.count { opacity: 0; animation: countStep 7s linear infinite; }
+.count-final { animation: countFinal 7s linear infinite; }
+@keyframes countStep { 0%, 4.4% { opacity: 1; } 4.5%, 100% { opacity: 0; } }
+@keyframes countFinal { 0%, 23% { opacity: 0; } 24%, 92% { opacity: 1; } 93%, 100% { opacity: 0; } }
+.floor-pulse { animation: floorPulse 5s ease-in-out infinite; }
+@keyframes floorPulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+.spark { animation: spark 3.2s ease-in-out infinite; }
+@keyframes spark { 0%, 100% { opacity: 0.15; transform: translateY(0); } 50% { opacity: 0.9; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) {
+  .bar-clip, .count, .count-final, .floor-pulse, .spark { animation: none !important; }
+  .count:not(.count-final) { display: none !important; }
+  .count-final { opacity: 1 !important; }
+}
+]]></style>
+<g class="anim">
+  <ellipse cx="600" cy="280" rx="560" ry="240" fill="url(#stats-aura)"/>
+
+  <g class="mono" font-size="10.5" letter-spacing="3" fill="#57606a">
+    <text x="80" y="48">// STACK SIGNAL</text>
+    <text x="1120" y="48" text-anchor="end" fill="#7b8494">ILLUSTRATIVE SNAPSHOT</text>
+  </g>
+  <text x="80" y="88" font-size="30" font-weight="700" letter-spacing="-0.6" fill="#1f2328">Language fingerprint</text>
+  <line x1="80" y1="108" x2="220" y2="108" stroke="#0891b2" stroke-width="2" opacity="0.8"/>
+
+  <path d="M600,226 L1120,350 L600,474 L80,350 Z" fill="url(#stats-floor)" stroke="url(#floor-edge)" stroke-width="1.4"/>
+  <g clip-path="url(#stats-floor-clip)" opacity="0.8"><path d="M535,241.5 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M665,241.5 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M470,257 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M730,257 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M405,272.5 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M795,272.5 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M340,288 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M860,288 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M275,303.5 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M925,303.5 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M210,319 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M990,319 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M145,334.5 l520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/><path d="M1055,334.5 l-520,124" stroke="#0969da" stroke-opacity="0.16" stroke-width="1"/></g>
+  <path class="floor-pulse" d="M600,226 L1120,350 L600,474 L80,350 Z" fill="none" stroke="#0891b2" stroke-opacity="0.4" stroke-width="1"/>
+
+  <path d="M232,358 l0,14" stroke="#c7d2fe" stroke-opacity="0.6"/><path d="M380,358 l0,14" stroke="#c7d2fe" stroke-opacity="0.6"/><path d="M528,358 l0,14" stroke="#c7d2fe" stroke-opacity="0.6"/><path d="M676,358 l0,14" stroke="#c7d2fe" stroke-opacity="0.6"/><path d="M824,358 l0,14" stroke="#c7d2fe" stroke-opacity="0.6"/><path d="M972,358 l0,14" stroke="#c7d2fe" stroke-opacity="0.6"/>
+
+  <g>
+  <ellipse cx="240" cy="363" rx="62" ry="16" fill="#22305a" opacity="0.18" filter="url(#stats-soft)"/>
+  <clipPath id="bar-clip-ts">
+    <rect class="bar-clip" style="animation-delay:0.25s" x="178" y="133.4" width="108" height="236.6"/>
+  </clipPath>
+  <g clip-path="url(#bar-clip-ts)">
+    <ellipse cx="232" cy="167.4" rx="44" ry="12" fill="#0969da" opacity="0.5" filter="url(#bar-bloom)"/>
+    <path d="M185,167.4 L232,185.4 L232,368 L185,350 Z" fill="url(#bar-ts)"/>
+    <path d="M279,167.4 L232,185.4 L232,368 L279,350 Z" fill="url(#bar-ts)" opacity="0.55"/>
+    <path d="M232,149.4 L279,167.4 L232,185.4 L185,167.4 Z" fill="#0969da" fill-opacity="0.92"/>
+    <path d="M232,149.4 L279,167.4 L232,185.4 L185,167.4 Z" fill="none" stroke="#1f2328" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M185,167.4 L232,185.4 L232,368 L185,350 Z" fill="none" stroke="#0969da" stroke-opacity="0.5" stroke-width="0.9"/>
+    <path d="M279,167.4 L232,185.4 L232,368 L279,350 Z" fill="none" stroke="#0969da" stroke-opacity="0.35" stroke-width="0.9"/>
+  </g>
+  <g class="mono">
+<text class="count" style="animation-delay:0.35s" x="232" y="139.4" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">0%</text>
+<text class="count" style="animation-delay:0.69s" x="232" y="139.4" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">23%</text>
+<text class="count" style="animation-delay:1.03s" x="232" y="139.4" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">41%</text>
+<text class="count" style="animation-delay:1.37s" x="232" y="139.4" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">60%</text>
+<text class="count" style="animation-delay:1.71s" x="232" y="139.4" text-anchor="middle" font-size="15" font-weight="700" fill="#0969da">75%</text>
+<text class="count count-final" style="animation-delay:2.05s" x="232" y="139.4" text-anchor="middle" font-size="16" font-weight="700" fill="#0969da">92%</text>
+</g>
+</g>
+<g>
+  <ellipse cx="388" cy="363" rx="62" ry="16" fill="#22305a" opacity="0.18" filter="url(#stats-soft)"/>
+  <clipPath id="bar-clip-js">
+    <rect class="bar-clip" style="animation-delay:0.32s" x="326" y="142.7" width="108" height="227.3"/>
+  </clipPath>
+  <g clip-path="url(#bar-clip-js)">
+    <ellipse cx="380" cy="176.7" rx="44" ry="12" fill="#a16207" opacity="0.5" filter="url(#bar-bloom)"/>
+    <path d="M333,176.7 L380,194.7 L380,368 L333,350 Z" fill="url(#bar-js)"/>
+    <path d="M427,176.7 L380,194.7 L380,368 L427,350 Z" fill="url(#bar-js)" opacity="0.55"/>
+    <path d="M380,158.7 L427,176.7 L380,194.7 L333,176.7 Z" fill="#a16207" fill-opacity="0.92"/>
+    <path d="M380,158.7 L427,176.7 L380,194.7 L333,176.7 Z" fill="none" stroke="#1f2328" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M333,176.7 L380,194.7 L380,368 L333,350 Z" fill="none" stroke="#a16207" stroke-opacity="0.5" stroke-width="0.9"/>
+    <path d="M427,176.7 L380,194.7 L380,368 L427,350 Z" fill="none" stroke="#a16207" stroke-opacity="0.35" stroke-width="0.9"/>
+  </g>
+  <g class="mono">
+<text class="count" style="animation-delay:0.42s" x="380" y="148.7" text-anchor="middle" font-size="15" font-weight="700" fill="#a16207">0%</text>
+<text class="count" style="animation-delay:0.76s" x="380" y="148.7" text-anchor="middle" font-size="15" font-weight="700" fill="#a16207">22%</text>
+<text class="count" style="animation-delay:1.1s" x="380" y="148.7" text-anchor="middle" font-size="15" font-weight="700" fill="#a16207">39%</text>
+<text class="count" style="animation-delay:1.44s" x="380" y="148.7" text-anchor="middle" font-size="15" font-weight="700" fill="#a16207">56%</text>
+<text class="count" style="animation-delay:1.78s" x="380" y="148.7" text-anchor="middle" font-size="15" font-weight="700" fill="#a16207">71%</text>
+<text class="count count-final" style="animation-delay:2.12s" x="380" y="148.7" text-anchor="middle" font-size="16" font-weight="700" fill="#a16207">86%</text>
+</g>
+</g>
+<g>
+  <ellipse cx="536" cy="363" rx="62" ry="16" fill="#22305a" opacity="0.18" filter="url(#stats-soft)"/>
+  <clipPath id="bar-clip-py">
+    <rect class="bar-clip" style="animation-delay:0.39s" x="474" y="155.1" width="108" height="214.9"/>
+  </clipPath>
+  <g clip-path="url(#bar-clip-py)">
+    <ellipse cx="528" cy="189.1" rx="44" ry="12" fill="#0891b2" opacity="0.5" filter="url(#bar-bloom)"/>
+    <path d="M481,189.1 L528,207.1 L528,368 L481,350 Z" fill="url(#bar-py)"/>
+    <path d="M575,189.1 L528,207.1 L528,368 L575,350 Z" fill="url(#bar-py)" opacity="0.55"/>
+    <path d="M528,171.1 L575,189.1 L528,207.1 L481,189.1 Z" fill="#0891b2" fill-opacity="0.92"/>
+    <path d="M528,171.1 L575,189.1 L528,207.1 L481,189.1 Z" fill="none" stroke="#1f2328" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M481,189.1 L528,207.1 L528,368 L481,350 Z" fill="none" stroke="#0891b2" stroke-opacity="0.5" stroke-width="0.9"/>
+    <path d="M575,189.1 L528,207.1 L528,368 L575,350 Z" fill="none" stroke="#0891b2" stroke-opacity="0.35" stroke-width="0.9"/>
+  </g>
+  <g class="mono">
+<text class="count" style="animation-delay:0.49s" x="528" y="161.1" text-anchor="middle" font-size="15" font-weight="700" fill="#0891b2">0%</text>
+<text class="count" style="animation-delay:0.83s" x="528" y="161.1" text-anchor="middle" font-size="15" font-weight="700" fill="#0891b2">20%</text>
+<text class="count" style="animation-delay:1.17s" x="528" y="161.1" text-anchor="middle" font-size="15" font-weight="700" fill="#0891b2">35%</text>
+<text class="count" style="animation-delay:1.51s" x="528" y="161.1" text-anchor="middle" font-size="15" font-weight="700" fill="#0891b2">51%</text>
+<text class="count" style="animation-delay:1.85s" x="528" y="161.1" text-anchor="middle" font-size="15" font-weight="700" fill="#0891b2">64%</text>
+<text class="count count-final" style="animation-delay:2.19s" x="528" y="161.1" text-anchor="middle" font-size="16" font-weight="700" fill="#0891b2">78%</text>
+</g>
+</g>
+<g>
+  <ellipse cx="684" cy="363" rx="62" ry="16" fill="#22305a" opacity="0.18" filter="url(#stats-soft)"/>
+  <clipPath id="bar-clip-sql">
+    <rect class="bar-clip" style="animation-delay:0.46s" x="622" y="176.8" width="108" height="193.2"/>
+  </clipPath>
+  <g clip-path="url(#bar-clip-sql)">
+    <ellipse cx="676" cy="210.8" rx="44" ry="12" fill="#8250df" opacity="0.5" filter="url(#bar-bloom)"/>
+    <path d="M629,210.8 L676,228.8 L676,368 L629,350 Z" fill="url(#bar-sql)"/>
+    <path d="M723,210.8 L676,228.8 L676,368 L723,350 Z" fill="url(#bar-sql)" opacity="0.55"/>
+    <path d="M676,192.8 L723,210.8 L676,228.8 L629,210.8 Z" fill="#8250df" fill-opacity="0.92"/>
+    <path d="M676,192.8 L723,210.8 L676,228.8 L629,210.8 Z" fill="none" stroke="#1f2328" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M629,210.8 L676,228.8 L676,368 L629,350 Z" fill="none" stroke="#8250df" stroke-opacity="0.5" stroke-width="0.9"/>
+    <path d="M723,210.8 L676,228.8 L676,368 L723,350 Z" fill="none" stroke="#8250df" stroke-opacity="0.35" stroke-width="0.9"/>
+  </g>
+  <g class="mono">
+<text class="count" style="animation-delay:0.56s" x="676" y="182.8" text-anchor="middle" font-size="15" font-weight="700" fill="#8250df">0%</text>
+<text class="count" style="animation-delay:0.9s" x="676" y="182.8" text-anchor="middle" font-size="15" font-weight="700" fill="#8250df">16%</text>
+<text class="count" style="animation-delay:1.24s" x="676" y="182.8" text-anchor="middle" font-size="15" font-weight="700" fill="#8250df">29%</text>
+<text class="count" style="animation-delay:1.58s" x="676" y="182.8" text-anchor="middle" font-size="15" font-weight="700" fill="#8250df">42%</text>
+<text class="count" style="animation-delay:1.92s" x="676" y="182.8" text-anchor="middle" font-size="15" font-weight="700" fill="#8250df">52%</text>
+<text class="count count-final" style="animation-delay:2.26s" x="676" y="182.8" text-anchor="middle" font-size="16" font-weight="700" fill="#8250df">64%</text>
+</g>
+</g>
+<g>
+  <ellipse cx="832" cy="363" rx="62" ry="16" fill="#22305a" opacity="0.18" filter="url(#stats-soft)"/>
+  <clipPath id="bar-clip-sh">
+    <rect class="bar-clip" style="animation-delay:0.53s" x="770" y="195.4" width="108" height="174.6"/>
+  </clipPath>
+  <g clip-path="url(#bar-clip-sh)">
+    <ellipse cx="824" cy="229.4" rx="44" ry="12" fill="#4d7c0f" opacity="0.5" filter="url(#bar-bloom)"/>
+    <path d="M777,229.4 L824,247.4 L824,368 L777,350 Z" fill="url(#bar-sh)"/>
+    <path d="M871,229.4 L824,247.4 L824,368 L871,350 Z" fill="url(#bar-sh)" opacity="0.55"/>
+    <path d="M824,211.4 L871,229.4 L824,247.4 L777,229.4 Z" fill="#4d7c0f" fill-opacity="0.92"/>
+    <path d="M824,211.4 L871,229.4 L824,247.4 L777,229.4 Z" fill="none" stroke="#1f2328" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M777,229.4 L824,247.4 L824,368 L777,350 Z" fill="none" stroke="#4d7c0f" stroke-opacity="0.5" stroke-width="0.9"/>
+    <path d="M871,229.4 L824,247.4 L824,368 L871,350 Z" fill="none" stroke="#4d7c0f" stroke-opacity="0.35" stroke-width="0.9"/>
+  </g>
+  <g class="mono">
+<text class="count" style="animation-delay:0.63s" x="824" y="201.4" text-anchor="middle" font-size="15" font-weight="700" fill="#4d7c0f">0%</text>
+<text class="count" style="animation-delay:0.97s" x="824" y="201.4" text-anchor="middle" font-size="15" font-weight="700" fill="#4d7c0f">13%</text>
+<text class="count" style="animation-delay:1.31s" x="824" y="201.4" text-anchor="middle" font-size="15" font-weight="700" fill="#4d7c0f">23%</text>
+<text class="count" style="animation-delay:1.65s" x="824" y="201.4" text-anchor="middle" font-size="15" font-weight="700" fill="#4d7c0f">34%</text>
+<text class="count" style="animation-delay:1.99s" x="824" y="201.4" text-anchor="middle" font-size="15" font-weight="700" fill="#4d7c0f">43%</text>
+<text class="count count-final" style="animation-delay:2.33s" x="824" y="201.4" text-anchor="middle" font-size="16" font-weight="700" fill="#4d7c0f">52%</text>
+</g>
+</g>
+<g>
+  <ellipse cx="980" cy="363" rx="62" ry="16" fill="#22305a" opacity="0.18" filter="url(#stats-soft)"/>
+  <clipPath id="bar-clip-go">
+    <rect class="bar-clip" style="animation-delay:0.6s" x="918" y="218.7" width="108" height="151.3"/>
+  </clipPath>
+  <g clip-path="url(#bar-clip-go)">
+    <ellipse cx="972" cy="252.7" rx="44" ry="12" fill="#d1242f" opacity="0.5" filter="url(#bar-bloom)"/>
+    <path d="M925,252.7 L972,270.7 L972,368 L925,350 Z" fill="url(#bar-go)"/>
+    <path d="M1019,252.7 L972,270.7 L972,368 L1019,350 Z" fill="url(#bar-go)" opacity="0.55"/>
+    <path d="M972,234.7 L1019,252.7 L972,270.7 L925,252.7 Z" fill="#d1242f" fill-opacity="0.92"/>
+    <path d="M972,234.7 L1019,252.7 L972,270.7 L925,252.7 Z" fill="none" stroke="#1f2328" stroke-opacity="0.3" stroke-width="0.8"/>
+    <path d="M925,252.7 L972,270.7 L972,368 L925,350 Z" fill="none" stroke="#d1242f" stroke-opacity="0.5" stroke-width="0.9"/>
+    <path d="M1019,252.7 L972,270.7 L972,368 L1019,350 Z" fill="none" stroke="#d1242f" stroke-opacity="0.35" stroke-width="0.9"/>
+  </g>
+  <g class="mono">
+<text class="count" style="animation-delay:0.7s" x="972" y="224.7" text-anchor="middle" font-size="15" font-weight="700" fill="#d1242f">0%</text>
+<text class="count" style="animation-delay:1.04s" x="972" y="224.7" text-anchor="middle" font-size="15" font-weight="700" fill="#d1242f">9%</text>
+<text class="count" style="animation-delay:1.38s" x="972" y="224.7" text-anchor="middle" font-size="15" font-weight="700" fill="#d1242f">17%</text>
+<text class="count" style="animation-delay:1.72s" x="972" y="224.7" text-anchor="middle" font-size="15" font-weight="700" fill="#d1242f">24%</text>
+<text class="count" style="animation-delay:2.06s" x="972" y="224.7" text-anchor="middle" font-size="15" font-weight="700" fill="#d1242f">30%</text>
+<text class="count count-final" style="animation-delay:2.4s" x="972" y="224.7" text-anchor="middle" font-size="16" font-weight="700" fill="#d1242f">37%</text>
+</g>
+</g>
+
+  <g class="mono">
+    <circle cx="208" cy="410" r="3.2" fill="#0969da"/>
+    <text x="217" y="414" font-size="11" letter-spacing="0.2" fill="#57606a">TypeScript</text>
+  </g>
+<g class="mono">
+    <circle cx="356" cy="410" r="3.2" fill="#a16207"/>
+    <text x="365" y="414" font-size="11" letter-spacing="0.2" fill="#57606a">JavaScript</text>
+  </g>
+<g class="mono">
+    <circle cx="504" cy="410" r="3.2" fill="#0891b2"/>
+    <text x="513" y="414" font-size="11" letter-spacing="0.2" fill="#57606a">Python</text>
+  </g>
+<g class="mono">
+    <circle cx="652" cy="410" r="3.2" fill="#8250df"/>
+    <text x="661" y="414" font-size="11" letter-spacing="0.2" fill="#57606a">SQL</text>
+  </g>
+<g class="mono">
+    <circle cx="800" cy="410" r="3.2" fill="#4d7c0f"/>
+    <text x="809" y="414" font-size="11" letter-spacing="0.2" fill="#57606a">Shell</text>
+  </g>
+<g class="mono">
+    <circle cx="948" cy="410" r="3.2" fill="#d1242f"/>
+    <text x="957" y="414" font-size="11" letter-spacing="0.2" fill="#57606a">Go</text>
+  </g>
+
+  <g class="spark" style="animation-delay:-1.2s"><circle cx="186" cy="176" r="2.4" fill="#0891b2"/></g>
+  <g class="spark" style="animation-delay:-2.4s"><circle cx="1042" cy="212" r="2" fill="#d1242f"/></g>
+  <g class="spark" style="animation-delay:-0.6s"><circle cx="892" cy="150" r="1.6" fill="#4d7c0f"/></g>
+
+  <g class="mono" font-size="9.5" letter-spacing="2" fill="#7b8494">
+    <text x="80" y="448">SAMPLE DATA · LIVE CARDS BELOW</text>
+    <text x="1120" y="448" text-anchor="end">06 LANGUAGES · 3D PROJECTION</text>
+  </g>
+</g>
+</svg>

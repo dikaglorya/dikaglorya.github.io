@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1200 110" role="img" aria-labelledby="svg-title svg-desc">
+<title id="svg-title">Animated section divider</title>
+<desc id="svg-desc">A glowing three-dimensional energy wave with travelling light pulses.</desc>
+<defs>
+
+<linearGradient id="divider-line" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#00f5ff" stop-opacity="0"/>
+    <stop offset="0.16" stop-color="#00f5ff" stop-opacity="0.75"/>
+    <stop offset="0.5" stop-color="#7c3aed" stop-opacity="0.55"/>
+    <stop offset="0.84" stop-color="#ff2bd6" stop-opacity="0.7"/>
+    <stop offset="1" stop-color="#ff2bd6" stop-opacity="0"/>
+  </linearGradient>
+<linearGradient id="divider-wave" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#00f5ff" stop-opacity="0"/>
+    <stop offset="0.2" stop-color="#00f5ff" stop-opacity="0.9"/>
+    <stop offset="0.5" stop-color="#38bdf8" stop-opacity="0.5"/>
+    <stop offset="0.8" stop-color="#ff2bd6" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#ff2bd6" stop-opacity="0"/>
+  </linearGradient>
+<filter id="divider-glow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+    <feFlood flood-color="#00f5ff" flood-opacity="1.2" result="tint"/>
+    <feComposite in="tint" in2="blur" operator="in" result="glow"/>
+    <feMerge>
+      <feMergeNode in="glow"/>
+      <feMergeNode in="glow"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+<filter id="divider-core" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+    <feFlood flood-color="#ff2bd6" flood-opacity="1" result="tint"/>
+    <feComposite in="tint" in2="blur" operator="in" result="glow"/>
+    <feMerge>
+      <feMergeNode in="glow"/>
+      <feMergeNode in="glow"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</defs>
+<style><![CDATA[
+
+text { font-family: 'Segoe UI', Ubuntu, 'Helvetica Neue', Arial, sans-serif; }
+.mono { font-family: 'Courier New', 'DejaVu Sans Mono', monospace; }
+.eyebrow { letter-spacing: 3.4px; }
+
+
+.dash { stroke-dasharray: 3 12; animation: dashFlow 5s linear infinite; }
+@keyframes dashFlow { to { stroke-dashoffset: -90; } }
+.tick { animation: tickPulse 3.6s ease-in-out infinite; }
+@keyframes tickPulse { 0%, 100% { opacity: 0.18; } 50% { opacity: 0.8; } }
+.core { transform-box: fill-box; transform-origin: center; animation: coreSpin 14s linear infinite; }
+@keyframes coreSpin { to { transform: rotate(360deg); } }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .anim, .anim * { animation: none !important; }
+  .smil { display: none !important; }
+  .orb-motion { display: none !important; }
+  .orb-static { display: block !important; }
+  .sub-b, .sub-c { opacity: 0 !important; }
+  .sub-a { opacity: 1 !important; }
+  .count:not(.count-final) { display: none !important; }
+  .count-final { opacity: 1 !important; }
+  .cf-first { opacity: 1 !important; }
+  .tile, .tile-shadow, .bar-clip, .footer-fade, .thanks { animation: none !important; }
+}
+
+]]></style>
+<g class="anim">
+  <line x1="40" y1="55" x2="1160" y2="55" stroke="url(#divider-line)" stroke-width="1.2"/>
+  <path d="M60,55 C180,20 300,90 420,55 C540,20 660,90 780,55 C900,20 1020,90 1140,55" fill="none" stroke="url(#divider-wave)" stroke-width="1.6" filter="url(#divider-glow)" opacity="0.6"/>
+  <path class="dash" d="M60,55 C180,20 300,90 420,55 C540,20 660,90 780,55 C900,20 1020,90 1140,55" fill="none" stroke="#00f5ff" stroke-width="1.4" opacity="0.55"/>
+  <line class="tick" style="animation-delay:0s" x1="120" y1="49" x2="120" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-0.2s" x1="188" y1="51.5" x2="188" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-0.4s" x1="256" y1="49" x2="256" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-0.6s" x1="324" y1="51.5" x2="324" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-0.8s" x1="392" y1="49" x2="392" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-1s" x1="460" y1="51.5" x2="460" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-1.2s" x1="528" y1="49" x2="528" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-1.4s" x1="596" y1="51.5" x2="596" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-1.6s" x1="664" y1="49" x2="664" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-1.8s" x1="732" y1="51.5" x2="732" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-2s" x1="800" y1="49" x2="800" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-2.2s" x1="868" y1="51.5" x2="868" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-2.4s" x1="936" y1="49" x2="936" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-2.6s" x1="1004" y1="51.5" x2="1004" y2="58.5" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/><line class="tick" style="animation-delay:-2.8s" x1="1072" y1="49" x2="1072" y2="61" stroke="#00f5ff" stroke-opacity="0.35" stroke-width="1"/>
+  <g class="core" filter="url(#divider-core)">
+    <rect x="592" y="47" width="16" height="16" rx="2" transform="rotate(45 600 55)" fill="#0a0f1f" stroke="#00f5ff" stroke-width="1.4"/>
+    <rect x="597" y="52" width="6" height="6" rx="1" transform="rotate(45 600 55)" fill="#ff2bd6"/>
+  </g>
+  <circle cx="40" cy="55" r="3" fill="#00f5ff"/>
+  <circle cx="1160" cy="55" r="3" fill="#ff2bd6"/>
+  <g class="smil">
+    <circle r="3" fill="#00f5ff">
+      <animateMotion dur="6s" repeatCount="indefinite" path="M60,55 C180,20 300,90 420,55 C540,20 660,90 780,55 C900,20 1020,90 1140,55"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2" fill="#ff2bd6">
+      <animateMotion dur="8s" begin="-3.4s" repeatCount="indefinite" path="M60,55 C180,20 300,90 420,55 C540,20 660,90 780,55 C900,20 1020,90 1140,55"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2" fill="#7c3aed">
+      <animateMotion dur="10s" begin="-6.3s" repeatCount="indefinite" path="M60,55 C180,20 300,90 420,55 C540,20 660,90 780,55 C900,20 1020,90 1140,55"/>
+      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</g>
+</svg>
