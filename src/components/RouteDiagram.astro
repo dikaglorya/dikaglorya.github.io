@@ -1,46 +1,66 @@
 <div
   class="route-diagram"
   role="img"
-  aria-label="DikaRoute menerima satu request dari client lalu meneruskannya ke provider AI yang tersedia, dengan fallback otomatis jika provider gagal."
+  aria-label="Ilustrasi konseptual: satu request dari client masuk ke DikaRoute, lalu diteruskan ke provider yang tersedia dengan fallback otomatis."
 >
-  <div class="route-diagram__node route-diagram__client">
-    <span class="route-diagram__index mono">01 · REQUEST</span>
-    <strong>Client</strong>
-    <span>Satu request</span>
+  <div class="route-diagram__head">
+    <span class="route-diagram__eyebrow mono">DIKAROUTE / ALUR REQUEST</span>
+    <span class="route-diagram__concept mono">ILUSTRASI KONSEPTUAL</span>
   </div>
 
-  <div class="route-diagram__connector" aria-hidden="true">
-    <span></span>
-    <span class="route-diagram__connector-label">ROUTE</span>
-  </div>
-
-  <div class="route-diagram__node route-diagram__gateway">
-    <span class="route-diagram__index mono">02 · GATEWAY</span>
-    <strong>DikaRoute</strong>
-    <span>API kompatibel OpenAI</span>
-  </div>
-
-  <div class="route-diagram__connector route-diagram__connector--branch" aria-hidden="true">
-    <span></span>
-    <span class="route-diagram__connector-label">PILIH · ULANGI</span>
-  </div>
-
-  <div class="route-diagram__providers">
-    <p class="route-diagram__providers-heading mono">PROVIDER TERSEDIA</p>
-    <div class="route-diagram__provider">
-      <span class="route-diagram__provider-mark" aria-hidden="true">A</span>
-      <span><strong>Provider A</strong><small>Tersedia</small></span>
-      <span class="route-diagram__state mono">SIAP</span>
+  <div class="route-diagram__flow">
+    <div class="route-diagram__node route-diagram__client">
+      <span class="route-diagram__index mono">01 <span>REQUEST</span></span>
+      <strong>Client</strong>
+      <span>Satu request masuk</span>
     </div>
-    <div class="route-diagram__provider">
-      <span class="route-diagram__provider-mark" aria-hidden="true">B</span>
-      <span><strong>Provider B</strong><small>Tersedia</small></span>
-      <span class="route-diagram__state mono">SIAP</span>
+
+    <div class="route-diagram__connector" aria-hidden="true">
+      <span class="route-diagram__connector-line"></span>
+      <span class="route-diagram__connector-label mono">API</span>
     </div>
-    <div class="route-diagram__provider route-diagram__provider--fallback">
-      <span class="route-diagram__provider-mark" aria-hidden="true">C</span>
-      <span><strong>Provider C</strong><small>Fallback otomatis</small></span>
-      <span class="route-diagram__state mono">BERIKUTNYA</span>
+
+    <div class="route-diagram__node route-diagram__gateway">
+      <span class="route-diagram__index mono">02 <span>GATEWAY</span></span>
+      <strong>DikaRoute</strong>
+      <span>API kompatibel OpenAI</span>
+      <span class="route-diagram__gateway-foot mono">PILIH PROVIDER · COBA LAGI</span>
+    </div>
+
+    <div class="route-diagram__connector route-diagram__connector--branch" aria-hidden="true">
+      <span class="route-diagram__connector-line"></span>
+      <span class="route-diagram__connector-label mono">ROUTE</span>
+    </div>
+
+    <div class="route-diagram__providers">
+      <div class="route-diagram__providers-heading">
+        <span class="mono">PROVIDER</span>
+        <span class="route-diagram__provider-count mono">01—03</span>
+      </div>
+      <div class="route-diagram__provider">
+        <span class="route-diagram__provider-mark mono" aria-hidden="true">A</span>
+        <span class="route-diagram__provider-copy">
+          <strong>Provider A</strong>
+          <small>Prioritas utama</small>
+        </span>
+        <span class="route-diagram__state mono">01</span>
+      </div>
+      <div class="route-diagram__provider">
+        <span class="route-diagram__provider-mark mono" aria-hidden="true">B</span>
+        <span class="route-diagram__provider-copy">
+          <strong>Provider B</strong>
+          <small>Alternatif tersedia</small>
+        </span>
+        <span class="route-diagram__state mono">02</span>
+      </div>
+      <div class="route-diagram__provider route-diagram__provider--fallback">
+        <span class="route-diagram__provider-mark mono" aria-hidden="true">C</span>
+        <span class="route-diagram__provider-copy">
+          <strong>Provider C</strong>
+          <small>Fallback otomatis</small>
+        </span>
+        <span class="route-diagram__state mono">NEXT</span>
+      </div>
     </div>
   </div>
 </div>
