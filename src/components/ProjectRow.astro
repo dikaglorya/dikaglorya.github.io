@@ -1,6 +1,7 @@
 ---
 import Arrow from './Arrow.astro';
 import type { Project } from '../data/projects';
+import BilingualCopy from './BilingualCopy.astro';
 
 interface Props {
   project: Project;
@@ -20,12 +21,12 @@ const paddedIndex = String(index).padStart(2, '0');
   <span class="project-row__index mono" aria-hidden="true">{paddedIndex}</span>
   <span class="project-row__body">
     <span class="project-row__name">{project.name}</span>
-    <span class="project-row__summary">{project.summary}</span>
+    <BilingualCopy en={project.summary} id={project.summaryId} />
   </span>
   <span class="project-row__side">
     <span class="project-row__type mono">{project.type}</span>
     <span class="project-row__availability mono">
-      {project.link ? project.link.label : 'Source not public'}
+      {project.link ? project.link.label : 'Source not public / Source belum publik'}
     </span>
     <span class="project-row__stack mono">{project.stack.join(' / ')}</span>
     <Arrow class="project-row__arrow" />

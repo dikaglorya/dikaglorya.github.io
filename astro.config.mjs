@@ -1,9 +1,13 @@
 import { defineConfig } from 'astro/config';
 
 // The repo is a GitHub Pages user site (dikaglorya.github.io), so the base path is "/".
-// The public site is served from https://obitoglory.tech.
+//
+// Canonical origin: the host this build is actually served from. obitoglory.tech
+// still serves the previous site on Vercel, so pointing canonical, sitemap, and
+// og:url there would credit a different page. When the new site moves to the
+// domain, set SITE_URL=https://obitoglory.tech for that build and add public/CNAME.
 export default defineConfig({
-  site: 'https://obitoglory.tech',
+  site: process.env.SITE_URL ?? 'https://dikaglorya.github.io',
   output: 'static',
   trailingSlash: 'always',
   build: {

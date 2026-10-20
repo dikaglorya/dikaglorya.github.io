@@ -15,10 +15,12 @@ export const site = {
     'Dika Developer',
     'ObitoGlory',
   ],
-  url: 'https://obitoglory.tech',
-  title: 'DikaGlorya | ObitoGlory, Independent Developer',
+  // Follows astro.config.mjs (SITE_URL, else the GitHub Pages host), so no page
+  // hardcodes a domain that is currently serving a different site.
+  url: import.meta.env.SITE,
+  title: 'DikaGlorya / DikaOfc | Programmer & Developer di Kendal | ObitoGlory',
   description:
-    'The official portfolio of DikaGlorya, also known as DikaCode. ObitoGlory is the home for practical software, developer tools, web projects, and technical notes.',
+    'Portofolio resmi DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode, programmer dan independent developer dari Kendal. Lihat proyek, website, bot, developer tools, dan catatan teknis / Official portfolio of DikaGlorya, also known as DikaOfc and DikaCode, an independent developer from Kendal, Indonesia.',
   email: 'dikasukasukaa@gmail.com',
   telegram: 'dikaacode',
   telegramUrl: 'https://t.me/dikaacode',
@@ -28,8 +30,9 @@ export const site = {
   tiktok: 'https://www.tiktok.com/@dikasecx',
   location: 'Kendal, Central Java, Indonesia',
   locationShort: 'Kendal, ID',
-  locale: 'en_US',
-  lang: 'en',
+  locale: 'id_ID',
+  alternateLocale: 'en_US',
+  lang: 'id',
   ogImage: '/og-default.png',
   ogImageAlt:
     'Masked portrait of DikaGlorya on a dark ObitoGlory social card with the wordmark and the line "Useful software, built by DikaGlorya."',

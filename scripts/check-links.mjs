@@ -4,6 +4,8 @@ import sharp from 'sharp';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist');
+// Canonical origin this build was generated for. Kept in sync with astro.config.mjs.
+const expectedOrigin = process.env.SITE_URL ?? 'https://dikaglorya.github.io';
 
 const walk = async (dir) => {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -132,7 +134,7 @@ for (const file of htmlFiles) {
     const content = meta.get(name);
     if (!content) continue;
 
-    const imageURL = new URL(content, 'https://obitoglory.tech');
+    const imageURL = new URL(content, expectedOrigin);
     const imageFile = await resolvePageFile(imageURL.pathname);
     const key = `${pagePath} ${name} ${content}`;
 
@@ -182,7 +184,7 @@ try {
   const sitemap = await readFile(sitemapFile, 'utf8');
   for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
     const url = new URL(match[1]);
-    if (url.origin !== 'https://obitoglory.tech') {
+    if (url.origin !== expectedOrigin) {
       errors.push(`sitemap: unexpected origin ${url.origin}`);
       continue;
     }

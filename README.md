@@ -2,7 +2,7 @@
 
 Portfolio and services site for **DikaGlorya**, working under the developer identity **DikaCode**. **ObitoGlory** is the canonical website and portfolio brand; DikaGlory, DikaOfc, Dika Developer, and Dika Kendal are contextual public-name variations. The site uses a dark editorial surface, one restrained ice-blue accent, monospace technical metadata, and minimal decoration.
 
-- Production target: [obitoglory.tech](https://obitoglory.tech)
+- Production target: [obitoglory.tech](https://obitoglory.tech) (still the previous site). The new build is previewed at [dikaglorya.github.io](https://dikaglorya.github.io).
 - GitHub: [github.com/dikaglorya](https://github.com/dikaglorya)
 - Stack: Astro 7, TypeScript, hand-written CSS on custom properties, self-hosted fonts, `sharp` image optimization, Playwright + axe-core for checks
 - Output: fully static HTML, built into `dist/`
@@ -26,7 +26,7 @@ Tokens live at the top of `src/styles/global.css`. They are initial values, not 
 - Radii: 2px for small controls, 3px for editorial cards, and 6px for large panels. Shadows are reserved for the portrait.
 - Layout: 1200px outer container, 720px reading width for prose, gutters `clamp(20px, 5vw, 76px)`.
 - Motion: restrained, transitions in the 140–220ms range on color, border, and transform only. `prefers-reduced-motion` disables all of it. There is no scroll-reveal system.
-- Public copy is English. The journal publishes practical technical notes based on implementation details that can be checked in this repository. Navigation is `Home / Projects / Journal / About / Services`, with "Get in touch" as a separate header action.
+- Public copy is bilingual, Indonesian first and English second, in the same block. Longer prose (journal articles) stays single-language. The document is `lang="id"` with `og:locale` `id_ID` and `en_US` as the alternate. The journal publishes practical technical notes based on implementation details that can be checked in this repository. Navigation labels are paired, `Home / Beranda` through `Services / Layanan`, with "Get in touch" as a separate header action.
 
 ## Local setup
 
@@ -84,7 +84,7 @@ Screenshots are written to `.test-output/screenshots/` (ignored by Git).
 
 ## Content editing
 
-All public content is typed and centralized, in English. No CMS or database is involved.
+All public content is typed and centralized. Paired Indonesian/English strings live side by side (`body` / `bodyId`) and are rendered through `BilingualCopy.astro`. No CMS or database is involved.
 
 | File | Content |
 | --- | --- |
@@ -176,7 +176,7 @@ The choice is documented so it is a decision, not an omission:
 
 ## SEO and accessibility
 
-- Canonical URLs use `https://obitoglory.tech`.
+- Canonical URLs follow `SITE_URL` in `astro.config.mjs`, which defaults to the host the build is served from (`https://dikaglorya.github.io` while the new site is in preview). No page hardcodes a domain.
 - Open Graph and Twitter card metadata are generated in `src/layouts/BaseLayout.astro`.
 - JSON-LD covers the Person, WebSite, project pages, services, contact page, and journal articles.
 - Every indexable page has a skip link, semantic landmarks, one `h1`, visible focus states, and reduced-motion handling.
@@ -186,16 +186,31 @@ The choice is documented so it is a decision, not an omission:
 
 ## Deployment
 
-The repository is set up for GitHub Pages as a user site. The root `index.html` is a lightweight branded gateway for `dikaglorya.github.io` branch-based publishing: it identifies DikaGlorya and sends visitors to the canonical portfolio at `obitoglory.tech`. The Astro build in `src/pages/index.astro` is the full homepage and is deployed from `dist/` by GitHub Actions.
+Two hosts exist on purpose right now:
+
+| Host | What it serves | Source |
+| --- | --- | --- |
+| `obitoglory.tech` (apex + `www`) | the previous site, on Vercel | outside this repository |
+| `dikaglorya.github.io` | this build, on GitHub Pages | `main` via `.github/workflows/deploy.yml` |
+
+The new site is not yet at parity with the old one, so the domain has not moved. Until it does, canonical, sitemap, and `og:url` point at `dikaglorya.github.io` so search engines are never told that a different page at `obitoglory.tech` is this content.
+
+The Astro build is deployed from `dist/` by GitHub Actions. The root `index.html` is a small branded gateway served by Pages branch publishing; it sends visitors to the live preview of this build, not to the old site.
 
 1. In GitHub, open **Settings → Pages**.
-2. Set **Source** to **GitHub Actions**.
-3. Set the custom domain to `obitoglory.tech`.
-4. Enable **Enforce HTTPS** after DNS is verified.
-5. Push to `main`. The workflow in `.github/workflows/deploy.yml` runs `npm ci`, typechecks, builds, checks internal links, and deploys `dist/`.
-6. After the first deploy, add the domain in Google Search Console and submit `/sitemap.xml`. That is the organic-search baseline for the measurement section above.
+2. Set **Source** to **GitHub Actions**. With branch publishing still enabled, every push also starts a Jekyll build that fails on `.astro` files.
+3. Leave the custom domain empty while `obitoglory.tech` is served elsewhere.
+4. Push to `main`. The workflow in `.github/workflows/deploy.yml` runs `npm ci`, typechecks, builds, checks internal links, and deploys `dist/`.
+5. After the first deploy, add the site in Google Search Console and submit `/sitemap.xml`. That is the organic-search baseline for the measurement section above.
 
-The custom domain is stored in `public/CNAME`, so it is copied into every build. This repository does **not** change DNS records. At the DNS provider, point the apex domain to GitHub Pages and add the `www` record according to GitHub's current instructions. If the site is hosted somewhere else, publish the `dist/` directory after `npm run build`.
+### Moving to the domain later
+
+1. Point the apex and `www` records at GitHub Pages and remove the Vercel project, or keep Vercel and serve `dist/` there instead.
+2. Build with `SITE_URL=https://obitoglory.tech npm run build` so canonical, sitemap, and structured data switch in one place.
+3. Add `public/CNAME` containing `obitoglory.tech`, then set the custom domain in **Settings → Pages** and enforce HTTPS.
+4. Re-verify Search Console against the new origin and resubmit the sitemap.
+
+`public/CNAME` is deliberately absent today: if it ships while Pages has no custom domain, it claims `obitoglory.tech` for a build that is not served there. This repository does not change DNS records.
 
 ### Rollback
 

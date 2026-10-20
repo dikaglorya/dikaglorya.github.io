@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BilingualCopy from '../components/BilingualCopy.astro';
 import { services } from '../data/services';
 import { site } from '../data/site';
 
@@ -7,7 +8,7 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
   name: 'Contact ObitoGlory',
-  url: 'https://obitoglory.tech/contact/',
+  url: `${site.url}/contact/`,
   mainEntity: {
     '@type': 'Person',
     '@id': `${site.url}/#person`,
@@ -27,17 +28,18 @@ const schema = {
 ---
 
 <BaseLayout
-  title="Contact | ObitoGlory"
-  description="Contact DikaGlorya for website, bot, developer tool, or system repair projects through the official channels listed on ObitoGlory."
+  title="Contact / Kontak DikaOfc | DikaGlorya | ObitoGlory"
+  description="Hubungi DikaGlorya (DikaOfc / DikaCode), programmer dari Kendal, untuk jasa website, bot, tools, dan perbaikan sistem / Contact DikaGlorya for website, bot, developer tool, or system repair projects."
   schema={schema}
 >
   <section class="page-hero page-hero--contact" aria-labelledby="contact-title">
     <div class="container">
-      <h1 id="contact-title">Let's talk about the work.</h1>
-      <p class="page-hero__lead">
-        For project inquiries, collaboration, or technical discussions. You do not need to
-        commit yet; an open discussion is welcome.
-      </p>
+      <h1 id="contact-title">Let's talk about the work. / Mari bahas proyekmu.</h1>
+      <BilingualCopy
+        class="page-hero__lead"
+        en="For project inquiries, collaboration, or technical discussions. You do not need to commit yet; an open discussion is welcome."
+        id="Untuk pertanyaan proyek, kolaborasi, atau diskusi teknis. Belum harus langsung berkomitmen—kita bisa ngobrol dulu."
+      />
       <div class="page-hero__meta mono">
         <span class="status">{site.availability}</span>
         <span>{site.location}</span>
@@ -49,12 +51,11 @@ const schema = {
   <section class="section--tight" aria-label="Contact methods">
     <div class="container contact-layout">
       <div class="contact-form-wrap">
-        <h2>Project brief</h2>
-        <p>
-          Fill in the brief. Name, email, service, and message are required. The button below
-          opens your email application with the brief prefilled. Nothing is sent to a server
-          by this site.
-        </p>
+        <h2>Project brief / Brief proyek</h2>
+        <BilingualCopy
+          en="Name, email, service, and message are required. The button opens your email app with the brief filled in; this site does not send it to a server."
+          id="Nama, email, layanan, dan pesan wajib diisi. Tombol akan membuka aplikasi email dengan brief terisi; website ini tidak mengirim data ke server."
+        />
 
         <form
           class="contact-form"
@@ -68,7 +69,7 @@ const schema = {
           <div class="form-row">
             <div class="form-field">
               <label for="name">
-                Name <span class="required-mark" aria-hidden="true">*</span>
+                Name / Nama <span class="required-mark" aria-hidden="true">*</span>
               </label>
               <input id="name" name="name" type="text" autocomplete="name" required />
             </div>
@@ -83,18 +84,18 @@ const schema = {
           <div class="form-row">
             <div class="form-field">
               <label for="service">
-                Service <span class="required-mark" aria-hidden="true">*</span>
+                Service / Layanan <span class="required-mark" aria-hidden="true">*</span>
               </label>
               <select id="service" name="service" required>
-                <option value="">Choose a service</option>
+                <option value="">Choose a service / Pilih layanan</option>
                 {services.map((service) => (
                   <option value={service.slug}>{service.name}</option>
                 ))}
-                <option value="other">Something else / not sure yet</option>
+                <option value="other">Something else / Lainnya / not sure yet</option>
               </select>
             </div>
             <div class="form-field">
-              <label for="budget">Budget</label>
+              <label for="budget">Budget / Anggaran</label>
               <select id="budget" name="budget">
                 <option value="Not decided yet">Not decided yet</option>
                 <option value="Under Rp500k">Under Rp500k</option>
@@ -107,22 +108,23 @@ const schema = {
 
           <div class="form-field">
             <label for="message">
-              What you need <span class="required-mark" aria-hidden="true">*</span>
+              What you need / Kebutuhanmu <span class="required-mark" aria-hidden="true">*</span>
             </label>
             <textarea
               id="message"
               name="message"
               rows="6"
-              placeholder="Example: a landing page for an AC repair service, own domain ready, aiming to launch next month."
+              placeholder="Contoh / Example: landing page untuk jasa servis AC, domain sudah siap, target rilis bulan depan."
               required
             ></textarea>
           </div>
 
-          <button class="btn btn--primary" type="submit">Open the brief in your email</button>
+          <button class="btn btn--primary" type="submit">Open email brief / Buka brief di email</button>
 
           <p class="form-note">
-            This form uses <span class="mono">mailto:</span>. Pressing the button opens your
-            email application. If nothing opens, email the address directly:
+            Form ini menggunakan <span class="mono">mailto:</span> dan membuka aplikasi email.
+            / This form uses <span class="mono">mailto:</span> and opens your email app.
+            Jika tidak terbuka / If nothing opens, email langsung / email directly:
             <a class="link" href={`mailto:${site.email}`}>{site.email}</a>.
           </p>
 
@@ -131,7 +133,7 @@ const schema = {
       </div>
 
       <aside class="contact-aside" aria-label="Direct contact">
-        <h2>Direct channels</h2>
+        <h2>Direct channels / Kontak langsung</h2>
         <ul class="channel-list">
           <li>
             <a href={site.telegramUrl} rel="me">Telegram</a>
@@ -156,35 +158,35 @@ const schema = {
           type="button"
           data-copy-email={site.email}
         >
-          Copy email
+          Copy email / Salin email
         </button>
         <p class="form-note" role="status" aria-live="polite" data-copy-status></p>
 
         <div class="next-steps">
-          <h3>After you send it</h3>
+          <h3>After you send it / Setelah dikirim</h3>
           <ol>
             <li>
               <div>
-                <strong>The brief gets read.</strong>
-                <span>Usually answered through Telegram or email.</span>
+                <strong>Brief dibaca / The brief gets read.</strong>
+                <span>Biasanya dibalas lewat Telegram atau email / Usually answered through Telegram or email.</span>
               </div>
             </li>
             <li>
               <div>
-                <strong>Scope gets clarified.</strong>
-                <span>Features, platform, revisions, and limits are discussed first.</span>
+                <strong>Lingkup diperjelas / Scope gets clarified.</strong>
+                <span>Fitur, platform, revisi, dan batasan dibahas terlebih dulu / Features, platform, revisions, and limits are discussed first.</span>
               </div>
             </li>
             <li>
               <div>
-                <strong>A quote comes back.</strong>
-                <span>Price, timeline, and how the work is written out clearly.</span>
+                <strong>Penawaran dikirim / A quote comes back.</strong>
+                <span>Harga, timeline, dan alur kerja dijelaskan dengan jelas / Price, timeline, and workflow are written out clearly.</span>
               </div>
             </li>
             <li>
               <div>
-                <strong>The project starts once agreed.</strong>
-                <span>A 50% deposit to begin, the rest after delivery and approval.</span>
+                <strong>Proyek dimulai setelah sepakat / The project starts once agreed.</strong>
+                <span>DP 50% untuk mulai, sisanya setelah hasil diserahkan dan disetujui / 50% deposit to begin, the rest after delivery and approval.</span>
               </div>
             </li>
           </ol>

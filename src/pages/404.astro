@@ -1,25 +1,26 @@
 ---
 import PortraitFrame from '../components/PortraitFrame.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BilingualCopy from '../components/BilingualCopy.astro';
 ---
 
 <BaseLayout
-  title="404 | ObitoGlory"
-  description="Page not found."
+  title="Halaman tidak ditemukan / Page not found | ObitoGlory"
+  description="Halaman ini tidak ditemukan / This page could not be found."
   noindex
 >
   <section class="not-found" aria-labelledby="not-found-title">
     <div class="container not-found__grid">
       <div class="not-found__body">
         <p class="not-found__code mono" aria-hidden="true">404</p>
-        <h1 id="not-found-title">This page doesn't exist.</h1>
-        <p>
-          It may have been moved, the link could be wrong, or the page was never built. Start
-          from the project index or go back to the beginning.
-        </p>
+        <h1 id="not-found-title">This page doesn't exist. / Halaman ini tidak ditemukan.</h1>
+        <BilingualCopy
+          en="It may have moved, the link could be wrong, or the page was never built."
+          id="Mungkin halaman dipindahkan, tautannya salah, atau halamannya memang belum dibuat."
+        />
         <div class="not-found__actions">
-          <a class="btn btn--primary" href="/">Back to home</a>
-          <a class="btn" href="/projects/">Browse projects</a>
+          <a class="btn btn--primary" href="/">Back to home / Kembali ke beranda</a>
+          <a class="btn" href="/projects/">Browse projects / Lihat proyek</a>
         </div>
       </div>
       <PortraitFrame

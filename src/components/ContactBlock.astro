@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site';
+import BilingualCopy from './BilingualCopy.astro';
 
 interface Props {
   title?: string;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 const {
-  title = 'Have something worth building?',
+  title = 'Have something worth building? / Ada ide yang ingin diwujudkan?',
   id = 'contact-heading',
 } = Astro.props;
 ---
@@ -16,10 +17,11 @@ const {
   <div class="container contact-block__inner">
     <div class="contact-block__main">
       <h2 class="contact-block__title" id={id}>{title}</h2>
-      <p class="contact-block__copy">
-        For project inquiries, collaboration, or technical discussions.
-      </p>
-      <a class="btn btn--primary" href="/contact/">Get in touch</a>
+      <BilingualCopy
+        en="For project inquiries, collaboration, or technical discussions."
+        id="Untuk pertanyaan project, kolaborasi, atau diskusi teknis."
+      />
+      <a class="btn btn--primary" href="/contact/">Get in touch / Hubungi saya</a>
     </div>
 
     <div class="contact-block__details mono">

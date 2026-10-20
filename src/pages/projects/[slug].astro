@@ -1,5 +1,6 @@
 ---
 import ContactBlock from '../../components/ContactBlock.astro';
+import BilingualCopy from '../../components/BilingualCopy.astro';
 import RouteDiagram from '../../components/RouteDiagram.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getNextProject, projects, type Project } from '../../data/projects';
@@ -35,7 +36,7 @@ const schema = {
   '@type': 'CreativeWork',
   name: project.name,
   description: project.summary,
-  url: `https://obitoglory.tech/projects/${project.slug}/`,
+  url: `${site.url}/projects/${project.slug}/`,
   author: {
     '@id': `${site.url}/#person`,
   },
@@ -50,8 +51,8 @@ const schema = {
 ---
 
 <BaseLayout
-  title={`${project.name} | ObitoGlory`}
-  description={project.summary}
+  title={`${project.name} | DikaOfc / DikaGlorya | ObitoGlory`}
+  description={`${project.summaryId} / ${project.summary}`}
   type="article"
   schema={schema}
 >
@@ -59,7 +60,7 @@ const schema = {
     <header class="project-hero">
       <div class="container">
         <nav class="breadcrumb mono" aria-label="Breadcrumb">
-          <a href="/projects/">Projects</a>
+          <a href="/projects/">Projects / Proyek</a>
           <span class="breadcrumb__sep" aria-hidden="true">/</span>
           <span aria-current="page">{project.name}</span>
         </nav>
@@ -75,9 +76,9 @@ const schema = {
 
         <div class="project-hero__actions">
           <a class="btn btn--primary" href={`/contact/?service=${service}`}>
-            Discuss a project like this
+            Discuss a project / Diskusikan proyek serupa
           </a>
-          <a class="btn" href="/projects/">All projects</a>
+          <a class="btn" href="/projects/">All projects / Semua proyek</a>
         </div>
       </div>
     </header>
@@ -85,18 +86,18 @@ const schema = {
     <div class="container project-layout">
       <div class="project-content">
         <section class="project-section">
-          <h2>Overview</h2>
-          <p>{project.summary}</p>
+          <h2>Overview / Ringkasan</h2>
+          <BilingualCopy en={project.summary} id={project.summaryId} />
         </section>
 
         <section class="project-section">
-          <h2>The problem</h2>
-          <p>{project.problem}</p>
+          <h2>The problem / Masalah</h2>
+          <BilingualCopy en={project.problem} id={project.problemId} />
         </section>
 
         <section class="project-section">
-          <h2>What was built</h2>
-          <p>{project.approach}</p>
+          <h2>What was built / Yang dibuat</h2>
+          <BilingualCopy en={project.approach} id={project.approachId} />
           <ul class="feature-list">
             {project.features.map((feature) => (
               <li>{feature}</li>
@@ -105,14 +106,15 @@ const schema = {
         </section>
 
         <section class="project-section">
-          <h2>Availability and limitations</h2>
-          <p>
-            {project.link
+          <h2>Availability and limitations / Ketersediaan dan batasan</h2>
+          <BilingualCopy
+            en={`${project.link
               ? `A public link is available: ${project.link.label}.`
-              : 'The source code and a public demo are not linked for this project.'}
-            This page documents the described scope, but without a public source or demo a
-            visitor cannot independently inspect or run the implementation.
-          </p>
+              : 'The source code and a public demo are not linked for this project.'} This page documents the described scope, but without a public source or demo a visitor cannot independently inspect or run the implementation.`}
+            id={`${project.link
+              ? `Tautan publik tersedia: ${project.link.label}.`
+              : 'Kode sumber dan demo publik belum ditautkan untuk proyek ini.'} Halaman ini menjelaskan ruang lingkup yang dimaksud; tanpa source atau demo publik, pengunjung belum dapat memeriksa atau menjalankan implementasinya sendiri.`}
+          />
         </section>
 
         {project.slug === 'dikaroute' && (
@@ -175,11 +177,11 @@ const schema = {
 
     <div class="container">
       <a class="next-project" href={`/projects/${nextProject.slug}/`}>
-        <span class="mono">Next project</span>
+        <span class="mono">Next project / Proyek berikutnya</span>
         <span class="next-project__name">{nextProject.name}</span>
       </a>
     </div>
   </article>
 
-  <ContactBlock id="project-contact-title" title="Need a system like this?" />
+  <ContactBlock id="project-contact-title" title="Need a system like this? / Butuh sistem seperti ini?" />
 </BaseLayout>

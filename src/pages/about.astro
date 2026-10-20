@@ -1,5 +1,6 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
+import BilingualCopy from '../components/BilingualCopy.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
 import SectionHead from '../components/SectionHead.astro';
 import StackGrid from '../components/StackGrid.astro';
@@ -12,7 +13,7 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
   name: 'About ObitoGlory',
-  url: 'https://obitoglory.tech/about/',
+  url: `${site.url}/about/`,
   mainEntity: {
     '@type': 'Person',
     '@id': `${site.url}/#person`,
@@ -34,23 +35,23 @@ const schema = {
 ---
 
 <BaseLayout
-  title="About DikaGlorya | ObitoGlory"
-  description="Meet DikaGlorya, also known as DikaCode. Learn how the DikaGlory, DikaOfc, Dika Developer, Dika Kendal, and ObitoGlory names relate to one independent developer."
+  title="About DikaGlorya (DikaOfc) / Tentang DikaGlorya | ObitoGlory"
+  description="Tentang DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode, programmer independen dari Kendal, Indonesia. Kenali identitas, karya, dan tautan resminya / About DikaGlorya, also known as DikaOfc and DikaCode, an independent developer from Kendal."
   type="profile"
   schema={schema}
 >
   <section class="page-hero page-hero--about" aria-labelledby="about-title">
     <div class="container">
-      <p class="page-hero__eyebrow mono">About / DikaGlorya</p>
-      <h1 id="about-title">One developer, start to handover.</h1>
-      <p class="page-hero__lead">
-        The work covers websites, bots, AI tools, and security automation. One person handles
-        the build from the first sketch to the handover, with the scope agreed before anything
-        starts.
-      </p>
+      <p class="page-hero__eyebrow mono">About / Tentang DikaGlorya (DikaOfc)</p>
+      <h1 id="about-title">One developer, start to handover. / Satu developer, dari awal hingga serah terima.</h1>
+      <BilingualCopy
+        class="page-hero__lead"
+        en="I build websites, bots, AI tools, and security automation. Scope is agreed before work begins."
+        id="Saya membuat website, bot, AI tools, dan automasi keamanan. Lingkup pekerjaan disepakati sebelum mulai."
+      />
       <div class="page-hero__meta mono">
         <span>{site.location}</span>
-        <span>Personal identity / developer name / website brand</span>
+        <span>Nama pribadi / personal identity · nama developer / developer name · brand website / website brand</span>
       </div>
     </div>
   </section>
@@ -58,18 +59,15 @@ const schema = {
   <section class="section--tight" aria-label="Introduction">
     <div class="container profile-grid">
       <div class="profile-body">
-        <h2 id="profile-title">Not a big company. One person taking the work seriously.</h2>
-        <p>
-          DikaGlorya is an independent developer from Kendal, Central Java. DikaCode is the
-          developer name used for software work; ObitoGlory is the name of this website and
-          portfolio.
-        </p>
-        <p>
-          DikaGlory, DikaOfc, Dika Developer, and Dika Kendal are other names or descriptions
-          associated with the same person where they are actually used. They are not separate
-          people or separate brands. This site is the canonical place to find the work and the
-          official links.
-        </p>
+        <h2 id="profile-title">Not a big company. One person taking the work seriously. / Bukan perusahaan besar. Satu orang yang serius mengerjakan karya.</h2>
+        <BilingualCopy
+          en="DikaGlorya is an independent developer from Kendal, Central Java. DikaCode is the developer identity used for software work; ObitoGlory is this website and portfolio."
+          id="DikaGlorya adalah programmer independen dari Kendal, Jawa Tengah. DikaCode adalah identitas developer untuk karya software; ObitoGlory adalah nama website dan portofolio ini."
+        />
+        <BilingualCopy
+          en="DikaOfc and DikaGlory are other public names used by the same person, not separate people. Dika Developer is a professional description. This page connects those names to the work and the official links."
+          id="DikaOfc dan DikaGlory adalah nama publik lain yang digunakan orang yang sama, bukan orang berbeda. Dika Developer adalah sebutan profesi. Halaman ini menghubungkan nama-nama tersebut dengan karya dan tautan resmi."
+        />
       </div>
       <PortraitFrame
         class="profile-portrait"
@@ -82,16 +80,17 @@ const schema = {
     <div class="container">
       <SectionHead
         id="identity-title"
-        title="One person, a few public names."
-        meta="Names are listed with their actual context, not as separate profiles."
+        title="One person, a few public names / Satu orang, beberapa nama publik"
+        meta="The context is explained honestly / Konteks setiap nama dijelaskan dengan jujur."
       />
       <dl class="identity-list">
-        <div><dt>DikaGlorya</dt><dd>Primary personal identity.</dd></div>
-        <div><dt>DikaCode</dt><dd>Developer identity used for software work.</dd></div>
-        <div><dt>ObitoGlory</dt><dd>Website and portfolio brand.</dd></div>
-        <div><dt>DikaGlory / DikaOfc</dt><dd>Other public names used for the same person.</dd></div>
-        <div><dt>Dika Developer</dt><dd>Professional description, not another person.</dd></div>
-        <div><dt>Dika Kendal</dt><dd>Location-related name; Kendal is the stated base.</dd></div>
+        <div><dt>DikaGlorya</dt><dd>Identitas pribadi utama / Primary personal identity.</dd></div>
+        <div><dt>DikaOfc</dt><dd>Nama publik lain yang digunakan DikaGlorya / Another public name used by DikaGlorya.</dd></div>
+        <div><dt>DikaCode</dt><dd>Identitas developer untuk karya software / Developer identity for software work.</dd></div>
+        <div><dt>ObitoGlory</dt><dd>Brand website dan portofolio / Website and portfolio brand.</dd></div>
+        <div><dt>DikaGlory</dt><dd>Nama publik lain untuk orang yang sama / Another public name for the same person.</dd></div>
+        <div><dt>Dika Developer</dt><dd>Deskripsi profesi, bukan orang lain / A professional description, not another person.</dd></div>
+        <div><dt>Dika Kendal</dt><dd>Nama yang terkait lokasi; basis di Kendal / Location-related name; based in Kendal.</dd></div>
       </dl>
     </div>
   </section>
@@ -100,16 +99,16 @@ const schema = {
     <div class="container">
       <SectionHead
         id="principles-title"
-        title="Working approach"
-        meta="Three rules applied before touching a new project."
+        title="Working approach / Cara kerja"
+        meta="Three rules before each project / Tiga prinsip sebelum mengerjakan proyek."
       />
       <ul class="principle-list">
         {principles.map((principle, index) => (
           <li class="principle">
             <span class="principle__index mono" aria-hidden="true">{`0${index + 1}`}</span>
             <div>
-              <h3>{principle.title}</h3>
-              <p>{principle.body}</p>
+              <h3>{principle.titleId} / {principle.title}</h3>
+              <BilingualCopy en={principle.body} id={principle.bodyId} />
             </div>
           </li>
         ))}
@@ -121,14 +120,14 @@ const schema = {
     <div class="container">
       <SectionHead
         id="focus-title"
-        title="Current interests"
-        meta="What is being worked on and learned right now."
+        title="Current interests / Fokus saat ini"
+        meta="What I am exploring now / Hal yang sedang dipelajari dan dieksplorasi."
       />
       <ul class="focus-list">
         {currentFocus.map((item, index) => (
           <li>
             <span class="mono">{String(index + 1).padStart(2, '0')}</span>
-            <span>{item}</span>
+            <BilingualCopy en={item.en} id={item.id} />
           </li>
         ))}
       </ul>
@@ -139,8 +138,8 @@ const schema = {
     <div class="container">
       <SectionHead
         id="stack-title"
-        title="Technology and tools"
-        meta="Grouped by purpose, not scored."
+        title="Technology and tools / Teknologi dan tools"
+        meta="Grouped by purpose, not ranked / Dikelompokkan berdasarkan fungsi, bukan peringkat."
       />
       <StackGrid />
     </div>
@@ -148,7 +147,7 @@ const schema = {
 
   <section class="section--tight" aria-labelledby="profiles-title">
     <div class="container">
-      <SectionHead id="profiles-title" title="Elsewhere" meta="Public links used by this site." />
+      <SectionHead id="profiles-title" title="Elsewhere / Tautan resmi" meta="Public links used by this site / Tautan publik yang digunakan di website ini." />
       <ul class="profile-links mono">
         <li>
           <a href={site.github} rel="me noopener noreferrer" target="_blank" data-outbound="github">

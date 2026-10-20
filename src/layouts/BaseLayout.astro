@@ -71,7 +71,7 @@ const websiteSchema = {
   alternateName: ['obitoglory.tech'],
   url: site.url,
   description: site.description,
-  inLanguage: 'en',
+  inLanguage: ['id', 'en'],
   author: {
     '@id': `${site.url}/#person`,
   },
@@ -114,6 +114,7 @@ const pageSchemas = [
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content={site.locale} />
+    <meta property="og:locale:alternate" content={site.alternateLocale} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

@@ -159,8 +159,8 @@ const html = `<!doctype html>
           <p class="sub">ObitoGlory is the home for practical software, developer tools, and technical notes.</p>
         </main>
         <figure class="portrait">
-          <img src="data:image/jpeg;base64,${portrait}" alt="Portrait of Dika" />
-          <figcaption class="caption"><b>DikaGlorya / developer</b><span>Portrait 01</span></figcaption>
+          <img src="data:image/jpeg;base64,${portrait}" alt="Masked portrait of DikaGlorya" />
+          <figcaption class="caption"><b>DikaGlorya / developer</b><span>Masked portrait</span></figcaption>
         </figure>
       </div>
       <footer>
