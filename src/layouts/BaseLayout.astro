@@ -1,8 +1,5 @@
 ---
-import '@fontsource-variable/inter/wght.css';
-import '@fontsource-variable/newsreader/wght.css';
-import '@fontsource/jetbrains-mono/latin-400.css';
-import '@fontsource/jetbrains-mono/latin-500.css';
+import '../styles/fonts.css';
 import '../styles/global.css';
 
 import Footer from '../components/Footer.astro';
@@ -94,6 +91,7 @@ const pageSchemas = [
     <meta name="color-scheme" content="dark" />
     <meta name="author" content={site.personName} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <title>{title}</title>
     <meta name="description" content={description} />

@@ -112,6 +112,14 @@ a {
   text-decoration: none;
 }
 
+.arrow-icon--down {
+  transform: rotate(90deg);
+}
+
+.arrow-icon--up {
+  transform: rotate(-90deg);
+}
+
 ul,
 ol {
   margin: 0;

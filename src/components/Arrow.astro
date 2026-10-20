@@ -5,17 +5,15 @@ interface Props {
 }
 
 const { class: className = '', direction = 'right' } = Astro.props;
-const rotation = direction === 'down' ? 90 : direction === 'up' ? -90 : 0;
 ---
 
 <svg
-  class={className}
+  class:list={['arrow-icon', `arrow-icon--${direction}`, className]}
   width="18"
   height="18"
   viewBox="0 0 18 18"
   fill="none"
   aria-hidden="true"
-  style={`transform: rotate(${rotation}deg)`}
 >
   <path d="M2.5 9h12M9.5 3.5 15 9l-5.5 5.5" stroke="currentColor" stroke-width="1.5" />
 </svg>

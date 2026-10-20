@@ -1,8 +1,11 @@
 import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const baseURL = process.env.BASE_URL ?? 'http://127.0.0.1:4321';
 const axePath = path.join(process.cwd(), 'node_modules/axe-core/axe.min.js');
+const axeURL = new URL('/__test__/axe.min.js', baseURL).href;
+const axeSource = await readFile(axePath);
 
 const pages = [
   '/',
@@ -34,6 +37,13 @@ for (const viewport of viewports) {
 
   for (const pagePath of pages) {
     const page = await context.newPage();
+    await page.route(axeURL, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/javascript',
+        body: axeSource,
+      }),
+    );
     const consoleErrors = [];
     page.on('console', (message) => {
       if (message.type() === 'error') consoleErrors.push(message.text());
@@ -41,7 +51,7 @@ for (const viewport of viewports) {
     page.on('pageerror', (error) => consoleErrors.push(error.message));
 
     await page.goto(`${baseURL}${pagePath}`, { waitUntil: 'networkidle' });
-    await page.addScriptTag({ path: axePath });
+    await page.addScriptTag({ url: axeURL });
 
     const results = await page.evaluate(async () => {
       return await window.axe.run(document, {

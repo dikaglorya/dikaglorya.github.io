@@ -10,10 +10,34 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://dikaglorya.github.io',
   output: 'static',
   trailingSlash: 'always',
+  markdown: {
+    syntaxHighlight: 'prism',
+  },
   build: {
     format: 'directory',
   },
   compressHTML: true,
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-src 'none'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "form-action 'self' mailto:",
+        'upgrade-insecure-requests',
+      ],
+      scriptDirective: {
+        resources: ["'self'"],
+      },
+      styleDirective: {
+        resources: ["'self'"],
+      },
+    },
+  },
   server: {
     host: '127.0.0.1',
   },

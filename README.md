@@ -23,6 +23,9 @@ Tokens live at the top of `src/styles/global.css`. They are initial values, not 
 | `--control-border` | `#64757d` | Interactive boundaries: 4.2:1 on the page background and 3.8:1 on `--surface`; passes the 3:1 non-text requirement |
 
 - Type: **Newsreader Variable** for display (an editorial serif chosen for the independent-journal voice), **Inter Variable** for body, **JetBrains Mono** for eyebrows, labels, and metadata. All are self-hosted through Fontsource packages: `@fontsource-variable/newsreader`, `@fontsource-variable/inter`, `@fontsource/jetbrains-mono`; no font CDNs.
+- Performance: `src/styles/fonts.css` includes only the Latin and Latin Extended WOFF2 subsets used by the site. Fonts use `font-display: swap`, images use Astro-generated responsive WebP variants, and the homepage portrait is prioritized as the hero image.
+- Security: Astro generates a hash-based Content Security Policy for bundled and inline scripts/styles; the policy restricts resource origins, frames, objects, and form destinations. A strict referrer policy is set, and CI runs `npm audit --audit-level=high`.
+- Hosting limitation: GitHub Pages does not let this repository configure arbitrary HTTP response headers. The CSP is delivered as a meta policy; protections that require response headers (such as HSTS and `X-Frame-Options`) must be configured at a capable CDN/hosting layer when the domain is moved. Do not treat the meta policy as a replacement for those headers.
 - Radii: 2px for small controls, 3px for editorial cards, and 6px for large panels. Shadows are reserved for the portrait.
 - Layout: 1200px outer container, 720px reading width for prose, gutters `clamp(20px, 5vw, 76px)`.
 - Motion: restrained, transitions in the 140–220ms range on color, border, and transform only. `prefers-reduced-motion` disables all of it. There is no scroll-reveal system.
