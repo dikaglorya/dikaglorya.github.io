@@ -68,11 +68,11 @@ This is a map of what I work with, not a claim of equal depth in each.
 
 ## Explore
 
-- [Projects](https://dikaglorya.github.io/projects/) — documented case studies
-- [About](https://dikaglorya.github.io/about/) — who I am and what the aliases mean
-- [Journal](https://dikaglorya.github.io/journal/) — technical notes
-- [Services](https://dikaglorya.github.io/services/) — what I take on
-- [Contact](https://dikaglorya.github.io/contact/) — Telegram is fastest
+- [Projects](https://dikaglorya.github.io/projects/): documented case studies
+- [About](https://dikaglorya.github.io/about/): who I am and what the aliases mean
+- [Journal](https://dikaglorya.github.io/journal/): technical notes
+- [Services](https://dikaglorya.github.io/services/): what I take on
+- [Contact](https://dikaglorya.github.io/contact/): Telegram is fastest
 
 ## Find Me Online
 
