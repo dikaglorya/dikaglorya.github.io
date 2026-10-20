@@ -1,17 +1,13 @@
 export type ArticleSection = {
   heading: string;
-  headingId: string;
   paragraphs: string[];
-  paragraphsId: string[];
   code?: string;
 };
 
 export type Article = {
   slug: string;
   title: string;
-  titleId: string;
   description: string;
-  descriptionId: string;
   date: string;
   readingTime: number;
   tags: string[];
@@ -21,36 +17,23 @@ export type Article = {
 export const articles: Article[] = [
   {
     slug: 'small-static-portfolio-architecture',
-    title: 'A small static portfolio architecture that stays easy to maintain',
-    titleId: 'Arsitektur portofolio statis yang sederhana dan mudah dirawat',
+    title: 'Arsitektur portofolio statis yang sederhana dan mudah dirawat',
     description:
-      'A practical look at shared page metadata, data-driven project routes, a generated sitemap, and the trade-offs of a static Astro portfolio.',
-    descriptionId:
       'Mengenal metadata halaman bersama, route project berbasis data, sitemap otomatis, dan trade-off portofolio statis dengan Astro.',
     date: '2026-10-20',
     readingTime: 5,
-    tags: ['Astro', 'Static sites', 'SEO'],
+    tags: ['Astro', 'Situs statis', 'SEO'],
     sections: [
       {
-        heading: 'The problem: a portfolio can become a pile of one-off pages',
-        headingId: 'Masalahnya: portofolio bisa berubah menjadi tumpukan halaman terpisah',
+        heading: 'Masalahnya: portofolio bisa berubah menjadi tumpukan halaman terpisah',
         paragraphs: [
-          'A portfolio needs project pages, clear identity information, and search metadata. Copying those details into every page makes it easy for titles, author names, canonical URLs, and social links to drift apart.',
-          'This site is built with Astro as static HTML. The goal is not to claim a performance score; it is to keep the content and page rules understandable, then make the published routes checkable at build time.',
-        ],
-        paragraphsId: [
           'Portofolio membutuhkan halaman proyek, informasi identitas yang jelas, dan metadata untuk pencarian. Menyalin detail tersebut ke setiap halaman membuat judul, nama penulis, URL kanonis, dan tautan sosial mudah berbeda satu sama lain.',
           'Situs ini dibuat dengan Astro sebagai HTML statis. Tujuannya bukan mengklaim skor performa, tetapi menjaga konten dan aturan halaman tetap mudah dipahami, lalu memastikan route yang diterbitkan dapat diperiksa saat proses build.',
         ],
       },
       {
-        heading: 'Put site identity and shared metadata in one place',
-        headingId: 'Simpan identitas situs dan metadata bersama di satu tempat',
+        heading: 'Simpan identitas situs dan metadata bersama di satu tempat',
         paragraphs: [
-          'The site identity lives in `src/data/site.ts`. The shared layout reads that data to emit canonical, Open Graph, Twitter, and structured-data metadata. A page can still pass its own title, description, and specific schema without duplicating the global Person and WebSite entities.',
-          'This helps keep the primary person name, the ObitoGlory website brand, and the canonical origin distinct. Alternate names describe one person; the website remains its own entity.',
-        ],
-        paragraphsId: [
           'Identitas situs disimpan di `src/data/site.ts`. Layout bersama membaca data tersebut untuk menghasilkan metadata canonical, Open Graph, Twitter, dan structured data. Halaman tetap dapat memberikan judul, deskripsi, dan schema khusus tanpa menggandakan entitas Person dan WebSite global.',
           'Pemisahan ini membantu membedakan nama utama seseorang, brand website ObitoGlory, dan origin kanonis. Nama alternatif menjelaskan satu orang; website tetap menjadi entitas tersendiri.',
         ],
@@ -66,13 +49,8 @@ const personSchema = {
 };`,
       },
       {
-        heading: 'Generate repeated project pages from structured data',
-        headingId: 'Buat halaman proyek berulang dari data terstruktur',
+        heading: 'Buat halaman proyek berulang dari data terstruktur',
         paragraphs: [
-          'Project summaries are stored in `src/data/projects.ts`. Astro generates each project detail route from that list, so titles, descriptions, stack details, and the project URL all refer to the same entry.',
-          'A data-driven route is useful only when its source data is accurate. The portfolio leaves repository and demo links out unless a real destination is available; a project description is not proof that the source is public.',
-        ],
-        paragraphsId: [
           'Ringkasan proyek disimpan di `src/data/projects.ts`. Astro membuat setiap route detail proyek dari daftar tersebut, sehingga judul, deskripsi, detail teknologi, dan URL proyek mengacu ke entri yang sama.',
           'Route berbasis data hanya berguna jika sumber datanya akurat. Portofolio tidak menampilkan tautan repositori atau demo kecuali tujuan nyatanya tersedia; deskripsi proyek bukan bukti bahwa source code-nya publik.',
         ],
@@ -84,13 +62,8 @@ const personSchema = {
 }`,
       },
       {
-        heading: 'Make the sitemap follow the same content sources',
-        headingId: 'Buat sitemap mengikuti sumber konten yang sama',
+        heading: 'Buat sitemap mengikuti sumber konten yang sama',
         paragraphs: [
-          'The sitemap is generated from the static routes and the project and article data. Adding a real content entry therefore adds its canonical URL to the same build output, rather than relying on a hand-maintained list that can go stale.',
-          'The repository also has a link-check script that resolves internal links and sitemap URLs against the generated `dist/` files. That catches missing local destinations; it does not prove that third-party sites will remain online.',
-        ],
-        paragraphsId: [
           'Sitemap dihasilkan dari route statis serta data proyek dan artikel. Karena itu, menambahkan konten nyata juga menambahkan URL kanonisnya ke hasil build yang sama, tanpa mengandalkan daftar manual yang bisa kedaluwarsa.',
           'Repositori ini juga memiliki skrip pemeriksa tautan yang mencocokkan tautan internal dan URL sitemap dengan file hasil `dist/`. Ini menangkap tujuan lokal yang hilang, tetapi tidak membuktikan bahwa situs pihak ketiga akan selalu aktif.',
         ],
@@ -101,25 +74,15 @@ const personSchema = {
 ];`,
       },
       {
-        heading: 'Know when static publishing is the wrong trade-off',
-        headingId: 'Ketahui kapan publikasi statis bukan pilihan yang tepat',
+        heading: 'Ketahui kapan publikasi statis bukan pilihan yang tepat',
         paragraphs: [
-          'Static output avoids a runtime content server for these pages and keeps deployment simple. The trade-off is that content changes require a build and deploy; there is no editor or live publishing workflow in this repository.',
-          'That is a good fit for a small portfolio and a modest journal. If publishing volume or collaborative editing grows, the content workflow should be revisited based on that need rather than adding a CMS pre-emptively.',
-        ],
-        paragraphsId: [
           'Output statis menghindari server konten saat runtime untuk halaman ini dan menyederhanakan deployment. Konsekuensinya, perubahan konten memerlukan build dan deploy; repositori ini tidak memiliki editor atau alur publikasi langsung.',
           'Pilihan ini cocok untuk portofolio kecil dan jurnal sederhana. Jika volume publikasi atau kebutuhan kolaborasi meningkat, alur konten sebaiknya ditinjau berdasarkan kebutuhan tersebut, bukan menambahkan CMS terlalu dini.',
         ],
       },
       {
-        heading: 'What this does and does not prove',
-        headingId: 'Hal yang dibuktikan dan tidak dibuktikan',
+        heading: 'Hal yang dibuktikan dan tidak dibuktikan',
         paragraphs: [
-          'The implementation shows how this repository shares identity metadata, generates content routes, and checks its own static links. It does not establish search rankings, measured speed improvements, or adoption by other developers.',
-          'The useful next step is to publish actual project releases and documentation, then use privacy-conscious search and feedback data to decide what to improve.',
-        ],
-        paragraphsId: [
           'Implementasi ini menunjukkan cara repositori berbagi metadata identitas, membuat route konten, dan memeriksa tautan statisnya sendiri. Ini tidak membuktikan peringkat pencarian, peningkatan kecepatan yang terukur, ataupun adopsi oleh developer lain.',
           'Langkah berikutnya yang bermanfaat adalah merilis proyek nyata beserta dokumentasinya, lalu memakai data pencarian dan masukan yang menjaga privasi untuk menentukan perbaikan.',
         ],
@@ -128,35 +91,23 @@ const personSchema = {
   },
   {
     slug: 'static-contact-form-mailto-handoff',
-    title: 'A contact form with no backend: local validation and the mailto handoff',
-    titleId: 'Formulir kontak tanpa backend: validasi lokal dan pengiriman lewat mailto',
+    title: 'Formulir kontak tanpa backend: validasi lokal dan pengiriman lewat mailto',
     description:
-      'How the ObitoGlory contact form works on a static site: novalidate validation, a prepared mailto draft, a status-line fallback for sandboxed browsers, and the trade-offs accepted.',
-    descriptionId:
       'Cara kerja formulir kontak ObitoGlory di situs statis: validasi lokal, draft mailto, fallback untuk browser sandbox, dan batasan yang perlu diketahui.',
     date: '2026-10-20',
     readingTime: 6,
-    tags: ['Astro', 'Forms', 'Static sites'],
+    tags: ['Astro', 'Formulir', 'Situs statis'],
     sections: [
       {
-        heading: 'The problem: a static site has no inbox',
-        headingId: 'Masalahnya: situs statis tidak memiliki kotak masuk',
+        heading: 'Masalahnya: situs statis tidak memiliki kotak masuk',
         paragraphs: [
-          'This site is hosted as static files, so there is no origin-controlled server to receive a form POST. A contact form has three realistic options: a third-party form service, a self-hosted endpoint, or no form at all.',
-          'A third-party service needs an external script, an account, and a privacy policy to review. A backend turns a static portfolio into something with logs, spam filtering, and maintenance. The path used here is the middle one: the form composes a structured brief and hands it over to the email client the visitor already uses, with mailto. The address is published on the page either way, so nothing new is exposed.',
-        ],
-        paragraphsId: [
           'Situs ini di-host sebagai file statis, jadi tidak ada server yang dikendalikan origin untuk menerima POST formulir. Formulir kontak memiliki tiga pilihan realistis: layanan formulir pihak ketiga, endpoint yang di-host sendiri, atau tidak menyediakan formulir.',
           'Layanan pihak ketiga membutuhkan skrip eksternal, akun, dan kebijakan privasi yang perlu ditinjau. Backend membuat portofolio statis memiliki log, penyaringan spam, dan kebutuhan pemeliharaan. Pilihan di sini adalah jalan tengah: formulir menyusun brief terstruktur lalu menyerahkannya lewat mailto ke aplikasi email yang sudah digunakan pengunjung. Alamat email tetap ditampilkan di halaman, jadi tidak ada informasi baru yang dibuka.',
         ],
       },
       {
-        heading: 'Keep a form that works without JavaScript',
-        headingId: 'Pertahankan formulir yang tetap berfungsi tanpa JavaScript',
+        heading: 'Pertahankan formulir yang tetap berfungsi tanpa JavaScript',
         paragraphs: [
-          'The form element itself declares the fallback before any script is involved: a mailto action with text/plain encoding. If the script layer never loads, the browser still attempts native mailto submission. The result varies by browser and is never polished, but it is not zero.',
-        ],
-        paragraphsId: [
           'Elemen formulir mendeklarasikan fallback sebelum skrip apa pun berjalan: aksi mailto dengan encoding text/plain. Jika skrip tidak pernah dimuat, browser tetap mencoba pengiriman mailto bawaan. Hasilnya berbeda-beda antarbrowser dan tidak selalu mulus, tetapi tetap menyediakan jalur dasar.',
         ],
         code: `<form
@@ -169,13 +120,8 @@ const personSchema = {
 >`,
       },
       {
-        heading: 'Take over the submit and validate locally',
-        headingId: 'Tangani submit dan validasi secara lokal',
+        heading: 'Tangani submit dan validasi secara lokal',
         paragraphs: [
-          'The novalidate attribute disables native bubbles so the custom handler always runs. checkValidity and reportValidity keep the native behavior that matters: focus moves to the first invalid field, and the browser explains which field failed. A status line carries the message in the wording used everywhere else on the page.',
-          'One migration detail: the service select is normalized from the query string first. Old Indonesian URLs such as ?service=perbaikan map to repairs, so a decade-old link still preselects the right option instead of failing silently.',
-        ],
-        paragraphsId: [
           'Atribut novalidate menonaktifkan pesan bawaan agar handler kustom selalu berjalan. checkValidity dan reportValidity mempertahankan perilaku bawaan yang penting: fokus berpindah ke kolom tidak valid pertama dan browser menjelaskan kesalahannya. Baris status menyampaikan pesan dengan gaya bahasa yang konsisten di seluruh halaman.',
           'Satu detail migrasi: pilihan layanan dinormalisasi lebih dulu dari query string. URL Indonesia lama seperti ?service=perbaikan dipetakan ke repairs, sehingga tautan lama tetap memilih opsi yang tepat dan tidak gagal tanpa penjelasan.',
         ],
@@ -183,82 +129,59 @@ const personSchema = {
   if (!form.checkValidity()) {
     event.preventDefault();
     form.reportValidity();
-    setStatus('Complete the required fields first.', true);
+    setStatus('Lengkapi kolom wajib terlebih dahulu.', true);
     return;
   }
   event.preventDefault();
-  // ...compose the mailto draft from FormData
+  // ...susun draft mailto dari FormData
 });`,
       },
       {
-        heading: 'Compose the draft and hand it off',
-        headingId: 'Susun draft lalu serahkan ke aplikasi email',
+        heading: 'Susun draft lalu serahkan ke aplikasi email',
         paragraphs: [
-          'Values come from FormData, trimmed the same way no matter the source field. The subject and body are assembled into readable plain text, and both query values are passed through encodeURIComponent so newlines and ampersands in the message cannot corrupt the mailto URL.',
-        ],
-        paragraphsId: [
           'Nilai diambil dari FormData dan dirapikan dengan cara yang sama, apa pun kolom sumbernya. Subjek dan isi disusun menjadi teks biasa yang mudah dibaca; kedua nilai query melewati encodeURIComponent agar baris baru dan ampersand di dalam pesan tidak merusak URL mailto.',
         ],
-        code: `const subject = \`Project brief: \${service} - \${name}\`;
+        code: `const subject = \`Brief proyek: \${service} - \${name}\`;
 const body = [
-  \`Name: \${name}\`,
+  \`Nama: \${name}\`,
   \`Email: \${email}\`,
-  \`Service: \${service}\`,
-  \`Budget: \${budget || 'Not decided yet'}\`,
+  \`Layanan: \${service}\`,
+  \`Anggaran: \${budget || 'Belum ditentukan'}\`,
   '',
-  'Message:',
+  'Pesan:',
   message,
 ].join('\\n');
 const mailto = \`mailto:\${formEmail}?subject=\${encodeURIComponent(subject)}&body=\${encodeURIComponent(body)}\`;`,
       },
       {
-        heading: 'The fallback that must exist',
-        headingId: 'Fallback yang wajib tersedia',
+        heading: 'Fallback yang wajib tersedia',
         paragraphs: [
-          'Script-initiated mailto navigation is blocked in some sandboxed browsers and embedded webviews. A status line that only says "opening your email" would then claim an action that never happened.',
-          'So the status line appends a real anchor element carrying the exact prepared href. Whatever the environment decides about window.location, the visitor always holds a clickable path to the same draft. The status element uses role="status" with aria-live="polite", and the copy-email button has its own failure path: if the Clipboard API rejects, the status says "Copy manually" followed by the address.',
-        ],
-        paragraphsId: [
-          'Navigasi mailto yang dimulai skrip diblokir oleh sebagian browser sandbox dan webview tertanam. Baris status yang hanya mengatakan “membuka email” akan mengklaim tindakan yang sebenarnya mungkin tidak terjadi.',
+          'Navigasi mailto yang dimulai skrip diblokir oleh sebagian browser sandbox dan webview tertanam. Baris status yang hanya mengatakan "membuka email" akan mengklaim tindakan yang sebenarnya mungkin tidak terjadi.',
           'Karena itu, baris status menambahkan elemen tautan nyata dengan href draft yang sudah disiapkan. Apa pun keputusan lingkungan terhadap window.location, pengunjung tetap memiliki tautan yang dapat diklik menuju draft yang sama. Elemen status memakai role="status" dengan aria-live="polite", sementara tombol salin email memiliki jalur gagal sendiri: jika Clipboard API menolak permintaan, status meminta pengguna menyalin alamat secara manual.',
         ],
         code: `const draftLink = document.createElement('a');
 draftLink.href = mailto;
 draftLink.textContent = formEmail;
-setStatus('Opening your email application. If nothing opens, use the prepared draft:', false, draftLink);
+setStatus('Membuka aplikasi email. Jika tidak terbuka, gunakan draft berikut:', false, draftLink);
 window.location.href = mailto;`,
       },
       {
-        heading: 'What is verified, and what is not',
-        headingId: 'Hal yang sudah diverifikasi dan yang belum',
+        heading: 'Hal yang sudah diverifikasi dan yang belum',
         paragraphs: [
-          'The verifiable part lives in this repository: typecheck and build pass, the internal link checker passes, and the recorded manual checks show the empty submit blocked with the required-field status, focus moved to the first invalid field, a filled submit preparing the exact draft, and zero console errors.',
-          'The unverifiable part is delivery. The email client decides whether mail is ever sent, and the site holds no receipt, no log, and no counter. That is the trade-off in exchange for keeping zero third-party involvement in a private message.',
-        ],
-        paragraphsId: [
           'Bagian yang dapat diverifikasi ada di repositori ini: pemeriksaan tipe dan build berhasil, pemeriksa tautan internal berhasil, dan catatan pemeriksaan manual menunjukkan submit kosong ditolak dengan status kolom wajib, fokus berpindah ke kolom tidak valid pertama, submit yang terisi menyiapkan draft yang tepat, serta tidak ada error console.',
           'Bagian yang tidak dapat diverifikasi adalah pengiriman. Aplikasi email menentukan apakah pesan benar-benar dikirim; situs tidak menyimpan bukti penerimaan, log, ataupun penghitung. Itulah komprominya agar pesan pribadi tidak melibatkan pihak ketiga.',
         ],
       },
       {
-        heading: 'Limitations, and when to replace this',
-        headingId: 'Batasan dan kapan solusi ini perlu diganti',
+        heading: 'Batasan dan kapan solusi ini perlu diganti',
         paragraphs: [
-          'mailto subjects and bodies are interpreted differently by every client: some strip newlines, some ignore prefill, and none accept attachments. Submissions are not stored anywhere, so a brief the visitor never sends leaves no trace on either side. The published address can be harvested like any public address.',
-          'None of these justify a backend for the current volume. The honest replacement points are real: a working endpoint when spam or volume justifies it, or first-party hosting that can accept POSTs. Until then the form copy says exactly what happens: nothing is sent to a server by this site.',
-        ],
-        paragraphsId: [
           'Setiap aplikasi email menafsirkan subjek dan isi mailto secara berbeda: sebagian menghapus baris baru, sebagian mengabaikan isian awal, dan tidak ada yang menerima lampiran. Submit tidak disimpan di mana pun, jadi brief yang tidak dikirim pengunjung tidak meninggalkan jejak di kedua sisi. Alamat email yang dipublikasikan juga dapat dipanen seperti alamat publik lainnya.',
           'Untuk volume saat ini, hal-hal tersebut belum menjadi alasan untuk menambahkan backend. Penggantian baru masuk akal ketika ada kebutuhan nyata: endpoint yang berfungsi jika spam atau volume membenarkannya, atau hosting sendiri yang bisa menerima POST. Sampai saat itu, teks formulir menjelaskan dengan tepat apa yang terjadi: situs ini tidak mengirim apa pun ke server.',
         ],
       },
       {
-        heading: 'Where to look',
-        headingId: 'Lokasi implementasi',
+        heading: 'Lokasi implementasi',
         paragraphs: [
-          'The form is at /contact/. The implementation is src/scripts/contact.ts in this website repository (github.com/dikaglorya/dikaglorya.github.io), and the architecture trade-offs are covered in the sibling note about the static portfolio structure that hosts this journal.',
-        ],
-        paragraphsId: [
           'Formulir tersedia di /contact/. Implementasinya berada di src/scripts/contact.ts dalam repositori website ini (github.com/dikaglorya/dikaglorya.github.io), sedangkan kompromi arsitekturnya dijelaskan di artikel terkait tentang struktur portofolio statis yang menaungi jurnal ini.',
         ],
       },

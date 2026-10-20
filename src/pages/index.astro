@@ -1,6 +1,5 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
-import BilingualCopy from '../components/BilingualCopy.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import RouteDiagram from '../components/RouteDiagram.astro';
@@ -18,22 +17,16 @@ const selected = projects.filter((project) => project.slug !== 'dikaroute').slic
 
 const capabilities = [
   {
-    title: 'Websites',
-    titleId: 'Website',
-    body: 'Responsive interfaces and small web applications, built on a clear structure and tested before delivery.',
-    bodyId: 'Website responsif dan aplikasi web kecil dengan struktur jelas, diuji sebelum diserahkan.',
+    title: 'Website',
+    body: 'Website responsif dan aplikasi web kecil dengan struktur jelas, diuji sebelum diserahkan.',
   },
   {
-    title: 'Bots and integrations',
-    titleId: 'Bot dan integrasi',
-    body: 'Automated workflows and platform integrations for Telegram, WhatsApp, and Discord.',
-    bodyId: 'Otomasi alur kerja dan integrasi Telegram, WhatsApp, serta Discord.',
+    title: 'Bot dan integrasi',
+    body: 'Otomasi alur kerja dan integrasi Telegram, WhatsApp, serta Discord.',
   },
   {
-    title: 'Developer tools',
-    titleId: 'Tools developer',
-    body: 'Utilities, scripts, and experiments that improve development workflows, including AI agents that run locally.',
-    bodyId: 'Utilitas, skrip, dan eksperimen untuk membantu workflow developer, termasuk AI agent lokal.',
+    title: 'Tools developer',
+    body: 'Utilitas, skrip, dan eksperimen untuk membantu workflow developer, termasuk AI agent lokal.',
   },
 ];
 
@@ -49,11 +42,11 @@ const homeSchema = {
     alternateName: site.alternateNames,
     url: site.url,
     image: new URL(site.profileImage, site.url).href,
-    jobTitle: 'Independent developer',
+    jobTitle: 'Developer independen',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Kendal',
-      addressRegion: 'Central Java',
+      addressRegion: 'Jawa Tengah',
       addressCountry: 'ID',
     },
   },
@@ -71,23 +64,23 @@ const homeSchema = {
         <PortraitFrame
           class="hero__portrait"
           sizes="(max-width: 1120px) 320px, 420px"
-          caption="DikaGlorya / developer"
+          caption="DikaGlorya, developer"
           index="ObitoGlory"
           priority
         />
         <div class="hero__body">
-          <p class="hero__eyebrow mono">Independent developer / programmer independen / Kendal, Indonesia</p>
+          <p class="hero__eyebrow mono">Developer independen · Kendal, Indonesia</p>
           <h1 class="hero__title" id="hero-title">
             <span class="line"><span>DikaGlorya<span class="hero__stop">.</span></span></span>
             <span class="line"><span>ObitoGlory.</span></span>
           </h1>
-          <BilingualCopy
-            en="I'm DikaGlorya, also known as DikaOfc and DikaCode. ObitoGlory is my home for practical software, developer tools, web projects, and technical experiments."
-            id="Saya DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode. ObitoGlory adalah rumah untuk karya software, developer tools, proyek web, dan eksperimen teknis."
-          />
+          <p class="hero__copy">
+            Saya DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode. ObitoGlory adalah rumah
+            untuk karya software, developer tools, proyek web, dan eksperimen teknis.
+          </p>
           <div class="hero__actions">
-            <a class="btn btn--primary" href="/projects/">Projects / Proyek</a>
-            <a class="btn" href="/about/">About / Tentang</a>
+            <a class="btn btn--primary" href="/projects/">Lihat proyek</a>
+            <a class="btn" href="/about/">Tentang saya</a>
           </div>
           <div class="hero__meta mono">
             <span>{site.location}</span>
@@ -98,12 +91,12 @@ const homeSchema = {
     </div>
   </section>
 
-  <div class="identity-strip" role="list" aria-label="Work areas">
+  <div class="identity-strip" role="list" aria-label="Bidang kerja">
     <div class="container identity-strip__row mono">
-      <span role="listitem">Web development / Pengembangan web</span>
-      <span role="listitem">Bots &amp; automation / Bot &amp; automasi</span>
-      <span role="listitem">Developer tools / Tools developer</span>
-      <span role="listitem">AI &amp; security / AI &amp; keamanan</span>
+      <span role="listitem">Pengembangan web</span>
+      <span role="listitem">Bot dan automasi</span>
+      <span role="listitem">Tools developer</span>
+      <span role="listitem">AI dan keamanan</span>
     </div>
   </div>
 
@@ -111,29 +104,28 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="work-title"
-        title="Selected work / Proyek pilihan"
-        meta="Projects, experiments, and tools / Proyek, eksperimen, dan tools."
-        link={{ href: '/projects/', label: 'All projects / Semua proyek' }}
+        title="Proyek pilihan"
+        meta="Proyek, eksperimen, dan tools."
+        link={{ href: '/projects/', label: 'Semua proyek' }}
       />
 
       {featured && (
         <article class="featured">
           <div class="featured__copy">
             <p class="featured__label mono">
-              Case study / Studi kasus · source not public / source belum publik · {featured.type}
+              Studi kasus · source belum publik · {featured.type}
             </p>
             <h3>{featured.name}</h3>
-            <BilingualCopy en={featured.summary} id={featured.summaryId} />
-            <p class="mono">{featured.stack.join(' / ')}</p>
+            <p>{featured.summary}</p>
+            <p class="mono">{featured.stack.join(' · ')}</p>
             <a class="link" href={`/projects/${featured.slug}/`}>
-              Read case study / Baca studi kasus
+              Baca studi kasus
             </a>
           </div>
           <figure class="featured__diagram">
             <RouteDiagram />
             <figcaption class="mono">
               Konsep: satu request, satu provider yang tersedia, fallback otomatis jika gagal.
-              / Concept: one request, one available provider, automatic fallback on failure.
             </figcaption>
           </figure>
         </article>
@@ -151,14 +143,14 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="focus-title"
-        title="Current focus / Fokus saat ini"
-        meta="Topics being explored, not released-product claims / Topik yang sedang dieksplorasi, bukan klaim produk rilis."
+        title="Fokus saat ini"
+        meta="Topik yang sedang dieksplorasi, bukan klaim produk rilis."
       />
       <ul class="focus-list">
         {currentFocus.map((item, index) => (
           <li>
             <span class="mono">{String(index + 1).padStart(2, '0')}</span>
-            <BilingualCopy en={item.en} id={item.id} />
+            <span>{item}</span>
           </li>
         ))}
       </ul>
@@ -169,21 +161,21 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="journal-title"
-        title="Technical notes / Catatan teknis"
-        meta="Implementation details and lessons from the work / Detail implementasi dan pelajaran dari prosesnya."
-        link={{ href: '/journal/', label: 'All notes / Semua catatan' }}
+        title="Catatan teknis"
+        meta="Detail implementasi dan pelajaran dari prosesnya."
+        link={{ href: '/journal/', label: 'Semua catatan' }}
       />
       <div class="journal-list">
         {articles.slice(0, 2).map((article) => (
           <article class="journal-card">
             <p class="mono journal-card__meta">
-              {article.date} / {article.readingTime} min read
+              {article.date} · {article.readingTime} menit baca
             </p>
             <h3>
-              <a href={`/journal/${article.slug}/`}>{article.title} / {article.titleId}</a>
+              <a href={`/journal/${article.slug}/`}>{article.title}</a>
             </h3>
-            <BilingualCopy en={article.description} id={article.descriptionId} />
-            <a class="link" href={`/journal/${article.slug}/`}>Read note / Baca catatan</a>
+            <p>{article.description}</p>
+            <a class="link" href={`/journal/${article.slug}/`}>Baca catatan</a>
           </article>
         ))}
       </div>
@@ -194,39 +186,37 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="capabilities-title"
-        title="What I build / Yang saya buat"
-        meta="The three groups behind the services / Tiga area utama layanan."
+        title="Yang saya buat"
+        meta="Tiga area utama layanan."
       />
 
       <div class="capability-grid">
         {capabilities.map((capability, index) => (
           <article class="capability">
             <p class="capability__index mono" aria-hidden="true">{`0${index + 1}`}</p>
-            <h3>{capability.titleId} / {capability.title}</h3>
-            <BilingualCopy en={capability.body} id={capability.bodyId} />
+            <h3>{capability.title}</h3>
+            <p>{capability.body}</p>
           </article>
         ))}
       </div>
 
       <p class="capability-more mono">
-        <a class="link" href="/services/">Services / Detail layanan</a>
+        <a class="link" href="/services/">Detail layanan</a>
       </p>
     </div>
   </section>
 
   <section class="section section--tight-2" aria-labelledby="philosophy-title">
     <div class="container container--narrow">
-      <h2 class="philosophy-title" id="philosophy-title">Less noise. Better software. / Lebih sedikit noise, software lebih baik.</h2>
-      <BilingualCopy
-        class="philosophy-body"
-        en="Things here are built for real use, not just a demo. Systems stay understandable and maintainable; fixes start by reading the flow before changing it."
-        id="Setiap hal dibuat untuk kebutuhan nyata, bukan sekadar demo. Sistem dibuat mudah dipahami dan dirawat; perbaikan dimulai dengan memahami alurnya."
-      />
-      <BilingualCopy
-        class="philosophy-body"
-        en="Code is written from scratch, tested, and handed over with the scope agreed in advance. Performance and deliberate design matter more than decoration."
-        id="Kode dibuat dari awal, diuji, lalu diserahkan sesuai lingkup yang disepakati. Performa dan desain yang terarah lebih penting daripada dekorasi."
-      />
+      <h2 class="philosophy-title" id="philosophy-title">Lebih sedikit noise, software lebih baik.</h2>
+      <p class="philosophy-body">
+        Setiap hal dibuat untuk kebutuhan nyata, bukan sekadar demo. Sistem dibuat mudah dipahami
+        dan dirawat; perbaikan dimulai dengan memahami alurnya.
+      </p>
+      <p class="philosophy-body">
+        Kode dibuat dari awal, diuji, lalu diserahkan sesuai lingkup yang disepakati. Performa dan
+        desain yang terarah lebih penting daripada dekorasi.
+      </p>
     </div>
   </section>
 
@@ -234,13 +224,13 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="stack-title"
-        title="Technology index / Teknologi"
-        meta="Tools grouped by actual use, not proficiency scores / Tools dikelompokkan berdasarkan penggunaan nyata, bukan skor kemampuan."
+        title="Teknologi"
+        meta="Tools dikelompokkan berdasarkan penggunaan nyata, bukan skor kemampuan."
       />
       <div class="stack-grid">
         {technologyGroups.map((group) => (
           <div class="stack-group">
-            <h3>{group.titleId} / {group.title}</h3>
+            <h3>{group.title}</h3>
             <ul>
               {group.items.map((item) => (
                 <li>{item}</li>
@@ -255,14 +245,14 @@ const homeSchema = {
   <section class="section section--tight-2" aria-labelledby="about-title">
     <div class="container about-grid">
       <div class="about-grid__body">
-        <h2 id="about-title">One person, from first sketch to handover. / Satu orang, dari sketsa sampai serah terima.</h2>
-        <BilingualCopy
-          en="DikaGlorya builds as DikaOfc and DikaCode. ObitoGlory is the website brand: one place for projects, honest notes, and official links."
-          id="DikaGlorya berkarya dengan nama DikaOfc dan DikaCode. ObitoGlory adalah brand website: satu tempat untuk melihat proyek, catatan yang jujur, dan tautan resmi."
-        />
+        <h2 id="about-title">Satu orang, dari sketsa sampai serah terima.</h2>
+        <p>
+          DikaGlorya berkarya dengan nama DikaOfc dan DikaCode. ObitoGlory adalah brand website:
+          satu tempat untuk melihat proyek, catatan yang jujur, dan tautan resmi.
+        </p>
         <div class="about-actions">
           <a class="btn" href="/about/">
-            About / Tentang DikaGlorya <Arrow class="about-arrow" />
+            Tentang DikaGlorya <Arrow class="about-arrow" />
           </a>
         </div>
       </div>
@@ -270,8 +260,8 @@ const homeSchema = {
       <dl class="about-facts">
         {facts.map((fact) => (
           <div>
-            <dt class="fact__label mono">{fact.labelId} / {fact.label}</dt>
-            <dd class="fact__value">{fact.valueId} / {fact.value}</dd>
+            <dt class="fact__label mono">{fact.label}</dt>
+            <dd class="fact__value">{fact.value}</dd>
           </div>
         ))}
       </dl>
@@ -281,13 +271,13 @@ const homeSchema = {
   <section class="section section--tight-2" aria-labelledby="follow-title">
     <div class="container follow-grid">
       <div>
-        <h2 id="follow-title">Follow the work / Ikuti karya terbaru.</h2>
-        <BilingualCopy
-          en="Project updates appear here first. GitHub is the verified public code profile; Telegram is the direct contact channel."
-          id="Update proyek dipublikasikan lebih dulu di sini. GitHub adalah profil kode publik yang terverifikasi; Telegram merupakan kanal kontak langsung."
-        />
+        <h2 id="follow-title">Ikuti karya terbaru.</h2>
+        <p>
+          Update proyek dipublikasikan lebih dulu di sini. GitHub adalah profil kode publik yang
+          terverifikasi; Telegram merupakan kanal kontak langsung.
+        </p>
       </div>
-      <ul class="profile-links mono" aria-label="Public profiles">
+      <ul class="profile-links mono" aria-label="Profil publik">
         {socialLinks.map((link) => (
           <li>
             <a href={link.href} rel="me noopener noreferrer" target="_blank" data-outbound={link.label.toLowerCase()}>

@@ -1,6 +1,5 @@
 ---
 import ContactBlock from '../../components/ContactBlock.astro';
-import BilingualCopy from '../../components/BilingualCopy.astro';
 import RouteDiagram from '../../components/RouteDiagram.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getNextProject, projects, type Project } from '../../data/projects';
@@ -20,16 +19,21 @@ interface Props {
 const { project } = Astro.props;
 const nextProject = getNextProject(project.slug);
 const paddedOrder = String(project.order).padStart(2, '0');
-const service =
-  project.category === 'Web'
-    ? 'website'
-    : project.category === 'Android'
-      ? 'tools'
-      : project.category === 'Developer tools'
-        ? 'tools'
-        : project.category === 'Security & automation'
-          ? 'repairs'
-          : 'bot';
+
+const serviceByCategory: Record<string, string> = {
+  Web: 'website',
+  Android: 'tools',
+  'Tools developer': 'tools',
+  'Keamanan & automasi': 'repairs',
+};
+
+const service = serviceByCategory[project.category] ?? 'bot';
+
+const availability = project.link
+  ? project.link.kind === 'package'
+    ? `Paket publik tersedia: ${project.link.label}. Dengan memasangnya, implementasinya bisa dijalankan sendiri. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
+    : `Tautan publik tersedia: ${project.link.label}. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
+  : 'Kode sumber dan demo publik belum ditautkan untuk proyek ini. Halaman ini menjelaskan ruang lingkup yang dimaksud; tanpa source atau demo publik, pengunjung belum dapat memeriksa atau menjalankan implementasinya sendiri.';
 
 const schema = {
   '@context': 'https://schema.org',
@@ -42,6 +46,7 @@ const schema = {
   },
   keywords: project.stack.join(', '),
   genre: project.category,
+  inLanguage: 'id',
   isPartOf: {
     '@type': 'WebSite',
     name: site.name,
@@ -51,22 +56,22 @@ const schema = {
 ---
 
 <BaseLayout
-  title={`${project.name} | DikaOfc / DikaGlorya | ObitoGlory`}
-  description={`${project.summaryId} / ${project.summary}`}
+  title={`${project.name} | DikaOfc (DikaGlorya) | ObitoGlory`}
+  description={project.summary}
   type="article"
   schema={schema}
 >
   <article>
     <header class="project-hero">
       <div class="container">
-        <nav class="breadcrumb mono" aria-label="Breadcrumb">
-          <a href="/projects/">Projects / Proyek</a>
+        <nav class="breadcrumb mono" aria-label="Remah roti">
+          <a href="/projects/">Proyek</a>
           <span class="breadcrumb__sep" aria-hidden="true">/</span>
           <span aria-current="page">{project.name}</span>
         </nav>
 
         <div class="project-hero__meta mono">
-          <span>Project {paddedOrder}</span>
+          <span>Proyek {paddedOrder}</span>
           <span>{project.type}</span>
           <span>{project.category}</span>
         </div>
@@ -76,9 +81,9 @@ const schema = {
 
         <div class="project-hero__actions">
           <a class="btn btn--primary" href={`/contact/?service=${service}`}>
-            Discuss a project / Diskusikan proyek serupa
+            Diskusikan proyek serupa
           </a>
-          <a class="btn" href="/projects/">All projects / Semua proyek</a>
+          <a class="btn" href="/projects/">Semua proyek</a>
         </div>
       </div>
     </header>
@@ -86,18 +91,18 @@ const schema = {
     <div class="container project-layout">
       <div class="project-content">
         <section class="project-section">
-          <h2>Overview / Ringkasan</h2>
-          <BilingualCopy en={project.summary} id={project.summaryId} />
+          <h2>Ringkasan</h2>
+          <p>{project.summary}</p>
         </section>
 
         <section class="project-section">
-          <h2>The problem / Masalah</h2>
-          <BilingualCopy en={project.problem} id={project.problemId} />
+          <h2>Masalah</h2>
+          <p>{project.problem}</p>
         </section>
 
         <section class="project-section">
-          <h2>What was built / Yang dibuat</h2>
-          <BilingualCopy en={project.approach} id={project.approachId} />
+          <h2>Yang dibuat</h2>
+          <p>{project.approach}</p>
           <ul class="feature-list">
             {project.features.map((feature) => (
               <li>{feature}</li>
@@ -106,23 +111,8 @@ const schema = {
         </section>
 
         <section class="project-section">
-          <h2>Availability and limitations / Ketersediaan dan batasan</h2>
-          <BilingualCopy
-            en={
-              project.link?.kind === 'package'
-                ? `A published package is available: ${project.link.label}. Installing it lets you run the implementation yourself. The source repository is not linked, so the internals still cannot be read here.`
-                : project.link
-                  ? `A public link is available: ${project.link.label}. The source repository is not linked, so the internals cannot be read here.`
-                  : 'The source code and a public demo are not linked for this project. This page documents the described scope, but without a public source or demo a visitor cannot independently inspect or run the implementation.'
-            }
-            id={
-              project.link?.kind === 'package'
-                ? `Paket publik tersedia: ${project.link.label}. Dengan memasangnya, implementasinya bisa dijalankan sendiri. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
-                : project.link
-                  ? `Tautan publik tersedia: ${project.link.label}. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
-                  : 'Kode sumber dan demo publik belum ditautkan untuk proyek ini. Halaman ini menjelaskan ruang lingkup yang dimaksud; tanpa source atau demo publik, pengunjung belum dapat memeriksa atau menjalankan implementasinya sendiri.'
-            }
-          />
+          <h2>Ketersediaan dan batasan</h2>
+          <p>{availability}</p>
         </section>
 
         {project.slug === 'dikaroute' && (
@@ -130,48 +120,47 @@ const schema = {
             <RouteDiagram />
             <figcaption class="mono">
               Konsep: satu request, satu provider yang tersedia, fallback otomatis jika gagal.
-              / Concept: one request, one available provider, automatic fallback on failure.
             </figcaption>
           </figure>
         )}
 
         {project.note && (
           <div class="project-note">
-            <p><strong>Note:</strong> {project.note}</p>
+            <p><strong>Catatan:</strong> {project.note}</p>
           </div>
         )}
 
         {!project.link && (
           <div class="project-note">
             <p>
-              <strong>Source:</strong> this project is not public. Ask for a walkthrough if you
-              want to see how it was built.
+              <strong>Source:</strong> proyek ini tidak publik. Silakan minta penjelasan langsung
+              jika ingin melihat cara pembuatannya.
             </p>
           </div>
         )}
       </div>
 
-      <aside class="project-aside" aria-label="Project details">
+      <aside class="project-aside" aria-label="Detail proyek">
         <dl class="spec">
           <div class="spec__row">
-            <dt class="spec__label mono">Type</dt>
+            <dt class="spec__label mono">Jenis</dt>
             <dd class="spec__value">{project.type}</dd>
           </div>
           <div class="spec__row">
-            <dt class="spec__label mono">Category</dt>
+            <dt class="spec__label mono">Kategori</dt>
             <dd class="spec__value">{project.category}</dd>
           </div>
           <div class="spec__row">
-            <dt class="spec__label mono">Stack</dt>
+            <dt class="spec__label mono">Teknologi</dt>
             <dd class="spec__value">{project.stack.join(', ')}</dd>
           </div>
           <div class="spec__row">
             <dt class="spec__label mono">Source</dt>
-            <dd class="spec__value">Not public</dd>
+            <dd class="spec__value">Tidak publik</dd>
           </div>
           {project.link && (
             <div class="spec__row">
-              <dt class="spec__label mono">{project.link.kind === 'package' ? 'Package' : 'Live'}</dt>
+              <dt class="spec__label mono">{project.link.kind === 'package' ? 'Paket' : 'Live'}</dt>
               <dd class="spec__value">
                 <a href={project.link.href} rel="noopener noreferrer" target="_blank" data-outbound="project-live">
                   {project.link.label}
@@ -185,11 +174,11 @@ const schema = {
 
     <div class="container">
       <a class="next-project" href={`/projects/${nextProject.slug}/`}>
-        <span class="mono">Next project / Proyek berikutnya</span>
+        <span class="mono">Proyek berikutnya</span>
         <span class="next-project__name">{nextProject.name}</span>
       </a>
     </div>
   </article>
 
-  <ContactBlock id="project-contact-title" title="Need a system like this? / Butuh sistem seperti ini?" />
+  <ContactBlock id="project-contact-title" title="Butuh sistem seperti ini?" />
 </BaseLayout>

@@ -41,21 +41,21 @@ const personSchema = {
   alternateName: site.alternateNames,
   url: site.url,
   image: new URL(site.profileImage, Astro.site).href,
-  jobTitle: 'Independent developer',
+  jobTitle: 'Developer independen',
   description: site.description,
   email: `mailto:${site.email}`,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Kendal',
-    addressRegion: 'Central Java',
+    addressRegion: 'Jawa Tengah',
     addressCountry: 'ID',
   },
   knowsAbout: [
-    'Web development',
-    'Telegram bots',
-    'AI gateways',
-    'Security automation',
-    'Android development',
+    'Pengembangan web',
+    'Bot Telegram',
+    'Gateway AI',
+    'Automasi keamanan',
+    'Pengembangan Android',
   ],
   sameAs: [site.github],
 };
@@ -68,7 +68,7 @@ const websiteSchema = {
   alternateName: ['obitoglory.tech'],
   url: site.url,
   description: site.description,
-  inLanguage: ['id', 'en'],
+  inLanguage: 'id',
   author: {
     '@id': `${site.url}/#person`,
   },
@@ -112,17 +112,12 @@ const pageSchemas = [
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content={site.locale} />
-    <meta property="og:locale:alternate" content={site.alternateLocale} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageURL} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
-
-    <script is:inline>
-      document.documentElement.classList.add('js');
-    </script>
 
     {pageSchemas.map((item) => (
       <script type="application/ld+json" set:html={JSON.stringify(item)} />
@@ -131,7 +126,7 @@ const pageSchemas = [
     <slot name="head" />
   </head>
   <body id="top" class={bodyClass}>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">Lewati ke konten</a>
     <Header />
     <main id="main">
       <slot />

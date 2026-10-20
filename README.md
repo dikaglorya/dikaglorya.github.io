@@ -29,7 +29,7 @@ Tokens live at the top of `src/styles/global.css`. They are initial values, not 
 - Radii: 2px for small controls, 3px for editorial cards, and 6px for large panels. Shadows are reserved for the portrait.
 - Layout: 1200px outer container, 720px reading width for prose, gutters `clamp(20px, 5vw, 76px)`.
 - Motion: restrained, transitions in the 140–220ms range on color, border, and transform only. `prefers-reduced-motion` disables all of it. There is no scroll-reveal system.
-- Public copy is bilingual, Indonesian first and English second, in the same block. Longer prose (journal articles) stays single-language. The document is `lang="id"` with `og:locale` `id_ID` and `en_US` as the alternate. The journal publishes practical technical notes based on implementation details that can be checked in this repository. Navigation labels are paired, `Home / Beranda` through `Services / Layanan`, with "Get in touch" as a separate header action.
+- Public copy is Indonesian only. Every label, heading, button, and paragraph exists in one language, so no element repeats itself as `English / Indonesian`. The document is `lang="id"` with `og:locale` `id_ID` and no `og:locale:alternate`, because no alternate locale is published. The journal publishes practical technical notes based on implementation details that can be checked in this repository. Navigation reads `Beranda`, `Proyek`, `Jurnal`, `Tentang`, `Layanan`, with `Kontak` as a separate header action.
 
 ## Local setup
 
@@ -87,7 +87,7 @@ Screenshots are written to `.test-output/screenshots/` (ignored by Git).
 
 ## Content editing
 
-All public content is typed and centralized. Paired Indonesian/English strings live side by side (`body` / `bodyId`) and are rendered through `BilingualCopy.astro`. No CMS or database is involved.
+All public content is typed and centralized in Indonesian. Each field holds one string; there is no second-language field to keep in sync. No CMS or database is involved.
 
 | File | Content |
 | --- | --- |
@@ -100,15 +100,17 @@ All public content is typed and centralized. Paired Indonesian/English strings l
 | `src/data/facts.ts` | About facts, principles, and the four-step process |
 | `src/data/faqs.ts` | FAQ questions and answers |
 
-### Bilingual copy
+### Language
 
-The site is bilingual on the same URL: Indonesian and English sit next to each other, not on separate routes. This is a deliberate choice, not an unfinished translation.
+The site is published in Indonesian only. This is a deliberate choice: a single-language site reads as one voice, and a label appears exactly once.
 
-- `BilingualCopy.astro` renders two lines: English in the normal text color, Indonesian below it in `--muted` at `0.92em`, each wrapped in `lang="en"` / `lang="id"` so screen readers and search engines can tell them apart. The `EN` / `ID` markers are `aria-hidden`; they are a visual cue only.
-- Data files carry paired fields (`body` / `bodyId`, `name` / `nameId`, `summary` / `summaryId`). Both must be written by hand. Do not machine-translate: the Indonesian line is what local searches match, and a mechanical translation matches nothing anyone types.
-- There is one canonical URL per page, so no `hreflang` alternate set is needed or emitted. Emitting `hreflang` for the same URL in two languages would be wrong.
-- Page titles and descriptions combine both languages where the page targets Indonesian search intent (home, services, contact, projects, journal). `/about` leads in English. Titles stay under the point where Google truncates them.
-- Mixed-language copy is not a ranking trick. It exists because the same visitor group searches in both languages: Indonesian for local service intent ("jasa website Kendal"), English for technical intent. It will not make the site rank for a name on its own; the name still has to appear in real, linked, referenced places.
+- No component renders a second language. Text lives directly in the Astro markup or in the data files, so there is nothing to keep in sync and no `EN` / `ID` marker to explain.
+- Data files carry one field per value (`name`, `summary`, `problem`, `approach`, `features`). The earlier `nameId` / `summaryId` pairs are gone; a field is never a translation of its neighbour.
+- There is one canonical URL per page and no `hreflang` set, because there is no alternate language version to point at.
+- Titles and descriptions are written for Indonesian search intent ("jasa website Kendal", "jasa pembuatan bot Telegram") and stay under the length where Google truncates them.
+- Slashes still appear where they are not translations: brand aliases in `alternateName`, name joins such as `DikaOfc (DikaGlorya)`, and breadcrumb separators. Those are punctuation, not doubled labels.
+- URLs keep their English paths (`/projects/`, `/about/`, `/services/`, `/journal/`, `/contact/`). They were already indexed and linked from the GitHub profile, so they are treated as stable identifiers while the visible copy is Indonesian. Old Indonesian paths redirect to them.
+- An Indonesian-only site will not rank for a name on its own; the name still has to appear in real, linked, referenced places.
 
 ### Projects
 
@@ -189,7 +191,7 @@ The contact form does not post to a backend: nothing is sent to a server by this
 
 The choice is documented so it is a decision, not an omission:
 
-- Nothing on the site measures visitors: no analytics scripts, cookies, fingerprinting, or third-party trackers. The footer line "No analytics or tracking." is a factual claim; if measurement is ever added, update that line in the same change.
+- Nothing on the site measures visitors: no analytics scripts, cookies, fingerprinting, or third-party trackers. The footer line "Dibuat dengan Astro, tanpa analytics atau tracking." is a factual claim; if measurement is ever added, update that line in the same change.
 - Post-deploy baseline: Google Search Console (once domain access is verified) for organic queries and impressions, and GitHub Insights for stars, forks, and repository traffic on the site repository. These count public artifacts, not individuals.
 - Outbound links carry `data-outbound` attributes (`github`, `telegram`, `instagram`, `tiktok`, `project-live`) in Footer, ContactBlock, the home Follow section, About, and project pages. The attribute is inert today; it exists so a privacy-conscious click counter can wire events later without rewriting markup.
 - If visit-level measurement is ever connected, pick a cookieless, no-fingerprinting approach (for example self-hosted analytics on an owned server), document the provider and what it stores in this section, and keep the payload small enough to stay honest about privacy.

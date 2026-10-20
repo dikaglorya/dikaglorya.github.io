@@ -1,16 +1,16 @@
 export const mainNavigation = [
-  { href: '/', label: 'Home / Beranda' },
-  { href: '/projects/', label: 'Projects / Proyek' },
-  { href: '/journal/', label: 'Journal / Jurnal' },
-  { href: '/about/', label: 'About / Tentang' },
-  { href: '/services/', label: 'Services / Layanan' },
+  { href: '/', label: 'Beranda' },
+  { href: '/projects/', label: 'Proyek' },
+  { href: '/journal/', label: 'Jurnal' },
+  { href: '/about/', label: 'Tentang' },
+  { href: '/services/', label: 'Layanan' },
 ] as const;
 
 export const footerNavigation = [
-  { href: '/', label: 'Home / Beranda' },
-  { href: '/projects/', label: 'Projects / Proyek' },
-  { href: '/journal/', label: 'Journal / Jurnal' },
-  { href: '/about/', label: 'About / Tentang' },
-  { href: '/services/', label: 'Services / Layanan' },
-  { href: '/contact/', label: 'Contact / Kontak' },
+  { href: '/', label: 'Beranda' },
+  { href: '/projects/', label: 'Proyek' },
+  { href: '/journal/', label: 'Jurnal' },
+  { href: '/about/', label: 'Tentang' },
+  { href: '/services/', label: 'Layanan' },
+  { href: '/contact/', label: 'Kontak' },
 ] as const;

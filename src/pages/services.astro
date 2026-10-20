@@ -1,6 +1,5 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
-import BilingualCopy from '../components/BilingualCopy.astro';
 import SectionHead from '../components/SectionHead.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { faqs } from '../data/faqs';
@@ -11,7 +10,7 @@ import { site } from '../data/site';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Services, ObitoGlory',
+  name: 'Layanan ObitoGlory',
   url: `${site.url}/services/`,
   mainEntity: {
     '@type': 'ItemList',
@@ -22,7 +21,7 @@ const schema = {
       item: {
         '@type': 'Service',
         name: service.name,
-        description: `${service.descriptionId} / ${service.description}`,
+        description: service.description,
         provider: {
           '@id': `${site.url}/#person`,
         },
@@ -37,28 +36,27 @@ const schema = {
 ---
 
 <BaseLayout
-  title="Jasa Website, Bot, dan Tools di Kendal | DikaOfc / DikaGlorya | ObitoGlory"
-  description="Jasa pembuatan website, bot Telegram, tools custom, dan perbaikan sistem dari DikaGlorya (DikaOfc / DikaCode), Kendal / Website development, bots, custom tools, and system repair by DikaGlorya in Kendal, Indonesia."
+  title="Jasa Website, Bot, dan Tools di Kendal | DikaOfc (DikaGlorya)"
+  description="Jasa pembuatan website, bot Telegram, tools custom, dan perbaikan sistem dari DikaGlorya (DikaOfc, DikaCode) di Kendal."
   schema={schema}
 >
   <section class="page-hero page-hero--services" aria-labelledby="services-title">
     <div class="container">
-      <p class="page-hero__eyebrow mono">Services / Layanan · DikaOfc</p>
-      <h1 id="services-title">Practical software, built with care. / Software praktis, dibuat dengan teliti.</h1>
-      <BilingualCopy
-        class="page-hero__lead"
-        en="Websites, bots, tools, and repair work for existing systems. Scope and price are agreed before work begins."
-        id="Pembuatan website, bot, tools, dan perbaikan sistem. Lingkup serta harga disepakati sebelum pekerjaan dimulai."
-      />
+      <p class="page-hero__eyebrow mono">Layanan · DikaOfc</p>
+      <h1 id="services-title">Software praktis, dibuat dengan teliti.</h1>
+      <p class="page-hero__lead">
+        Pembuatan website, bot, tools, dan perbaikan sistem. Lingkup serta harga disepakati sebelum
+        pekerjaan dimulai.
+      </p>
       <div class="page-hero__meta mono">
-        <span>{`${services.length} services`}</span>
+        <span>{`${services.length} layanan`}</span>
         <span>{site.availability}</span>
         <span>{`Telegram @${site.telegram}`}</span>
       </div>
     </div>
   </section>
 
-  <section class="section--tight" id="pricing" aria-label="Service list">
+  <section class="section--tight" id="pricing" aria-label="Daftar layanan">
     <div class="container">
       {services.map((service, index) => (
         <section
@@ -69,44 +67,36 @@ const schema = {
           <div class="service-row__index mono" aria-hidden="true">{`0${index + 1}`}</div>
 
           <div class="service-row__body">
-            <h2 id={`${service.slug}-title`}>{service.nameId} / {service.name}</h2>
-            <BilingualCopy
-              class="service-row__lead"
-              en={service.description}
-              id={service.descriptionId}
-            />
+            <h2 id={`${service.slug}-title`}>{service.name}</h2>
+            <p class="service-row__lead">{service.description}</p>
             <div class="service-row__cols">
               <div>
-                <h3 class="service-row__label mono">Possible deliverables / Hasil yang bisa dibuat</h3>
+                <h3 class="service-row__label mono">Hasil yang bisa dibuat</h3>
                 <ul class="includes">
-                  {service.includes.map((item, itemIndex) => (
-                    <li>
-                      {item} <span lang="id">/ {service.includesId[itemIndex]}</span>
-                    </li>
+                  {service.includes.map((item) => (
+                    <li>{item}</li>
                   ))}
                 </ul>
                 {service.platforms && (
                   <p class="mono muted service-row__platforms">
-                    Platform / Platforms: {service.platforms.join(' / ')}
+                    Platform: {service.platforms.join(', ')}
                   </p>
                 )}
               </div>
               <div>
-                <h3 class="service-row__label mono">Scope limits / Batasan lingkup</h3>
+                <h3 class="service-row__label mono">Batasan lingkup</h3>
                 <ul class="includes">
-                  {service.limits.map((item, itemIndex) => (
-                    <li>
-                      {item} <span lang="id">/ {service.limitsId[itemIndex]}</span>
-                    </li>
+                  {service.limits.map((item) => (
+                    <li>{item}</li>
                   ))}
                 </ul>
                 <p class="mono muted service-row__platforms">
-                  Mulai / From {service.priceFrom} · {service.priceNoteId} / {service.priceNote}
+                  Mulai {service.priceFrom} · {service.priceNote}
                 </p>
               </div>
             </div>
             <a class="link" href={`/contact/?service=${service.slug}`}>
-              Discuss / Diskusikan layanan ini
+              Diskusikan layanan ini
             </a>
           </div>
         </section>
@@ -118,15 +108,15 @@ const schema = {
     <div class="container">
       <SectionHead
         id="process-title"
-        title="Engagement process / Alur kerja"
-        meta="Four clear steps, without surprises / Empat langkah jelas tanpa kejutan di tengah jalan."
+        title="Alur kerja"
+        meta="Empat langkah jelas tanpa kejutan di tengah jalan."
       />
       <ol class="process-steps">
         {processSteps.map((step, index) => (
           <li>
             <span class="mono">{String(index + 1).padStart(2, '0')}</span>
-            <h3>{step.titleId} / {step.title}</h3>
-            <BilingualCopy en={step.body} id={step.bodyId} />
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
           </li>
         ))}
       </ol>
@@ -137,19 +127,19 @@ const schema = {
     <div class="container">
       <SectionHead
         id="faq-title"
-        title="Common questions / Pertanyaan umum"
-        meta="What clients ask before starting / Hal yang sering ditanyakan sebelum mulai."
+        title="Pertanyaan umum"
+        meta="Hal yang sering ditanyakan sebelum mulai."
       />
       <div class="faq-list">
         {faqs.map((faq) => (
           <details class="faq-item">
-            <summary>{faq.question} / {faq.questionId}</summary>
-            <BilingualCopy en={faq.answer} id={faq.answerId} />
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
           </details>
         ))}
       </div>
     </div>
   </section>
 
-  <ContactBlock id="services-contact-title" title="Ready to start? / Siap mulai? Tell me what you need / Ceritakan kebutuhanmu." />
+  <ContactBlock id="services-contact-title" title="Siap mulai? Ceritakan kebutuhanmu." />
 </BaseLayout>

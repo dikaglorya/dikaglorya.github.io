@@ -1,6 +1,5 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
-import BilingualCopy from '../components/BilingualCopy.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
 import SectionHead from '../components/SectionHead.astro';
 import StackGrid from '../components/StackGrid.astro';
@@ -12,7 +11,7 @@ import { currentFocus } from '../data/technologies';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
-  name: 'About ObitoGlory',
+  name: 'Tentang ObitoGlory',
   url: `${site.url}/about/`,
   mainEntity: {
     '@type': 'Person',
@@ -21,13 +20,13 @@ const schema = {
     alternateName: site.alternateNames,
     url: site.url,
     image: new URL(site.profileImage, site.url).href,
-    jobTitle: 'Independent developer',
+    jobTitle: 'Developer independen',
     description:
-      'An independent developer from Kendal, Central Java, building websites, bots, AI tools, and security automation.',
+      'Developer independen dari Kendal, Jawa Tengah, yang membuat website, bot, AI tools, dan automasi keamanan.',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Kendal',
-      addressRegion: 'Central Java',
+      addressRegion: 'Jawa Tengah',
       addressCountry: 'ID',
     },
   },
@@ -35,39 +34,40 @@ const schema = {
 ---
 
 <BaseLayout
-  title="About DikaGlorya (DikaOfc) / Tentang DikaGlorya | ObitoGlory"
-  description="Tentang DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode, programmer independen dari Kendal, Indonesia. Kenali identitas, karya, dan tautan resminya / About DikaGlorya, also known as DikaOfc and DikaCode, an independent developer from Kendal."
+  title="Tentang DikaGlorya (DikaOfc) | ObitoGlory"
+  description="Tentang DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode: developer independen dari Kendal, Indonesia. Kenali identitas, karya, dan tautan resminya."
   type="profile"
   schema={schema}
 >
   <section class="page-hero page-hero--about" aria-labelledby="about-title">
     <div class="container">
-      <p class="page-hero__eyebrow mono">About / Tentang DikaGlorya (DikaOfc)</p>
-      <h1 id="about-title">One developer, start to handover. / Satu developer, dari awal hingga serah terima.</h1>
-      <BilingualCopy
-        class="page-hero__lead"
-        en="I build websites, bots, AI tools, and security automation. Scope is agreed before work begins."
-        id="Saya membuat website, bot, AI tools, dan automasi keamanan. Lingkup pekerjaan disepakati sebelum mulai."
-      />
+      <p class="page-hero__eyebrow mono">Tentang DikaGlorya (DikaOfc)</p>
+      <h1 id="about-title">Satu developer, dari awal hingga serah terima.</h1>
+      <p class="page-hero__lead">
+        Saya membuat website, bot, AI tools, dan automasi keamanan. Lingkup pekerjaan disepakati
+        sebelum mulai.
+      </p>
       <div class="page-hero__meta mono">
         <span>{site.location}</span>
-        <span>Nama pribadi / personal identity · nama developer / developer name · brand website / website brand</span>
+        <span>Nama pribadi · nama developer · brand website</span>
       </div>
     </div>
   </section>
 
-  <section class="section--tight" aria-label="Introduction">
+  <section class="section--tight" aria-label="Perkenalan">
     <div class="container profile-grid">
       <div class="profile-body">
-        <h2 id="profile-title">Not a big company. One person taking the work seriously. / Bukan perusahaan besar. Satu orang yang serius mengerjakan karya.</h2>
-        <BilingualCopy
-          en="DikaGlorya is an independent developer from Kendal, Central Java. DikaCode is the developer identity used for software work; ObitoGlory is this website and portfolio."
-          id="DikaGlorya adalah programmer independen dari Kendal, Jawa Tengah. DikaCode adalah identitas developer untuk karya software; ObitoGlory adalah nama website dan portofolio ini."
-        />
-        <BilingualCopy
-          en="DikaOfc and DikaGlory are other public names used by the same person, not separate people. Dika Developer is a professional description. This page connects those names to the work and the official links."
-          id="DikaOfc dan DikaGlory adalah nama publik lain yang digunakan orang yang sama, bukan orang berbeda. Dika Developer adalah sebutan profesi. Halaman ini menghubungkan nama-nama tersebut dengan karya dan tautan resmi."
-        />
+        <h2 id="profile-title">Bukan perusahaan besar. Satu orang yang serius mengerjakan karya.</h2>
+        <p>
+          DikaGlorya adalah programmer independen dari Kendal, Jawa Tengah. DikaCode adalah
+          identitas developer untuk karya software; ObitoGlory adalah nama website dan portofolio
+          ini.
+        </p>
+        <p>
+          DikaOfc dan DikaGlory adalah nama publik lain yang digunakan orang yang sama, bukan orang
+          berbeda. Dika Developer adalah sebutan profesi. Halaman ini menghubungkan nama-nama
+          tersebut dengan karya dan tautan resmi.
+        </p>
       </div>
       <PortraitFrame
         class="profile-portrait"
@@ -80,17 +80,17 @@ const schema = {
     <div class="container">
       <SectionHead
         id="identity-title"
-        title="One person, a few public names / Satu orang, beberapa nama publik"
-        meta="The context is explained honestly / Konteks setiap nama dijelaskan dengan jujur."
+        title="Satu orang, beberapa nama publik"
+        meta="Konteks setiap nama dijelaskan dengan jujur."
       />
       <dl class="identity-list">
-        <div><dt>DikaGlorya</dt><dd>Identitas pribadi utama / Primary personal identity.</dd></div>
-        <div><dt>DikaOfc</dt><dd>Nama publik lain yang digunakan DikaGlorya / Another public name used by DikaGlorya.</dd></div>
-        <div><dt>DikaCode</dt><dd>Identitas developer untuk karya software / Developer identity for software work.</dd></div>
-        <div><dt>ObitoGlory</dt><dd>Brand website dan portofolio / Website and portfolio brand.</dd></div>
-        <div><dt>DikaGlory</dt><dd>Nama publik lain untuk orang yang sama / Another public name for the same person.</dd></div>
-        <div><dt>Dika Developer</dt><dd>Deskripsi profesi, bukan orang lain / A professional description, not another person.</dd></div>
-        <div><dt>Dika Kendal</dt><dd>Nama yang terkait lokasi; basis di Kendal / Location-related name; based in Kendal.</dd></div>
+        <div><dt>DikaGlorya</dt><dd>Identitas pribadi utama.</dd></div>
+        <div><dt>DikaOfc</dt><dd>Nama publik lain yang digunakan DikaGlorya.</dd></div>
+        <div><dt>DikaCode</dt><dd>Identitas developer untuk karya software.</dd></div>
+        <div><dt>ObitoGlory</dt><dd>Brand website dan portofolio.</dd></div>
+        <div><dt>DikaGlory</dt><dd>Nama publik lain untuk orang yang sama.</dd></div>
+        <div><dt>Dika Developer</dt><dd>Sebutan profesi, bukan orang lain.</dd></div>
+        <div><dt>Dika Kendal</dt><dd>Nama yang terkait lokasi; berbasis di Kendal.</dd></div>
       </dl>
     </div>
   </section>
@@ -99,16 +99,16 @@ const schema = {
     <div class="container">
       <SectionHead
         id="principles-title"
-        title="Working approach / Cara kerja"
-        meta="Three rules before each project / Tiga prinsip sebelum mengerjakan proyek."
+        title="Cara kerja"
+        meta="Tiga prinsip sebelum mengerjakan proyek."
       />
       <ul class="principle-list">
         {principles.map((principle, index) => (
           <li class="principle">
             <span class="principle__index mono" aria-hidden="true">{`0${index + 1}`}</span>
             <div>
-              <h3>{principle.titleId} / {principle.title}</h3>
-              <BilingualCopy en={principle.body} id={principle.bodyId} />
+              <h3>{principle.title}</h3>
+              <p>{principle.body}</p>
             </div>
           </li>
         ))}
@@ -120,14 +120,14 @@ const schema = {
     <div class="container">
       <SectionHead
         id="focus-title"
-        title="Current interests / Fokus saat ini"
-        meta="What I am exploring now / Hal yang sedang dipelajari dan dieksplorasi."
+        title="Fokus saat ini"
+        meta="Hal yang sedang dipelajari dan dieksplorasi."
       />
       <ul class="focus-list">
         {currentFocus.map((item, index) => (
           <li>
             <span class="mono">{String(index + 1).padStart(2, '0')}</span>
-            <BilingualCopy en={item.en} id={item.id} />
+            <span>{item}</span>
           </li>
         ))}
       </ul>
@@ -138,8 +138,8 @@ const schema = {
     <div class="container">
       <SectionHead
         id="stack-title"
-        title="Technology and tools / Teknologi dan tools"
-        meta="Grouped by purpose, not ranked / Dikelompokkan berdasarkan fungsi, bukan peringkat."
+        title="Teknologi dan tools"
+        meta="Dikelompokkan berdasarkan fungsi, bukan peringkat."
       />
       <StackGrid />
     </div>
@@ -147,7 +147,7 @@ const schema = {
 
   <section class="section--tight" aria-labelledby="profiles-title">
     <div class="container">
-      <SectionHead id="profiles-title" title="Elsewhere / Tautan resmi" meta="Public links used by this site / Tautan publik yang digunakan di website ini." />
+      <SectionHead id="profiles-title" title="Tautan resmi" meta="Tautan publik yang digunakan di website ini." />
       <ul class="profile-links mono">
         <li>
           <a href={site.github} rel="me noopener noreferrer" target="_blank" data-outbound="github">
@@ -168,5 +168,5 @@ const schema = {
     </div>
   </section>
 
-  <ContactBlock id="about-contact-title" title="Want to talk about a system or a project?" />
+  <ContactBlock id="about-contact-title" title="Ingin membahas sistem atau proyek?" />
 </BaseLayout>

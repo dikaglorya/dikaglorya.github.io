@@ -4,7 +4,6 @@ import ProjectRow from '../../components/ProjectRow.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { projectCategories, projects } from '../../data/projects';
 import { site } from '../../data/site';
-import BilingualCopy from '../../components/BilingualCopy.astro';
 
 const categoryCounts = projectCategories.map((category) => ({
   category,
@@ -14,9 +13,9 @@ const categoryCounts = projectCategories.map((category) => ({
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Selected work, ObitoGlory',
+  name: 'Proyek pilihan, ObitoGlory',
   description:
-    'Case studies of practical software, web projects, bots, Android apps, and developer tools by DikaGlorya.',
+    'Studi kasus software praktis, proyek web, bot, aplikasi Android, dan developer tools karya DikaGlorya.',
   url: `${site.url}/projects/`,
   mainEntity: {
     '@type': 'ItemList',
@@ -32,32 +31,30 @@ const schema = {
 ---
 
 <BaseLayout
-  title="Projects / Proyek | DikaGlorya (DikaOfc) | ObitoGlory"
-  description="Proyek dan software buatan DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode: website, bot, Android, dan developer tools. Explore practical software and developer projects by DikaGlorya."
+  title="Proyek | DikaGlorya (DikaOfc) | ObitoGlory"
+  description="Proyek dan software buatan DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode: website, bot, Android, dan developer tools."
   schema={schema}
 >
   <section class="page-hero page-hero--projects" aria-labelledby="projects-title">
     <div class="container">
-      <p class="page-hero__eyebrow mono">Portfolio / portofolio · project index / daftar proyek</p>
-      <h1 id="projects-title">Selected work / Proyek pilihan</h1>
-      <BilingualCopy
-        class="page-hero__lead"
-        en="Projects, tools, and experiments documented as concise technical case studies."
-        id="Proyek, tools, dan eksperimen yang dijelaskan melalui studi kasus teknis singkat."
-      />
+      <p class="page-hero__eyebrow mono">Portofolio · daftar proyek</p>
+      <h1 id="projects-title">Proyek pilihan</h1>
+      <p class="page-hero__lead">
+        Proyek, tools, dan eksperimen yang dijelaskan melalui studi kasus teknis singkat.
+      </p>
       <div class="page-hero__meta mono">
-        <span>{`${projects.length} projects`}</span>
-        <span>{`${projectCategories.length} categories`}</span>
+        <span>{`${projects.length} proyek`}</span>
+        <span>{`${projectCategories.length} kategori`}</span>
         <span>{site.locationShort}</span>
       </div>
     </div>
   </section>
 
-  <section class="section--tight" aria-label="Project list">
+  <section class="section--tight" aria-label="Daftar proyek">
     <div class="container">
-      <div class="filter-bar" data-js-only role="group" aria-label="Filter projects">
+      <div class="filter-bar" role="group" aria-label="Filter proyek">
         <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">
-          All / Semua ({projects.length})
+          Semua ({projects.length})
         </button>
         {categoryCounts.map((item) => (
           <button class="filter-btn" type="button" data-filter={item.category} aria-pressed="false">
@@ -67,16 +64,16 @@ const schema = {
       </div>
 
       <p class="filter-count mono" data-project-count aria-live="polite">
-        {`${projects.length} projects shown / proyek ditampilkan`}
+        {`${projects.length} proyek ditampilkan`}
       </p>
 
       <div class="project-list">
         <div class="project-list__head mono" aria-hidden="true">
-          <span>No. / No.</span>
-          <span>Project / Proyek</span>
-          <span>Type / Jenis</span>
-          <span>Stack / Teknologi</span>
-          <span>Detail / Detail</span>
+          <span>No.</span>
+          <span>Proyek</span>
+          <span>Jenis</span>
+          <span>Teknologi</span>
+          <span>Detail</span>
         </div>
         {projects.map((project, index) => (
           <ProjectRow project={project} index={index + 1} />
@@ -84,14 +81,14 @@ const schema = {
       </div>
 
       <div class="empty-state" data-empty-state hidden>
-        <p>No projects in this category / Tidak ada proyek dalam kategori ini.</p>
+        <p>Tidak ada proyek dalam kategori ini.</p>
         <p>
-          <button class="link" type="button" data-filter="all">Show all projects / Tampilkan semua proyek</button>
+          <button class="link" type="button" data-filter="all">Tampilkan semua proyek</button>
         </p>
       </div>
 
       <div class="projects-note mono">
-        <p>Source code belum dipublikasikan / Project repositories are not public. Lihat profil GitHub untuk kode yang memang tersedia / See GitHub for public code.</p>
+        <p>Kode sumber belum dipublikasikan. Lihat profil GitHub untuk kode yang memang tersedia.</p>
         <a
           class="link"
           href="https://github.com/dikaglorya"
@@ -106,7 +103,7 @@ const schema = {
 
   <ContactBlock
     id="projects-contact-title"
-    title="Missing the project you had in mind? / Belum menemukan proyek yang kamu cari?"
+    title="Belum menemukan proyek yang kamu cari?"
   />
 
   <script>

@@ -187,7 +187,7 @@ for (const viewport of viewports) {
   await page.locator('[data-copy-email]').click();
   await page.waitForTimeout(150);
   const copyStatus = await page.locator('[data-copy-status]').textContent();
-  if (!copyStatus?.includes('copied')) {
+  if (!copyStatus?.includes('disalin')) {
     issues.push(`contact: copy email did not report success (got "${copyStatus}")`);
   }
   await context.close();

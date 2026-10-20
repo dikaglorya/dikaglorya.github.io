@@ -1,6 +1,5 @@
 ---
 import ContactBlock from '../../components/ContactBlock.astro';
-import BilingualCopy from '../../components/BilingualCopy.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { articles, type Article } from '../../data/articles';
 import { site } from '../../data/site';
@@ -23,68 +22,63 @@ const schema = {
   '@type': 'BlogPosting',
   '@id': canonical,
   headline: article.title,
-  description: `${article.descriptionId} / ${article.description}`,
+  description: article.description,
   datePublished: article.date,
   dateModified: article.date,
   mainEntityOfPage: canonical,
   author: { '@id': `${site.url}/#person` },
   publisher: { '@id': `${site.url}/#website` },
   keywords: article.tags.join(', '),
+  inLanguage: 'id',
 };
 ---
 
 <BaseLayout
-  title={`${article.titleId} | DikaOfc`}
-  description={`${article.descriptionId} / ${article.description}`}
+  title={`${article.title} | DikaOfc`}
+  description={article.description}
   type="article"
   schema={schema}
 >
   <article>
     <header class="page-hero journal-hero">
       <div class="container">
-        <nav class="breadcrumb mono" aria-label="Breadcrumb">
-          <a href="/journal/">Journal / Jurnal</a>
+        <nav class="breadcrumb mono" aria-label="Remah roti">
+          <a href="/journal/">Jurnal</a>
           <span class="breadcrumb__sep" aria-hidden="true">/</span>
-          <span aria-current="page">Article / Artikel</span>
+          <span aria-current="page">Artikel</span>
         </nav>
-        <p class="page-hero__eyebrow mono">Technical note / Catatan teknis · {site.personName} / DikaOfc</p>
-        <h1>{article.titleId} / {article.title}</h1>
-        <BilingualCopy class="page-hero__lead" en={article.description} id={article.descriptionId} />
+        <p class="page-hero__eyebrow mono">Catatan teknis · {site.personName} (DikaOfc)</p>
+        <h1>{article.title}</h1>
+        <p class="page-hero__lead">{article.description}</p>
         <div class="page-hero__meta mono">
           <time datetime={article.date}>{article.date}</time>
-          <span>{article.readingTime} min read / menit baca</span>
-          <span>{article.tags.join(' / ')}</span>
+          <span>{article.readingTime} menit baca</span>
+          <span>{article.tags.join(' · ')}</span>
         </div>
       </div>
     </header>
 
     <div class="container journal-article">
-      <p class="mono muted">English and Indonesian article / Artikel dalam bahasa Inggris dan Indonesia.</p>
       {article.sections.map((section) => (
         <section class="journal-section">
-      <h2>{section.headingId} / {section.heading}</h2>
-      {section.paragraphs.map((paragraph, index) => (
-        <div class="journal-paragraph-pair">
-          <p lang="en">{paragraph}</p>
-          <p lang="id">{section.paragraphsId[index]}</p>
-        </div>
-      ))}
-      {section.code && (
-        <pre class="journal-code" tabindex="0" aria-label={`Code example / Contoh kode: ${section.heading}`}>
-          <code>{section.code}</code>
-        </pre>
-      )}
-    </section>
+          <h2>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+          {section.code && (
+            <pre class="journal-code" tabindex="0" aria-label={`Contoh kode: ${section.heading}`}>
+              <code>{section.code}</code>
+            </pre>
+          )}
+        </section>
       ))}
       <p class="journal-source mono">
-    Catatan ini menjelaskan implementasi di repositori website ini. Tidak ada klaim tentang
-    peringkat pencarian, benchmark performa, atau adopsi proyek. / This note describes the
-    implementation in this website repository. Claims about search rankings, performance
-    benchmarks, or project adoption are not made.
+        Catatan ini menjelaskan implementasi di repositori website ini. Tidak ada klaim tentang
+        peringkat pencarian, benchmark performa, atau adopsi proyek.
       </p>
-      <a class="link" href="/journal/">Back to all notes / Kembali ke semua catatan</a>
+      <a class="link" href="/journal/">Kembali ke semua catatan</a>
     </div>
   </article>
 
-  <ContactBlock id="article-contact-title" title="Want to discuss this? / Mau diskusi soal implementasi ini?" />
+  <ContactBlock id="article-contact-title" title="Mau diskusi soal implementasi ini?" />
 </BaseLayout>

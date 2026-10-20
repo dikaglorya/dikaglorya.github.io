@@ -18,9 +18,9 @@ export const site = {
   // Follows astro.config.mjs (SITE_URL, else the GitHub Pages host), so no page
   // hardcodes a domain that is currently serving a different site.
   url: import.meta.env.SITE,
-  title: 'DikaOfc / DikaGlorya | Developer di Kendal | ObitoGlory',
+  title: 'DikaOfc (DikaGlorya) | Developer di Kendal | ObitoGlory',
   description:
-    'Portofolio resmi DikaGlorya, dikenal sebagai DikaOfc dan DikaCode: programmer independen di Kendal. Website, bot, dan developer tools. / Official portfolio of DikaOfc, also known as DikaGlorya and DikaCode.',
+    'Portofolio resmi DikaGlorya, dikenal sebagai DikaOfc dan DikaCode: programmer independen di Kendal. Website, bot, dan tools developer.',
   email: 'dikasukasukaa@gmail.com',
   telegram: 'dikaacode',
   telegramUrl: 'https://t.me/dikaacode',
@@ -28,21 +28,16 @@ export const site = {
   githubHandle: 'dikaglorya',
   instagram: 'https://www.instagram.com/xxcdicka',
   tiktok: 'https://www.tiktok.com/@dikasecx',
-  location: 'Kendal, Central Java, Indonesia',
+  location: 'Kendal, Jawa Tengah, Indonesia',
   locationShort: 'Kendal, ID',
-  // The document language follows the prose that carries the page: English is
-  // written first and runs longer, Indonesian sits under it in BilingualCopy and
-  // is marked with lang="id". og:locale stays Indonesian because the audience and
-  // the social card are Indonesian-first.
   locale: 'id_ID',
-  alternateLocale: 'en_US',
-  lang: 'en',
+  lang: 'id',
   ogImage: '/og-default.png',
   ogImageAlt:
-    'Masked portrait of DikaGlorya on a dark ObitoGlory social card naming DikaOfc, with the line "Software berguna, dibuat oleh DikaOfc."',
+    'Potret bertopeng DikaGlorya pada kartu sosial ObitoGlory berlatar gelap, dengan nama DikaOfc dan kalimat "Software berguna, dibuat oleh DikaOfc."',
   profileImage: '/profile-portrait.jpg',
-  availability: 'Open for selected projects',
-  availabilityNote: 'Telegram is the fastest way to reach me.',
+  availability: 'Terbuka untuk proyek pilihan',
+  availabilityNote: 'Telegram adalah cara tercepat menghubungi saya.',
 } as const;
 
 export const socialLinks = [

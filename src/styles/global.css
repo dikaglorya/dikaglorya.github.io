@@ -1,4 +1,4 @@
-/* ObitoGlory design tokens and base styles (PRD v2.0).
+/* ObitoGlory design tokens and base styles.
    Concept: digital workshop / independent engineering journal.
    Accent use is deliberate: primary buttons, links, focus, active nav, and status marks. */
 
@@ -152,35 +152,6 @@ h4 {
 
 p {
   max-width: var(--measure);
-}
-
-.bilingual-copy {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0.2em;
-  vertical-align: baseline;
-}
-
-.bilingual-copy__line {
-  display: block;
-}
-
-.bilingual-copy__line--id {
-  color: var(--muted);
-  font-size: 0.92em;
-}
-
-.bilingual-copy__language {
-  margin-right: 0.35em;
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.72em;
-  letter-spacing: 0.05em;
-}
-
-.page-hero__lead.bilingual-copy,
-.service-row__lead.bilingual-copy {
-  display: flex;
 }
 
 [hidden] {
@@ -914,6 +885,13 @@ summary {
 .project-row__availability,
 .project-row__stack {
   color: var(--muted);
+}
+
+.project-row__summary {
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
 }
 
 .project-row__arrow {

@@ -1,6 +1,5 @@
 ---
 import { site } from '../data/site';
-import BilingualCopy from './BilingualCopy.astro';
 
 interface Props {
   title?: string;
@@ -8,7 +7,7 @@ interface Props {
 }
 
 const {
-  title = 'Have something worth building? / Ada ide yang ingin diwujudkan?',
+  title = 'Ada yang ingin dibuat?',
   id = 'contact-heading',
 } = Astro.props;
 ---
@@ -17,15 +16,14 @@ const {
   <div class="container contact-block__inner">
     <div class="contact-block__main">
       <h2 class="contact-block__title" id={id}>{title}</h2>
-      <BilingualCopy
-        en="For project inquiries, collaboration, or technical discussions."
-        id="Untuk pertanyaan project, kolaborasi, atau diskusi teknis."
-      />
-      <a class="btn btn--primary" href="/contact/">Get in touch / Hubungi saya</a>
+      <p class="contact-block__copy">
+        Untuk pertanyaan project, kolaborasi, atau diskusi teknis.
+      </p>
+      <a class="btn btn--primary" href="/contact/">Hubungi saya</a>
     </div>
 
     <div class="contact-block__details mono">
-      <p>{site.availability} / {site.locationShort}</p>
+      <p>{site.availability} · {site.locationShort}</p>
       <p class="contact-block__links">
         <a href={site.telegramUrl} rel="me" data-outbound="telegram">Telegram @{site.telegram}</a>
         <a href={site.github} rel="me noopener noreferrer" target="_blank" data-outbound="github">GitHub @{site.githubHandle}</a>

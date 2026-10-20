@@ -13,8 +13,8 @@ interface Props {
 const {
   class: className = '',
   sizes = '(max-width: 900px) 300px, 360px',
-  caption = 'DikaGlorya / developer',
-  index = 'Portrait 01',
+  caption = 'DikaGlorya, developer',
+  index = 'Potret 01',
   priority = false,
 } = Astro.props;
 ---
@@ -23,7 +23,7 @@ const {
   <div class="portrait-frame__media">
     <Image
       src={portrait}
-      alt="Masked portrait of DikaGlorya; the face is deliberately obscured by a question mark."
+      alt="Potret DikaGlorya dengan wajah yang sengaja ditutup tanda tanya."
       widths={[320, 480, 640]}
       sizes={sizes}
       quality={82}

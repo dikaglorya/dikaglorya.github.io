@@ -1,7 +1,6 @@
 ---
 import { site, socialLinks } from '../data/site';
 import { footerNavigation } from '../data/navigation';
-import BilingualCopy from './BilingualCopy.astro';
 
 const year = new Date().getFullYear();
 ---
@@ -13,14 +12,13 @@ const year = new Date().getFullYear();
         <a class="footer__wordmark" href="/">
           obitoglory<span class="dot">.</span>
         </a>
-        <BilingualCopy
-          class="footer__desc"
-          en="DikaGlorya's work, published under the DikaCode developer identity. ObitoGlory is the canonical portfolio."
-          id="Karya DikaGlorya diterbitkan dengan identitas developer DikaCode. ObitoGlory adalah portofolio resminya."
-        />
+        <p class="footer__desc">
+          Karya DikaGlorya diterbitkan dengan identitas developer DikaCode. ObitoGlory adalah
+          portofolio resminya.
+        </p>
       </div>
 
-      <nav class="footer__nav" aria-label="Footer">
+      <nav class="footer__nav" aria-label="Navigasi footer">
         {footerNavigation.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
@@ -37,9 +35,9 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="footer__bottom mono">
-      <p>© {year} ObitoGlory. DikaGlorya / DikaCode.</p>
-      <p>Built with Astro. No analytics or tracking. / Dibuat dengan Astro, tanpa analytics atau tracking.</p>
-      <p><a href="#top">Back to top / Kembali ke atas</a></p>
+      <p>© {year} ObitoGlory. DikaGlorya (DikaCode).</p>
+      <p>Dibuat dengan Astro, tanpa analytics atau tracking.</p>
+      <p><a href="#top">Kembali ke atas</a></p>
     </div>
   </div>
 </footer>

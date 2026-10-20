@@ -22,7 +22,7 @@ const applyFilter = (filter: string, updateUrl = true) => {
   });
 
   if (count) {
-    count.textContent = `${visible} projects shown`;
+    count.textContent = `${visible} proyek ditampilkan`;
   }
 
   if (emptyState) {

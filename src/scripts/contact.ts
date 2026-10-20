@@ -36,7 +36,7 @@ if (form) {
     if (!form.checkValidity()) {
       event.preventDefault();
       form.reportValidity();
-      setStatus('Complete the required fields first.', true);
+      setStatus('Lengkapi kolom wajib terlebih dahulu.', true);
       return;
     }
 
@@ -50,14 +50,14 @@ if (form) {
     const message = String(data.get('message') ?? '').trim();
 
     const formEmail = form.dataset.contactEmail ?? 'dikasukasukaa@gmail.com';
-    const subject = `Project brief: ${service} - ${name}`;
+    const subject = `Brief proyek: ${service} - ${name}`;
     const body = [
-      `Name: ${name}`,
+      `Nama: ${name}`,
       `Email: ${email}`,
-      `Service: ${service}`,
-      `Budget: ${budget || 'Not decided yet'}`,
+      `Layanan: ${service}`,
+      `Anggaran: ${budget || 'Belum ditentukan'}`,
       '',
-      'Message:',
+      'Pesan:',
       message,
     ].join('\n');
 
@@ -67,7 +67,7 @@ if (form) {
     draftLink.href = mailto;
     draftLink.textContent = formEmail;
 
-    setStatus('Opening your email application. If nothing opens, use the prepared draft:', false, draftLink);
+    setStatus('Membuka aplikasi email. Jika tidak terbuka, pakai draft berikut:', false, draftLink);
     window.location.href = mailto;
   });
 }
@@ -77,9 +77,9 @@ if (copyButton) {
     const email = copyButton.dataset.copyEmail ?? '';
     try {
       await navigator.clipboard.writeText(email);
-      if (copyStatus) copyStatus.textContent = 'Email copied.';
+      if (copyStatus) copyStatus.textContent = 'Email disalin.';
     } catch {
-      if (copyStatus) copyStatus.textContent = `Copy manually: ${email}`;
+      if (copyStatus) copyStatus.textContent = `Salin manual: ${email}`;
     }
   });
 }
