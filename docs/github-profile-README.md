@@ -1,31 +1,87 @@
-<!-- Draft for the GitHub profile README.
-
-How to use: create the special profile repository github.com/dikaglorya/dikaglorya (the repository must be named exactly like the username), paste everything below this comment into its README.md, commit, then pin repositories in profile settings.
-
-Before publishing:
-- Keep only claims that are true today; delete lines that are not.
-- Verify every link target (Instagram, TikTok, Telegram) belongs to DikaGlorya; remove the ones that do not.
-- Pin the site repository and write an accurate description and topics on it.
-- Do not add star counts, follower counts, or visitor numbers.
+<!--
+To publish this profile README:
+1. Open https://github.com/dikaglorya/dikaglorya
+2. Edit README.md and replace its contents with everything below this comment.
+3. Commit the change.
+4. Optionally pin dikaglorya/dikaglorya.github.io on your profile.
 -->
 
-## DikaGlorya, independent developer (Kendal, Indonesia)
+# DikaGlorya
 
-I build practical software: websites, bots and integrations, developer tools, and technical experiments that need to keep working after the demo ends.
+**Also known as DikaCode · DikaOfc · DikaGlory · ObitoGlory**
 
-You may know the work under a different name: **DikaCode** is the developer identity, **DikaGlory** and **DikaOfc** are other public names, and **ObitoGlory** is the website brand. It is one person, not a team or a company. The full name mapping, with context, is documented at [obitoglory.tech/about](https://obitoglory.tech/about/).
+Independent developer in Kendal, Central Java, Indonesia. I build developer tools, Telegram bots, AI gateways, and web applications.
 
-**Currently**
+**Website / Situs:** [dikaglorya.github.io](https://dikaglorya.github.io/) · **GitHub:** [@dikaglorya](https://github.com/dikaglorya)
 
-- Running [obitoglory.tech](https://obitoglory.tech), the canonical site for the work, built as fully static Astro with typed content data, self-hosted fonts, and link checks in CI. Local axe and Playwright checks cover accessibility and responsive behavior. Source: [dikaglorya/dikaglorya.github.io](https://github.com/dikaglorya/dikaglorya.github.io)
-- Writing technical notes in the [ObitoGlory journal](https://obitoglory.tech/journal/), each one tied to implementation you can inspect in a repository
-- Preparing the first public project releases with working documentation and honest limitations
+---
 
-**Official links**
+## About Me / Tentang Saya
 
-- Website and journal: [obitoglory.tech](https://obitoglory.tech)
-- Telegram: [@dikaacode](https://t.me/dikaacode), fastest for project inquiries
-- Instagram: [@xxcdicka](https://www.instagram.com/xxcdicka)
-- TikTok: [@dikasecx](https://www.tiktok.com/@dikasecx)
+DikaGlorya is my primary name, also known as DikaOfc. DikaCode is the handle I publish developer work under, ObitoGlory is a portfolio/project brand, and DikaGlory is an older alias that may still appear in links.
 
-Project inquiries: describe the problem, the platform, and the deadline. Telegram is fastest.
+DikaGlorya adalah nama utama saya, juga dikenal sebagai DikaOfc. DikaCode adalah nama yang saya gunakan untuk karya developer, ObitoGlory merupakan brand portofolio/proyek, dan DikaGlory adalah alias lama yang mungkin masih muncul di beberapa tautan.
+
+- Building tools that solve one specific, concrete problem
+- Working mostly in TypeScript, Node.js, and Python
+- Interested in AI coding agents, self-hosted tooling, and Android/Termux
+- Documenting projects as short technical case studies rather than feature lists
+
+I'm based in Kendal, Indonesia, and open for selected projects. / Saya tinggal di Kendal, Indonesia, dan terbuka untuk proyek pilihan.
+
+## Selected Work
+
+### DikaRoute
+
+An OpenAI-compatible gateway that puts several AI providers behind one endpoint. Requests are routed automatically, and when a provider fails or rate-limits, the request falls through to the next one.
+
+`TypeScript` `Node.js` `OpenAI API` — [case study](https://dikaglorya.github.io/projects/dikaroute/)
+
+### ObitoBuff CLI
+
+A terminal AI coding agent with sub-agents for finding files, editing, running bash, research, and code review. Runs fully locally against your own models, with no backend.
+
+`TypeScript` `Bun` `OpenAI-compatible API` — [case study](https://dikaglorya.github.io/projects/obitobuff/)
+
+### PentesterBot
+
+A Telegram bot that runs recon and vulnerability scanning workflows from inside a chat.
+
+`JavaScript` `Node.js` `Telegram Bot API` — [case study](https://dikaglorya.github.io/projects/pentesterbot/)
+
+### TelegramBot AI
+
+A Telethon userbot that replies to chats with AI, learns your writing style, keeps long-term memory, and transcribes voice notes.
+
+`Python` `Telethon` `OpenAI-compatible API` — [case study](https://dikaglorya.github.io/projects/telegrambot-ai/)
+
+Also documented: **Freebuff Patch**, running Freebuff on Termux without proot, and **RemoteUniversalDevice**, an Android remote for smart TVs. See the [full project list](https://dikaglorya.github.io/projects/).
+
+## Tech & Tools
+
+- **Languages:** TypeScript, JavaScript, Python, Kotlin, HTML, CSS
+- **Web:** Astro, React, Node.js
+- **Systems:** Linux, Termux, shell scripting
+- **AI:** OpenAI-compatible APIs, coding agents, local model tooling
+
+This is a map of what I work with, not a claim of equal depth in each.
+
+## Explore
+
+- [Projects](https://dikaglorya.github.io/projects/) — documented case studies
+- [About](https://dikaglorya.github.io/about/) — who I am and what the aliases mean
+- [Journal](https://dikaglorya.github.io/journal/) — technical notes
+- [Services](https://dikaglorya.github.io/services/) — what I take on
+- [Contact](https://dikaglorya.github.io/contact/) — Telegram is fastest
+
+## Find Me Online
+
+- Website: [dikaglorya.github.io](https://dikaglorya.github.io/)
+- GitHub: [@dikaglorya](https://github.com/dikaglorya)
+- Telegram: [@dikaacode](https://t.me/dikaacode)
+
+For the most reliable information about my work and official links, start at [dikaglorya.github.io](https://dikaglorya.github.io/). / Untuk informasi paling akurat tentang karya dan tautan resmi saya, kunjungi [dikaglorya.github.io](https://dikaglorya.github.io/).
+
+---
+
+*Building, learning, documenting, and improving, one project at a time.*
