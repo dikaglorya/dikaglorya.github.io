@@ -267,25 +267,6 @@ p {
   border: 0;
 }
 
-.skip-link {
-  position: fixed;
-  top: calc(var(--menubar-h) + 8px);
-  left: 12px;
-  z-index: 400;
-  padding: 10px 14px;
-  border-radius: var(--r-sm);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: var(--text-sm);
-  font-weight: 640;
-  transform: translateY(-240%);
-  transition: transform var(--d2) var(--ease);
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
 /* Wallpaper: layered mesh gradient with a fine grid. The layers move a few
    pixels with the pointer on capable devices, never more. */
 

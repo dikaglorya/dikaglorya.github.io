@@ -43,27 +43,27 @@ const mountScene = async () => {
   const core = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1.03, 5),
     new THREE.MeshPhysicalMaterial({
-      color: 0x59808a,
+      color: 0x8b8b90,
       metalness: 0.72,
       roughness: 0.24,
       clearcoat: 0.8,
       clearcoatRoughness: 0.16,
-      emissive: 0x123138,
-      emissiveIntensity: 0.3,
+      emissive: 0x202024,
+      emissiveIntensity: 0.22,
     }),
   );
   sculpture.add(core);
 
   const wireframe = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1.08, 2),
-    new THREE.MeshBasicMaterial({ color: 0xffbd8a, wireframe: true, transparent: true, opacity: 0.24 }),
+    new THREE.MeshBasicMaterial({ color: 0xe8e8ed, wireframe: true, transparent: true, opacity: 0.2 }),
   );
   sculpture.add(wireframe);
 
   const ringMaterials = [
-    new THREE.MeshBasicMaterial({ color: 0x8dddeb, transparent: true, opacity: 0.64 }),
-    new THREE.MeshBasicMaterial({ color: 0xffbd8a, transparent: true, opacity: 0.72 }),
-    new THREE.MeshBasicMaterial({ color: 0xd3f3f4, transparent: true, opacity: 0.3 }),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.62 }),
+    new THREE.MeshBasicMaterial({ color: 0xbfc0c6, transparent: true, opacity: 0.54 }),
+    new THREE.MeshBasicMaterial({ color: 0xe8e8ed, transparent: true, opacity: 0.3 }),
   ];
   const rings = ringMaterials.map((material, index) => {
     const ring = new THREE.Mesh(new THREE.TorusGeometry(1.48 + index * 0.16, 0.008, 8, 160), material);
@@ -82,15 +82,15 @@ const mountScene = async () => {
   starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
   const stars = new THREE.Points(
     starsGeometry,
-    new THREE.PointsMaterial({ color: 0xa6dbe2, size: 0.012, transparent: true, opacity: 0.65 }),
+    new THREE.PointsMaterial({ color: 0xe8e8ed, size: 0.012, transparent: true, opacity: 0.58 }),
   );
   scene.add(stars);
 
   scene.add(new THREE.AmbientLight(0xffffff, 1.35));
-  const keyLight = new THREE.DirectionalLight(0xb8f3ff, 3.2);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 3.0);
   keyLight.position.set(-3, 4, 5);
   scene.add(keyLight);
-  const warmLight = new THREE.PointLight(0xff966c, 40, 12);
+  const warmLight = new THREE.PointLight(0xd8d8de, 28, 12);
   warmLight.position.set(2, -1, 3);
   scene.add(warmLight);
 
