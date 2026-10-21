@@ -62,16 +62,6 @@ const homeSchema = {
   <section class="hero" aria-labelledby="hero-title">
     <div class="container">
       <div class="hero__grid">
-        <div class="hero__visual">
-          <HeroScene />
-          <PortraitFrame
-            class="hero__portrait"
-            sizes="(max-width: 1120px) 250px, 280px"
-            caption="DikaGlorya, developer"
-            index="ObitoGlory"
-            priority
-          />
-        </div>
         <div class="hero__body">
           <p class="hero__eyebrow mono">Developer independen · Kendal, Indonesia</p>
           <h1 class="hero__title" id="hero-title">
@@ -90,6 +80,16 @@ const homeSchema = {
             <span>{site.location}</span>
             <span>{site.availability}</span>
           </div>
+        </div>
+        <div class="hero__visual">
+          <HeroScene />
+          <PortraitFrame
+            class="hero__portrait"
+            sizes="(max-width: 1120px) 250px, 280px"
+            caption="DikaGlorya, developer"
+            index="ObitoGlory"
+            priority
+          />
         </div>
       </div>
     </div>

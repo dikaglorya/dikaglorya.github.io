@@ -93,11 +93,28 @@ for (const viewport of viewports) {
         h1Font: h1Style?.fontFamily ?? '',
         h1Size: h1Style?.fontSize ?? '',
         h1Color: h1Style?.color ?? '',
+        heroTitleVisible: (() => {
+          const title = document.querySelector('.hero__title');
+          if (!title) return null;
+          return Array.from(title.querySelectorAll('.line > span')).every(
+            (span) => Number.parseFloat(getComputedStyle(span).opacity) > 0.5,
+          );
+        })(),
         heroScene: (() => {
           const root = document.querySelector('[data-hero-scene]');
           const canvas = root?.querySelector('canvas');
+          const fallback = root?.querySelector('.hero__scene-fallback');
           return root && canvas
-            ? { ready: root.dataset.sceneReady === 'true', width: canvas.width, height: canvas.height }
+            ? {
+                ready: root.dataset.sceneReady === 'true',
+                initialized: root.dataset.initialized === 'true',
+                threeRequested: performance
+                  .getEntriesByType('resource')
+                  .some((entry) => entry.name.includes('three.module')),
+                fallbackOpacity: fallback ? getComputedStyle(fallback).opacity : '0',
+                width: canvas.width,
+                height: canvas.height,
+              }
             : null;
         })(),
       };
@@ -109,7 +126,7 @@ for (const viewport of viewports) {
       );
     }
 
-    if (metrics.bodyBackground !== 'rgb(8, 9, 11)') {
+    if (metrics.bodyBackground !== 'rgb(7, 11, 13)') {
       issues.push(
         `${pageInfo.name} @ ${viewport.name}: unexpected body background ${metrics.bodyBackground}`,
       );
@@ -118,21 +135,34 @@ for (const viewport of viewports) {
     if (!metrics.h1Text) {
       issues.push(`${pageInfo.name} @ ${viewport.name}: missing h1`);
     }
+    if (pageInfo.path === '/' && metrics.heroTitleVisible === false) {
+      issues.push(`${pageInfo.name} @ ${viewport.name}: hero headline is visually hidden`);
+    }
 
     if (pageInfo.path === '/') {
-      if (!metrics.heroScene?.ready || metrics.heroScene.width === 0 || metrics.heroScene.height === 0) {
-        issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero scene did not initialize`);
-      } else {
-        const canvasImage = await page.locator('[data-hero-canvas]').screenshot();
-        const { data, info } = await sharp(canvasImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
-        let coloredPixels = 0;
-        for (let index = 0; index < data.length; index += 3) {
-          const high = Math.max(data[index], data[index + 1], data[index + 2]);
-          const low = Math.min(data[index], data[index + 1], data[index + 2]);
-          if (high - low > 24 && high < 245) coloredPixels += 1;
+      if (viewport.name === 'desktop') {
+        if (!metrics.heroScene?.ready || metrics.heroScene.width === 0 || metrics.heroScene.height === 0) {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero scene did not initialize`);
         }
-        if (coloredPixels < 500) {
-          issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero canvas appears blank (${info.width}x${info.height})`);
+        if (!metrics.heroScene?.threeRequested) {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: Three.js chunk was not requested for desktop hero`);
+        }
+        if (metrics.heroScene?.ready) {
+          const canvasImage = await page.locator('[data-hero-canvas]').screenshot();
+          const { data, info } = await sharp(canvasImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+          let coloredPixels = 0;
+          for (let index = 0; index < data.length; index += 3) {
+            const high = Math.max(data[index], data[index + 1], data[index + 2]);
+            const low = Math.min(data[index], data[index + 1], data[index + 2]);
+            if (high - low > 24 && high < 245) coloredPixels += 1;
+          }
+          if (coloredPixels < 500) {
+            issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero canvas appears blank (${info.width}x${info.height})`);
+          }
+        }
+      } else {
+        if (metrics.heroScene?.initialized || metrics.heroScene?.threeRequested || metrics.heroScene?.fallbackOpacity === '0') {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: lightweight hero fallback is not active`);
         }
       }
     }
@@ -173,10 +203,14 @@ for (const viewport of viewports) {
   await page.waitForTimeout(250);
   const isOpen = await page.locator('[data-menu]').evaluate((dialog) => dialog.hasAttribute('open'));
   if (!isOpen) issues.push('mobile menu: did not open');
+  const expanded = await opener.getAttribute('aria-expanded');
+  if (expanded !== 'true') issues.push('mobile menu: opener aria-expanded is not true while open');
   await page.keyboard.press('Escape');
   await page.waitForTimeout(250);
   const closed = await page.locator('[data-menu]').evaluate((dialog) => !dialog.hasAttribute('open'));
   if (!closed) issues.push('mobile menu: did not close with Escape');
+  const collapsed = await opener.getAttribute('aria-expanded');
+  if (collapsed !== 'false') issues.push('mobile menu: opener aria-expanded is not false when closed');
   const focused = await opener.evaluate((element) => element === document.activeElement);
   if (!focused) issues.push('mobile menu: focus did not return to the opener');
   await context.close();
@@ -262,7 +296,7 @@ for (const viewport of viewports) {
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
   }));
-  if (appearance.background !== 'rgb(238, 243, 244)') {
+  if (appearance.background !== 'rgb(242, 245, 245)') {
     issues.push(`light appearance: unexpected body background ${appearance.background}`);
   }
   if (appearance.scrollWidth > appearance.innerWidth + 1) {
