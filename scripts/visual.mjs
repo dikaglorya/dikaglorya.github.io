@@ -93,6 +93,13 @@ for (const viewport of viewports) {
         h1Font: h1Style?.fontFamily ?? '',
         h1Size: h1Style?.fontSize ?? '',
         h1Color: h1Style?.color ?? '',
+        heroTitleVisible: (() => {
+          const title = document.querySelector('.hero__title');
+          if (!title) return null;
+          return Array.from(title.querySelectorAll('.line > span')).every(
+            (span) => Number.parseFloat(getComputedStyle(span).opacity) > 0.5,
+          );
+        })(),
         heroScene: (() => {
           const root = document.querySelector('[data-hero-scene]');
           const canvas = root?.querySelector('canvas');
@@ -119,7 +126,7 @@ for (const viewport of viewports) {
       );
     }
 
-    if (metrics.bodyBackground !== 'rgb(8, 9, 11)') {
+    if (metrics.bodyBackground !== 'rgb(7, 11, 13)') {
       issues.push(
         `${pageInfo.name} @ ${viewport.name}: unexpected body background ${metrics.bodyBackground}`,
       );
@@ -127,6 +134,9 @@ for (const viewport of viewports) {
 
     if (!metrics.h1Text) {
       issues.push(`${pageInfo.name} @ ${viewport.name}: missing h1`);
+    }
+    if (pageInfo.path === '/' && metrics.heroTitleVisible === false) {
+      issues.push(`${pageInfo.name} @ ${viewport.name}: hero headline is visually hidden`);
     }
 
     if (pageInfo.path === '/') {
@@ -193,10 +203,14 @@ for (const viewport of viewports) {
   await page.waitForTimeout(250);
   const isOpen = await page.locator('[data-menu]').evaluate((dialog) => dialog.hasAttribute('open'));
   if (!isOpen) issues.push('mobile menu: did not open');
+  const expanded = await opener.getAttribute('aria-expanded');
+  if (expanded !== 'true') issues.push('mobile menu: opener aria-expanded is not true while open');
   await page.keyboard.press('Escape');
   await page.waitForTimeout(250);
   const closed = await page.locator('[data-menu]').evaluate((dialog) => !dialog.hasAttribute('open'));
   if (!closed) issues.push('mobile menu: did not close with Escape');
+  const collapsed = await opener.getAttribute('aria-expanded');
+  if (collapsed !== 'false') issues.push('mobile menu: opener aria-expanded is not false when closed');
   const focused = await opener.evaluate((element) => element === document.activeElement);
   if (!focused) issues.push('mobile menu: focus did not return to the opener');
   await context.close();
@@ -282,7 +296,7 @@ for (const viewport of viewports) {
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
   }));
-  if (appearance.background !== 'rgb(233, 236, 241)') {
+  if (appearance.background !== 'rgb(242, 245, 245)') {
     issues.push(`light appearance: unexpected body background ${appearance.background}`);
   }
   if (appearance.scrollWidth > appearance.innerWidth + 1) {
