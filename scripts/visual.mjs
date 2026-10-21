@@ -126,7 +126,7 @@ for (const viewport of viewports) {
       );
     }
 
-    if (metrics.bodyBackground !== 'rgb(7, 11, 13)') {
+    if (metrics.bodyBackground !== 'rgb(8, 9, 11)') {
       issues.push(
         `${pageInfo.name} @ ${viewport.name}: unexpected body background ${metrics.bodyBackground}`,
       );
@@ -150,13 +150,15 @@ for (const viewport of viewports) {
         if (metrics.heroScene?.ready) {
           const canvasImage = await page.locator('[data-hero-canvas]').screenshot();
           const { data, info } = await sharp(canvasImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
-          let coloredPixels = 0;
+          let brightPixels = 0;
           for (let index = 0; index < data.length; index += 3) {
             const high = Math.max(data[index], data[index + 1], data[index + 2]);
             const low = Math.min(data[index], data[index + 1], data[index + 2]);
-            if (high - low > 24 && high < 245) coloredPixels += 1;
+            // The hero scene is intentionally monochrome, so measure lit
+            // neutral pixels instead of chromatic ones.
+            if (high > 45 && high - low <= 24) brightPixels += 1;
           }
-          if (coloredPixels < 500) {
+          if (brightPixels < 500) {
             issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero canvas appears blank (${info.width}x${info.height})`);
           }
         }
@@ -296,7 +298,7 @@ for (const viewport of viewports) {
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
   }));
-  if (appearance.background !== 'rgb(242, 245, 245)') {
+  if (appearance.background !== 'rgb(242, 242, 244)') {
     issues.push(`light appearance: unexpected body background ${appearance.background}`);
   }
   if (appearance.scrollWidth > appearance.innerWidth + 1) {
