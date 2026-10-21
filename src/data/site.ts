@@ -18,9 +18,9 @@ export const site = {
   // Follows astro.config.mjs (SITE_URL, else the GitHub Pages host), so no page
   // hardcodes a domain that is currently serving a different site.
   url: import.meta.env.SITE,
-  title: 'DikaOfc (DikaGlorya) | Developer di Kendal | ObitoGlory',
+  title: 'ObitoGlory — DikaOfc, developer independen di Kendal',
   description:
-    'Portofolio resmi DikaGlorya, dikenal sebagai DikaOfc dan DikaCode: programmer independen di Kendal. Website, bot, dan tools developer.',
+    'Portofolio DikaGlorya (DikaOfc, DikaCode): developer independen di Kendal. Website, bot, developer tools, dan automasi yang dibuat untuk dipakai.',
   email: 'dikasukasukaa@gmail.com',
   telegram: 'dikaacode',
   telegramUrl: 'https://t.me/dikaacode',

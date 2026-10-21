@@ -56,7 +56,7 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" id="pricing" aria-label="Daftar layanan">
+  <section class="section--tight" id="pricing" aria-label="Daftar layanan" data-reveal>
     <div class="container">
       {services.map((service, index) => (
         <section
@@ -104,10 +104,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-labelledby="process-title">
+  <section class="section--tight" aria-labelledby="process-title" data-reveal>
     <div class="container">
       <SectionHead
         id="process-title"
+        index="01 / Proses"
         title="Alur kerja"
         meta="Empat langkah jelas tanpa kejutan di tengah jalan."
       />
@@ -123,10 +124,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" id="faq" aria-labelledby="faq-title">
+  <section class="section--tight" id="faq" aria-labelledby="faq-title" data-reveal>
     <div class="container">
       <SectionHead
         id="faq-title"
+        index="02 / FAQ"
         title="Pertanyaan umum"
         meta="Hal yang sering ditanyakan sebelum mulai."
       />

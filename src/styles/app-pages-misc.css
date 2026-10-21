@@ -1,0 +1,405 @@
+/* ==========================================================================
+   ObitoGlory — misc pages & OS window chrome
+   Two loosely related concerns that appear on several pages:
+
+   A) .os-window — a small framed "desktop window" used as a presentational
+      container (terminal-ish panels, snippet frames, 404-side artwork).
+   B) .not-found — the 404 blank state (code numeral, copy, portrait).
+
+   Owns only: .os-window (+ __bar/__title/__lights/__body/__collapsed),
+   .os-light (+ modifiers), .not-found (+ __grid/__body/__code/__actions/
+   __portrait).
+   Tokens, reset, [hidden], .container, .link/.btn, and .portrait-frame live
+   elsewhere — never redeclare them here.
+
+   CONTRACT NOTE (read before editing):
+   src/components/Window.astro and src/scripts/windows.ts do NOT exist in this
+   repo at the time of writing. Nothing currently emits this markup and nothing
+   toggles collapse or drag state. The hooks styled below are therefore the
+   *declared contract* for that future component:
+     - .os-light buttons expose state via aria-expanded (false = dimmed).
+     - Collapsed copy is hidden through the native `hidden` attribute, which
+       app-base.css already forces to `display: none !important`.
+   Do not invent data-window-*/data-drag-* names; add them here only once the
+   script exists and its exact attribute names can be copied across.
+
+   Mobile-first. Breakpoints used: 480, 640, 761, 900.
+   ========================================================================== */
+
+/* ==========================================================================
+   A) OS window chrome
+   Restrained framed panel: hairline border, slightly-raised titlebar, flat
+   body. No skeuomorphic gloss, no glow — depth comes from --shadow-card only.
+   ========================================================================== */
+
+.os-window {
+  display: block;
+  /* min-width:0 lets the panel shrink inside grid/flex parents instead of
+     forcing the page wider (guards the 320px no-scroll rule). */
+  min-width: 0;
+  overflow: clip;
+  background: var(--surface);
+  border: 1px solid var(--stroke-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- Titlebar ------------------------------------------------------ */
+
+.os-window__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 9px 12px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--divider);
+  /* Honest default: a static panel is not a draggable object. */
+  cursor: default;
+}
+
+/* Drag affordance only when a component opts in. `[data-draggable]` is the
+   agreed public opt-in attribute for the window component; it is deliberately
+   paired with :not([data-dragging]) so an active drag wins. When windows.ts
+   lands, verify these two names against it before relying on them. */
+.os-window__bar[data-draggable]:not([data-dragging]) {
+  cursor: grab;
+}
+
+.os-window__bar[data-dragging] {
+  cursor: grabbing;
+  /* Do not let a drag select the title text underneath the pointer. */
+  user-select: none;
+}
+
+.os-window__lights {
+  display: flex;
+  flex: none;
+  gap: 7px;
+}
+
+/* ---------- Traffic lights -------------------------------------------------
+   Each light is a >=22px button with the visible 11px dot drawn by ::before,
+   so the control stays comfortably tappable while the chrome stays tidy.
+   -------------------------------------------------------------------------- */
+
+.os-light {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity var(--speed) var(--ease);
+}
+
+.os-light::before {
+  width: 11px;
+  height: 11px;
+  content: "";
+  background: var(--light-red);
+  border: 1px solid rgb(0 0 0 / 18%);
+  border-radius: 50%;
+  transition: opacity var(--speed) var(--ease);
+}
+
+.os-light--yellow::before {
+  background: var(--light-yellow);
+}
+
+.os-light--green::before {
+  background: var(--light-green);
+}
+
+/* State is owned by aria-expanded (true = window open, false = collapsed).
+   A dimmed dot reads as "inactive" without any colour swap, so the traffic
+   light colours keep their meaning. */
+.os-light[aria-expanded="false"] {
+  opacity: 0.55;
+}
+
+.os-light[aria-expanded="true"] {
+  opacity: 1;
+}
+
+/* Clear, non-decorative focus ring — but skip it for the mouse. */
+.os-light:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.os-light:hover::before {
+  filter: brightness(1.12);
+}
+
+/* ---------- Title ---------------------------------------------------------
+   Mono, uppercase, quiet. The <b> inside must not shout, so it inherits the
+   surrounding title styling instead of the UA's bold + larger size.
+   -------------------------------------------------------------------------- */
+
+.os-window__title {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.os-window__title b,
+.os-window__title strong {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+/* ---------- Body ---------------------------------------------------------- */
+
+.os-window__body {
+  min-width: 0;
+  padding: var(--space-5);
+}
+
+/* Flush body: no padding, and nothing to round off inside the panel — the
+   content (image, table, code block) runs edge to edge under the titlebar. */
+.os-window__body--flush {
+  padding: 0;
+}
+
+.os-window__body--flush > :first-child {
+  margin-block-start: 0;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+
+.os-window__body--flush > :last-child {
+  margin-block-end: 0;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* ---------- Collapsed region -----------------------------------------------
+   The restored-content <p> is rendered by the component and hidden with the
+   native `hidden` attribute, which app-base.css already forces to display:none
+   with !important. So there is NO display:none default here on purpose — a
+   rule like that would fight [hidden] and make the region impossible to show.
+   We only provide the visible layout, plus a tiny fade-in so restoring feels
+   continuous rather than abrupt.
+   -------------------------------------------------------------------------- */
+
+.os-window__collapsed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: baseline;
+  margin: 0;
+  padding: var(--space-3) var(--space-5);
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  border-top: 1px solid var(--divider);
+  animation: os-collapsed-in var(--speed) var(--ease) both;
+}
+
+.os-window__collapsed b {
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+/* .link styling is owned by app-base.css; only make sure the restored link
+   fits inline inside the mono strip without inheriting a bulky size. */
+.os-window__collapsed .link {
+  font-size: inherit;
+  font-weight: 500;
+}
+
+@keyframes os-collapsed-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Window on narrow screens ---------------------------------------
+   Below 340px the titlebar can get tight: keep the lights fixed so they never
+   leave the panel, let the title shrink and ellipsize (it never disappears),
+   and give the bar back a little horizontal padding.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 340px) {
+  .os-window__bar {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .os-window__lights {
+    gap: 5px;
+  }
+
+  .os-window__body,
+  .os-window__collapsed {
+    padding-inline: var(--space-3);
+  }
+}
+
+/* ==========================================================================
+   B) 404 — not found
+   A calm blank state: oversized mono numeral, short copy, two actions, and a
+   portrait for company. Single column until 901px, then copy + portrait.
+   ========================================================================== */
+
+.not-found {
+  padding-block: clamp(56px, 11vw, 120px);
+}
+
+.not-found__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.not-found__code {
+  margin: 0;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  /* --text-display is already a clamp; the multiplier keeps the numeral a
+     strong but not overwhelming focal point at every width, and never wider
+     than its column at 320px. */
+  font-size: clamp(3rem, calc(var(--text-display) * 1.5), 7rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  /* Old-style figures are tabular by default; keep the numeral on the grid. */
+  font-variant-numeric: tabular-nums;
+}
+
+.not-found h1 {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+/* The descriptive paragraph, not the code numeral. */
+.not-found__body > p:not(.not-found__code) {
+  max-width: var(--measure);
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  margin-block-start: var(--space-2);
+}
+
+/* ---------- Grid ----------------------------------------------------------
+   Mobile-first: one column, portrait beneath the copy. The portrait is a
+   companion, never the headline, so it is capped on small screens.
+   -------------------------------------------------------------------------- */
+
+.not-found__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.not-found__portrait {
+  width: 100%;
+  max-width: 260px;
+  min-width: 0;
+}
+
+@media (min-width: 480px) {
+  .not-found__actions .btn {
+    /* Keep both actions on one line where there is room. */
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 761px) {
+  .not-found__portrait {
+    max-width: 300px;
+  }
+}
+
+@media (min-width: 900px) {
+  .not-found__grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(36px, 7vw, 96px);
+  }
+
+  .not-found__body {
+    gap: var(--space-4);
+  }
+
+  .not-found__portrait {
+    max-width: none;
+  }
+}
+
+/* ---------- Overflow guard ------------------------------------------------
+   Belt-and-braces for the 320px rule: the display numeral and any long word in
+   the copy must wrap/shrink rather than push the document sideways. Every
+   ancestor that could grow (grid cells, flex items) already has min-width:0.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 400px) {
+  .not-found__code {
+    font-size: clamp(2.6rem, 16vw, 4rem);
+  }
+
+  .not-found h1 {
+    max-width: none;
+    overflow-wrap: anywhere;
+  }
+
+  .not-found__actions {
+    gap: var(--space-2);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .os-light,
+  .os-light::before,
+  .os-window__collapsed {
+    transition: none;
+    animation: none;
+    transform: none;
+  }
+
+  .os-light:hover::before {
+    filter: none;
+  }
+}

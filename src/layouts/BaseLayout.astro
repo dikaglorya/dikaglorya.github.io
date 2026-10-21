@@ -1,6 +1,11 @@
 ---
 import '../styles/fonts.css';
+import '../styles/tokens.css';
 import '../styles/global.css';
+import '../styles/pages.css';
+
+import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -65,7 +70,6 @@ const websiteSchema = {
   '@type': 'WebSite',
   '@id': `${site.url}/#website`,
   name: site.name,
-  alternateName: ['obitoglory.tech'],
   url: site.url,
   description: site.description,
   inLanguage: 'id',
@@ -87,11 +91,22 @@ const pageSchemas = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#08090b" />
+    <meta name="theme-color" content="#0a0b0c" />
     <meta name="color-scheme" content="dark" />
     <meta name="author" content={site.personName} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="preload" as="font" type="font/woff2" href={newsreaderFont} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={interFont} crossorigin />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      window.setTimeout(() => {
+        if (document.documentElement.dataset.motion !== 'ready') {
+          document.documentElement.classList.remove('js');
+        }
+      }, 4000);
+    </script>
 
     <title>{title}</title>
     <meta name="description" content={description} />

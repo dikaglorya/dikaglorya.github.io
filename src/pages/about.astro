@@ -54,7 +54,7 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-label="Perkenalan">
+  <section class="section--tight" aria-label="Perkenalan" data-reveal>
     <div class="container profile-grid">
       <div class="profile-body">
         <h2 id="profile-title">Bukan perusahaan besar. Satu orang yang serius mengerjakan karya.</h2>
@@ -76,10 +76,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-labelledby="identity-title">
+  <section class="section--tight" aria-labelledby="identity-title" data-reveal>
     <div class="container">
       <SectionHead
         id="identity-title"
+        index="01 / Identitas"
         title="Satu orang, beberapa nama publik"
         meta="Konteks setiap nama dijelaskan dengan jujur."
       />
@@ -95,10 +96,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-labelledby="principles-title">
+  <section class="section--tight" aria-labelledby="principles-title" data-reveal>
     <div class="container">
       <SectionHead
         id="principles-title"
+        index="02 / Prinsip"
         title="Cara kerja"
         meta="Tiga prinsip sebelum mengerjakan proyek."
       />
@@ -116,10 +118,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-labelledby="focus-title">
+  <section class="section--tight" aria-labelledby="focus-title" data-reveal>
     <div class="container">
       <SectionHead
         id="focus-title"
+        index="03 / Fokus"
         title="Fokus saat ini"
         meta="Hal yang sedang dipelajari dan dieksplorasi."
       />
@@ -134,10 +137,11 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-labelledby="stack-title">
+  <section class="section--tight" aria-labelledby="stack-title" data-reveal>
     <div class="container">
       <SectionHead
         id="stack-title"
+        index="04 / Toolkit"
         title="Teknologi dan tools"
         meta="Dikelompokkan berdasarkan fungsi, bukan peringkat."
       />
@@ -145,9 +149,9 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" aria-labelledby="profiles-title">
+  <section class="section--tight" aria-labelledby="profiles-title" data-reveal>
     <div class="container">
-      <SectionHead id="profiles-title" title="Tautan resmi" meta="Tautan publik yang digunakan di website ini." />
+      <SectionHead id="profiles-title" index="05 / Tautan" title="Tautan resmi" meta="Tautan publik yang digunakan di website ini." />
       <ul class="profile-links mono">
         <li>
           <a href={site.github} rel="me noopener noreferrer" target="_blank" data-outbound="github">

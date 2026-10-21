@@ -1,6 +1,5 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
-import HeroScene from '../components/HeroScene.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import RouteDiagram from '../components/RouteDiagram.astro';
@@ -9,12 +8,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Arrow from '../components/Arrow.astro';
 import { facts } from '../data/facts';
 import { projects } from '../data/projects';
-import { site, socialLinks } from '../data/site';
-import { currentFocus, technologyGroups } from '../data/technologies';
+import { site } from '../data/site';
+import { technologyGroups } from '../data/technologies';
 import { articles } from '../data/articles';
 
 const featured = projects.find((project) => project.slug === 'dikaroute');
-const selected = projects.filter((project) => project.slug !== 'dikaroute').slice(0, 5);
+const selected = projects.filter((project) => project.slug !== 'dikaroute').slice(0, 4);
 
 const capabilities = [
   {
@@ -60,36 +59,39 @@ const homeSchema = {
   schema={homeSchema}
 >
   <section class="hero" aria-labelledby="hero-title">
-    <div class="container">
-      <div class="hero__grid">
-        <div class="hero__visual">
-          <HeroScene />
-          <PortraitFrame
-            class="hero__portrait"
-            sizes="(max-width: 1120px) 250px, 280px"
-            caption="DikaGlorya, developer"
-            index="ObitoGlory"
-            priority
-          />
+    <div class="container hero__grid">
+      <div class="hero__body">
+        <p class="hero__pill">
+          <span class="status">{site.availability}</span>
+        </p>
+
+        <h1 class="hero__title" id="hero-title">Dibuat untuk <em>dipakai.</em></h1>
+
+        <p class="hero__lead">
+          Website, bot, dan developer tools dari <strong>Kendal, Indonesia</strong>. Dikerjakan
+          oleh DikaGlorya — dikenal juga sebagai DikaOfc dan DikaCode.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/projects/">Lihat proyek <Arrow /></a>
+          <a class="btn" href="/contact/">Mulai percakapan</a>
         </div>
-        <div class="hero__body">
-          <p class="hero__eyebrow mono">Developer independen · Kendal, Indonesia</p>
-          <h1 class="hero__title" id="hero-title">
-            <span class="line"><span>Website, bot,</span></span>
-            <span class="line"><span>dan tools developer.</span></span>
-          </h1>
-          <p class="hero__copy">
-            Saya DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode. Saya membuat software dari
-            Kendal; ObitoGlory memuat proyek, catatan teknis, dan eksperimen yang saya kerjakan.
-          </p>
-          <div class="hero__actions">
-            <a class="btn btn--primary" href="/projects/">Lihat proyek</a>
-            <a class="btn" href="/contact/">Hubungi saya</a>
-          </div>
-          <div class="hero__meta mono">
-            <span>{site.location}</span>
-            <span>{site.availability}</span>
-          </div>
+      </div>
+
+      <div class="hero__stage">
+        <PortraitFrame
+          class="hero__portrait"
+          sizes="(max-width: 900px) 78vw, 360px"
+          caption="DikaGlorya"
+          index="Kendal, ID"
+          priority
+        />
+        <div class="hero__chip">
+          <span class="status" aria-hidden="true"></span>
+          <span>
+            <strong>Developer independen</strong>
+            Kendal, Jawa Tengah · WIB
+          </span>
         </div>
       </div>
     </div>
@@ -108,13 +110,14 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="work-title"
+        index="01 / Selected work"
         title="Proyek pilihan"
-        meta="Proyek, eksperimen, dan tools."
+        meta="Proyek, eksperimen, dan tools yang dijelaskan lewat keputusan teknisnya."
         link={{ href: '/projects/', label: 'Semua proyek' }}
       />
 
       {featured && (
-        <article class="featured">
+        <article class="featured" data-reveal>
           <div class="featured__copy">
             <p class="featured__label mono">
               Studi kasus · source belum publik · {featured.type}
@@ -123,7 +126,7 @@ const homeSchema = {
             <p>{featured.summary}</p>
             <p class="mono">{featured.stack.join(' · ')}</p>
             <a class="link" href={`/projects/${featured.slug}/`}>
-              Baca studi kasus
+              Baca studi kasus <Arrow />
             </a>
           </div>
           <figure class="featured__diagram">
@@ -137,66 +140,64 @@ const homeSchema = {
 
       <div class="project-list">
         {selected.map((project, index) => (
-          <ProjectRow project={project} index={index + 2} />
+          <div data-reveal style={`--reveal-delay: ${index * 60}ms`}>
+            <ProjectRow project={project} index={index + 2} />
+          </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section section--tight-2" aria-labelledby="focus-title">
-    <div class="container">
-      <SectionHead
-        id="focus-title"
-        title="Fokus saat ini"
-        meta="Topik yang sedang dieksplorasi, bukan klaim produk rilis."
+  <section class="section section--paper" aria-labelledby="about-title">
+    <div class="container about-grid">
+      <PortraitFrame
+        class="about-portrait"
+        sizes="(max-width: 900px) 100vw, 42vw"
+        caption="DikaGlorya, developer"
+        index="Portrait / 01"
       />
-      <ul class="focus-list">
-        {currentFocus.map((item, index) => (
-          <li>
-            <span class="mono">{String(index + 1).padStart(2, '0')}</span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
 
-  <section class="section section--tight-2" aria-labelledby="journal-title">
-    <div class="container">
-      <SectionHead
-        id="journal-title"
-        title="Catatan teknis"
-        meta="Detail implementasi dan pelajaran dari prosesnya."
-        link={{ href: '/journal/', label: 'Semua catatan' }}
-      />
-      <div class="journal-list">
-        {articles.slice(0, 2).map((article) => (
-          <article class="journal-card">
-            <p class="mono journal-card__meta">
-              {article.date} · {article.readingTime} menit baca
-            </p>
-            <h3>
-              <a href={`/journal/${article.slug}/`}>{article.title}</a>
-            </h3>
-            <p>{article.description}</p>
-            <a class="link" href={`/journal/${article.slug}/`}>Baca catatan</a>
-          </article>
-        ))}
+      <div class="about-grid__body">
+        <h2 id="about-title">Lebih sedikit noise, software lebih baik.</h2>
+        <p>
+          Saya DikaGlorya, developer independen dari Kendal. DikaCode adalah identitas untuk karya
+          software; ObitoGlory adalah rumah untuk proyek, catatan teknis, dan cara saya bekerja.
+        </p>
+        <p>
+          Setiap hal dibuat untuk kebutuhan nyata, bukan sekadar demo. Struktur dibuat mudah
+          dipahami dan dirawat; perbaikan dimulai dengan memahami alurnya.
+        </p>
+
+        <dl class="about-facts">
+          {facts.map((fact) => (
+            <div>
+              <dt class="fact__label mono">{fact.label}</dt>
+              <dd class="fact__value">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div class="about-actions">
+          <a class="btn" href="/about/">
+            Tentang DikaGlorya <Arrow />
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section section--tight-2" aria-labelledby="capabilities-title">
+  <section class="section" aria-labelledby="capabilities-title">
     <div class="container">
       <SectionHead
         id="capabilities-title"
+        index="02 / Capabilities"
         title="Yang saya buat"
-        meta="Tiga area utama layanan."
+        meta="Tiga area utama, dikerjakan dari sketsa sampai serah terima."
       />
 
       <div class="capability-grid">
         {capabilities.map((capability, index) => (
-          <article class="capability">
+          <article class="capability" data-reveal style={`--reveal-delay: ${index * 80}ms`}>
             <p class="capability__index mono" aria-hidden="true">{`0${index + 1}`}</p>
             <h3>{capability.title}</h3>
             <p>{capability.body}</p>
@@ -205,22 +206,34 @@ const homeSchema = {
       </div>
 
       <p class="capability-more mono">
-        <a class="link" href="/services/">Detail layanan</a>
+        <a class="link" href="/services/">Detail layanan <Arrow /></a>
       </p>
     </div>
   </section>
 
-  <section class="section section--tight-2" aria-labelledby="philosophy-title">
-    <div class="container container--narrow">
-      <h2 class="philosophy-title" id="philosophy-title">Lebih sedikit noise, software lebih baik.</h2>
-      <p class="philosophy-body">
-        Setiap hal dibuat untuk kebutuhan nyata, bukan sekadar demo. Sistem dibuat mudah dipahami
-        dan dirawat; perbaikan dimulai dengan memahami alurnya.
-      </p>
-      <p class="philosophy-body">
-        Kode dibuat dari awal, diuji, lalu diserahkan sesuai lingkup yang disepakati. Performa dan
-        desain yang terarah lebih penting daripada dekorasi.
-      </p>
+  <section class="section section--tight-2" aria-labelledby="journal-title">
+    <div class="container">
+      <SectionHead
+        id="journal-title"
+        index="03 / Journal"
+        title="Catatan teknis"
+        meta="Detail implementasi dan pelajaran dari prosesnya."
+        link={{ href: '/journal/', label: 'Semua catatan' }}
+      />
+      <div class="journal-list">
+        {articles.slice(0, 2).map((article, index) => (
+          <article class="journal-card" data-reveal style={`--reveal-delay: ${index * 80}ms`}>
+            <p class="mono journal-card__meta">
+              <time datetime={article.date}>{article.date}</time> · {article.readingTime} menit baca
+            </p>
+            <h3>
+              <a href={`/journal/${article.slug}/`}>{article.title}</a>
+            </h3>
+            <p>{article.description}</p>
+            <a class="link" href={`/journal/${article.slug}/`}>Baca catatan <Arrow /></a>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -228,6 +241,7 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="stack-title"
+        index="04 / Toolkit"
         title="Teknologi"
         meta="Tools dikelompokkan berdasarkan penggunaan nyata, bukan skor kemampuan."
       />
@@ -246,52 +260,5 @@ const homeSchema = {
     </div>
   </section>
 
-  <section class="section section--tight-2" aria-labelledby="about-title">
-    <div class="container about-grid">
-      <div class="about-grid__body">
-        <h2 id="about-title">Satu orang, dari sketsa sampai serah terima.</h2>
-        <p>
-          DikaGlorya berkarya dengan nama DikaOfc dan DikaCode. ObitoGlory adalah brand website:
-          satu tempat untuk melihat proyek, catatan yang jujur, dan tautan resmi.
-        </p>
-        <div class="about-actions">
-          <a class="btn" href="/about/">
-            Tentang DikaGlorya <Arrow class="about-arrow" />
-          </a>
-        </div>
-      </div>
-
-      <dl class="about-facts">
-        {facts.map((fact) => (
-          <div>
-            <dt class="fact__label mono">{fact.label}</dt>
-            <dd class="fact__value">{fact.value}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  </section>
-
-  <section class="section section--tight-2" aria-labelledby="follow-title">
-    <div class="container follow-grid">
-      <div>
-        <h2 id="follow-title">Ikuti karya terbaru.</h2>
-        <p>
-          Update proyek dipublikasikan lebih dulu di sini. GitHub adalah profil kode publik yang
-          terverifikasi; Telegram merupakan kanal kontak langsung.
-        </p>
-      </div>
-      <ul class="profile-links mono" aria-label="Profil publik">
-        {socialLinks.map((link) => (
-          <li>
-            <a href={link.href} rel="me noopener noreferrer" target="_blank" data-outbound={link.label.toLowerCase()}>
-              {link.label} <span>{link.handle}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <ContactBlock id="home-contact-title" />
+  <ContactBlock id="home-contact-title" title="Ada yang ingin dibuat?" />
 </BaseLayout>

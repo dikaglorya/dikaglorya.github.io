@@ -1,6 +1,12 @@
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
 const menuOpen = document.querySelector<HTMLButtonElement>('[data-menu-open]');
 const menuClose = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+
+const setMenuState = (open: boolean) => {
+  document.body.classList.toggle('menu-open', open);
+  menuOpen?.setAttribute('aria-expanded', String(open));
+};
 
 const closeMenu = () => {
   if (!menu?.open) return;
@@ -8,20 +14,21 @@ const closeMenu = () => {
 };
 
 if (menu && menuOpen) {
+  menuOpen.setAttribute('aria-expanded', 'false');
   menuOpen.addEventListener('click', () => {
     if (typeof menu.showModal === 'function') {
       menu.showModal();
     } else {
       menu.setAttribute('open', '');
     }
-    document.body.classList.add('menu-open');
+    setMenuState(true);
     menuClose?.focus();
   });
 
   menuClose?.addEventListener('click', closeMenu);
 
   menu.addEventListener('close', () => {
-    document.body.classList.remove('menu-open');
+    setMenuState(false);
     menuOpen.focus();
   });
 
@@ -65,9 +72,11 @@ const updateSpotlightResults = () => {
 
 const openSpotlight = () => {
   if (!spotlight) return;
+  if (spotlightInput) spotlightInput.value = '';
+  updateSpotlightResults();
   if (typeof spotlight.showModal === 'function') spotlight.showModal();
   else spotlight.setAttribute('open', '');
-  spotlightInput?.focus();
+  window.requestAnimationFrame(() => spotlightInput?.focus());
 };
 
 if (spotlight && spotlightOpen && spotlightInput) {
@@ -79,6 +88,7 @@ if (spotlight && spotlightOpen && spotlightInput) {
   spotlightInput.addEventListener('input', updateSpotlightResults);
   spotlightInput.addEventListener('keydown', (event) => {
     const results = visibleResults();
+    if (!results.length) return;
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       const direction = event.key === 'ArrowDown' ? 1 : -1;
@@ -106,62 +116,39 @@ if (spotlight && spotlightOpen && spotlightInput) {
   });
 }
 
-const clock = document.querySelector<HTMLTimeElement>('[data-live-clock]');
-const updateClock = () => {
-  if (!clock) return;
-  const now = new Date();
-  clock.dateTime = now.toISOString();
-  clock.textContent = new Intl.DateTimeFormat('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(now);
+const progress = document.querySelector<HTMLElement>('[data-progress]');
+const header = document.querySelector<HTMLElement>('[data-header]');
+
+const syncHeader = () => {
+  header?.toggleAttribute('data-scrolled', window.scrollY > 8);
 };
 
-if (clock) {
-  updateClock();
-  window.setInterval(updateClock, 15_000);
+if (header) {
+  window.addEventListener('scroll', syncHeader, { passive: true });
+  syncHeader();
 }
 
-const dock = document.querySelector<HTMLElement>('.app-dock');
-const dockItems = Array.from(document.querySelectorAll<HTMLElement>('[data-dock-item]'));
-const canMagnifyDock = window.matchMedia('(hover: hover) and (pointer: fine)');
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-if (dock && canMagnifyDock.matches && !reduceMotion.matches) {
-  let frame = 0;
-  dock.addEventListener('pointermove', (event) => {
-    window.cancelAnimationFrame(frame);
-    frame = window.requestAnimationFrame(() => {
-      const centers = dockItems.map((item) => {
-        const bounds = item.getBoundingClientRect();
-        return bounds.left + bounds.width / 2;
-      });
-
-      dockItems.forEach((item, index) => {
-        const distance = Math.abs(event.clientX - centers[index]);
-        item.classList.toggle('dock-item--near', distance < 135 && distance >= 80);
-        item.classList.toggle('dock-item--nearer', distance < 80 && distance >= 38);
-        item.classList.toggle('dock-item--magnified', distance < 38);
-      });
-    });
-  });
-
-  dock.addEventListener('pointerleave', () => {
-    dockItems.forEach((item) => {
-      item.classList.remove('dock-item--near', 'dock-item--nearer', 'dock-item--magnified');
-    });
-  });
+if (progress) {
+  let ticking = false;
+  const updateProgress = () => {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const value = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    document.documentElement.style.setProperty('--progress', value.toFixed(4));
+  };
+  const requestUpdate = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(updateProgress);
+  };
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate, { passive: true });
+  updateProgress();
 }
 
-dockItems.forEach((item) => {
-  item.addEventListener('click', () => {
-    item.animate(
-      [
-        { transform: 'translateY(0) scale(1)' },
-        { transform: 'translateY(-9px) scale(1.08)' },
-        { transform: 'translateY(0) scale(1)' },
-      ],
-      { duration: 360, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
-    );
-  });
-});
+const reduceMotionState = () => reduceMotion.matches;
+if (reduceMotionState()) {
+  document.documentElement.classList.remove('js');
+}
+
+export {};
