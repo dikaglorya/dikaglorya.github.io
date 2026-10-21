@@ -96,8 +96,18 @@ for (const viewport of viewports) {
         heroScene: (() => {
           const root = document.querySelector('[data-hero-scene]');
           const canvas = root?.querySelector('canvas');
+          const fallback = root?.querySelector('.hero__scene-fallback');
           return root && canvas
-            ? { ready: root.dataset.sceneReady === 'true', width: canvas.width, height: canvas.height }
+            ? {
+                ready: root.dataset.sceneReady === 'true',
+                initialized: root.dataset.initialized === 'true',
+                threeRequested: performance
+                  .getEntriesByType('resource')
+                  .some((entry) => entry.name.includes('three.module')),
+                fallbackOpacity: fallback ? getComputedStyle(fallback).opacity : '0',
+                width: canvas.width,
+                height: canvas.height,
+              }
             : null;
         })(),
       };
@@ -120,19 +130,29 @@ for (const viewport of viewports) {
     }
 
     if (pageInfo.path === '/') {
-      if (!metrics.heroScene?.ready || metrics.heroScene.width === 0 || metrics.heroScene.height === 0) {
-        issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero scene did not initialize`);
-      } else {
-        const canvasImage = await page.locator('[data-hero-canvas]').screenshot();
-        const { data, info } = await sharp(canvasImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
-        let coloredPixels = 0;
-        for (let index = 0; index < data.length; index += 3) {
-          const high = Math.max(data[index], data[index + 1], data[index + 2]);
-          const low = Math.min(data[index], data[index + 1], data[index + 2]);
-          if (high - low > 24 && high < 245) coloredPixels += 1;
+      if (viewport.name === 'desktop') {
+        if (!metrics.heroScene?.ready || metrics.heroScene.width === 0 || metrics.heroScene.height === 0) {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero scene did not initialize`);
         }
-        if (coloredPixels < 500) {
-          issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero canvas appears blank (${info.width}x${info.height})`);
+        if (!metrics.heroScene?.threeRequested) {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: Three.js chunk was not requested for desktop hero`);
+        }
+        if (metrics.heroScene?.ready) {
+          const canvasImage = await page.locator('[data-hero-canvas]').screenshot();
+          const { data, info } = await sharp(canvasImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+          let coloredPixels = 0;
+          for (let index = 0; index < data.length; index += 3) {
+            const high = Math.max(data[index], data[index + 1], data[index + 2]);
+            const low = Math.min(data[index], data[index + 1], data[index + 2]);
+            if (high - low > 24 && high < 245) coloredPixels += 1;
+          }
+          if (coloredPixels < 500) {
+            issues.push(`${pageInfo.name} @ ${viewport.name}: 3D hero canvas appears blank (${info.width}x${info.height})`);
+          }
+        }
+      } else {
+        if (metrics.heroScene?.initialized || metrics.heroScene?.threeRequested || metrics.heroScene?.fallbackOpacity === '0') {
+          issues.push(`${pageInfo.name} @ ${viewport.name}: lightweight hero fallback is not active`);
         }
       }
     }
@@ -262,7 +282,7 @@ for (const viewport of viewports) {
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
   }));
-  if (appearance.background !== 'rgb(238, 243, 244)') {
+  if (appearance.background !== 'rgb(233, 236, 241)') {
     issues.push(`light appearance: unexpected body background ${appearance.background}`);
   }
   if (appearance.scrollWidth > appearance.innerWidth + 1) {

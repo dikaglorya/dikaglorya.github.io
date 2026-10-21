@@ -4,6 +4,14 @@ const mountScene = async () => {
   const root = document.querySelector<HTMLElement>('[data-hero-scene]');
   const canvas = root?.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
   if (!root || !canvas || root.dataset.initialized === 'true') return;
+
+  const desktopFinePointer = window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const saveData = Boolean(
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData,
+  );
+  if (!desktopFinePointer.matches || reducedMotion.matches || saveData) return;
+
   root.dataset.initialized = 'true';
 
   const THREE = await import('three');

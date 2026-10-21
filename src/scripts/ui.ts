@@ -1,3 +1,5 @@
+export {};
+
 const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
 const menuOpen = document.querySelector<HTMLButtonElement>('[data-menu-open]');
 const menuClose = document.querySelector<HTMLButtonElement>('[data-menu-close]');

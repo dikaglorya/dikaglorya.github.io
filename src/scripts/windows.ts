@@ -2,6 +2,8 @@
 // fullscreen, and pointer dragging with a light release inertia.
 // Everything is progressive: on touch or reduced motion only the lights work.
 
+export {};
+
 const SHELL_CLEARANCE = 46; // menu bar (30px) + a little air
 const DOCK_CLEARANCE = 96; // dock height + air
 
@@ -13,10 +15,6 @@ const bringToFront = (element: HTMLElement, counter: { z: number }) => {
   });
   element.classList.add('is-focused');
 };
-
-interface DragState {
-  cleanup: () => void;
-}
 
 const startInertia = (
   element: HTMLElement,
@@ -99,8 +97,6 @@ const attachWindow = (element: HTMLElement, counter: { z: number }) => {
   bar.addEventListener('pointerdown', () => bringToFront(element, counter));
 
   if (element.dataset.draggable === undefined) return;
-
-  let drag: DragState | null = null;
 
   bar.addEventListener('pointerdown', (event) => {
     if (!canFloat()) return;
@@ -185,7 +181,6 @@ const attachWindow = (element: HTMLElement, counter: { z: number }) => {
     window.removeEventListener('resize', onResize);
     element.removeEventListener('keydown', onKeydown);
   };
-  restoreLayout();
 };
 
 const addRestoreChip = (element: HTMLElement, counter: { z: number }) => {

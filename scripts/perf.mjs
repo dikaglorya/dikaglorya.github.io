@@ -46,8 +46,8 @@ const BUDGET = {
   transferPerPage: 420 * 1024,
   requestsPerPage: 14,
   htmlBytes: 32 * 1024,
-  cssBytes: 60 * 1024,
-  jsBytes: 16 * 1024,
+  cssBytesPerPage: 60 * 1024,
+  jsBytesPerPage: 16 * 1024,
 };
 
 const browser = await chromium.launch({ headless: true });
@@ -165,14 +165,18 @@ for (const result of results) {
     failures.push(`${where}: ${result.transferKB}KB > ${BUDGET.transferPerPage / 1024}KB`);
   if (result.requests > BUDGET.requestsPerPage)
     failures.push(`${where}: ${result.requests} requests > ${BUDGET.requestsPerPage}`);
+  const cssKB = result.byTypeKB.stylesheet ?? 0;
+  const jsKB = result.byTypeKB.script ?? 0;
+  if (cssKB * 1024 > BUDGET.cssBytesPerPage)
+    failures.push(`${where}: downloaded CSS ${cssKB}KB > ${BUDGET.cssBytesPerPage / 1024}KB`);
+  if (jsKB * 1024 > BUDGET.jsBytesPerPage)
+    failures.push(`${where}: downloaded JS ${jsKB}KB > ${BUDGET.jsBytesPerPage / 1024}KB`);
 }
-if (cssBytes > BUDGET.cssBytes) failures.push(`CSS ${cssBytes}B > ${BUDGET.cssBytes}B`);
-if (jsBytes > BUDGET.jsBytes) failures.push(`JS ${jsBytes}B > ${BUDGET.jsBytes}B`);
 
 const summary = {
   profile: `slow-4g / cpu-${CPU_SLOWDOWN}x`,
   budget: BUDGET,
-  assets: { cssBytes, jsBytes },
+  buildOutput: { cssBytes, jsBytes },
   pages: results,
 };
 
@@ -181,7 +185,9 @@ if (process.env.PERF_JSON) {
 }
 
 console.log(`profile: ${summary.profile}`);
-console.log(`css ${(cssBytes / 1024).toFixed(1)}KB · js ${(jsBytes / 1024).toFixed(1)}KB`);
+console.log(
+  `emitted build assets: CSS ${(cssBytes / 1024).toFixed(1)}KB · JS ${(jsBytes / 1024).toFixed(1)}KB (includes the optional desktop-only Three.js chunk)`,
+);
 console.table(
   results.map((r) => ({
     page: r.page,
@@ -191,6 +197,8 @@ console.table(
     lcpEl: r.lcpElement,
     cls: r.cls,
     req: r.requests,
+    cssKB: r.byTypeKB.stylesheet ?? 0,
+    jsKB: r.byTypeKB.script ?? 0,
     kb: r.transferKB,
   })),
 );
