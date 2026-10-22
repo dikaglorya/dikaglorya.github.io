@@ -4,6 +4,7 @@ import {
   buildBriefText,
   type BriefData,
 } from '../lib/brief-email';
+import { resolveStatus, type StatusState } from '../lib/status-registry';
 
 const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
 const formStatus = document.querySelector<HTMLElement>('[data-form-status]');
@@ -17,20 +18,28 @@ const gmailLink = document.querySelector<HTMLAnchorElement>('[data-brief-gmail]'
 const mailtoLink = document.querySelector<HTMLAnchorElement>('[data-brief-mailto]');
 const copyAgain = document.querySelector<HTMLButtonElement>('[data-brief-copy]');
 
-const setStatus = (message: string, isError = false, fallbackLink?: HTMLAnchorElement) => {
+const setFeedback = (element: HTMLElement, message: string, state: StatusState) => {
+  const resolved = resolveStatus(state);
+  element.dataset.status = resolved.state;
+  element.dataset.statusVariant = resolved.variant;
+  element.textContent = message;
+  return resolved;
+};
+
+const setStatus = (message: string, state: StatusState = 'neutral', fallbackLink?: HTMLAnchorElement) => {
   if (!formStatus) return;
-  formStatus.classList.toggle('form-status--error', isError);
-  formStatus.textContent = message;
-  if (fallbackLink) {
+  const resolved = setFeedback(formStatus, message, state);
+  formStatus.classList.toggle('form-status--error', resolved.variant === 'danger');
+  if (message && fallbackLink) {
     formStatus.appendChild(document.createTextNode(' '));
     formStatus.appendChild(fallbackLink);
   }
 };
 
-const setReadyStatus = (message: string, isError = false) => {
+const setReadyStatus = (message: string, state: StatusState = 'success') => {
   if (!readyStatus) return;
-  readyStatus.classList.toggle('form-status--error', isError);
-  readyStatus.textContent = message;
+  const resolved = setFeedback(readyStatus, message, state);
+  readyStatus.classList.toggle('form-status--error', resolved.variant === 'danger');
 };
 
 if (form) {
@@ -131,12 +140,13 @@ if (form) {
       if (readyTitle) readyTitle.textContent = 'Brief siap, teks biasa';
       setReadyStatus(
         'Browser ini belum mendukung salin HTML. Brief disalin sebagai teks biasa, jadi tampilannya polos di Gmail.',
+        'info',
       );
     } catch {
       if (readyTitle) readyTitle.textContent = 'Brief siap, clipboard diblokir';
       setReadyStatus(
         'Clipboard diblokir. Buka Gmail lalu salin manual dari pratinjau, atau pakai aplikasi email lain.',
-        true,
+        'warning',
       );
     }
   };
@@ -145,7 +155,7 @@ if (form) {
     if (!form.checkValidity()) {
       event.preventDefault();
       form.reportValidity();
-      setStatus('Lengkapi kolom wajib terlebih dahulu.', true);
+      setStatus('Lengkapi kolom wajib terlebih dahulu.', 'error');
       return;
     }
 
@@ -169,9 +179,9 @@ if (form) {
     } catch {
       try {
         await copyPlainBrief(text);
-        setReadyStatus('Brief disalin ulang sebagai teks biasa.');
-      } catch {
-        setReadyStatus('Clipboard masih diblokir. Pakai tautan aplikasi email lain.', true);
+      setReadyStatus('Brief disalin ulang sebagai teks biasa.', 'info');
+    } catch {
+      setReadyStatus('Clipboard masih diblokir. Pakai tautan aplikasi email lain.', 'warning');
       }
     }
   });
@@ -182,9 +192,9 @@ if (copyButton) {
     const email = copyButton.dataset.copyEmail ?? '';
     try {
       await navigator.clipboard.writeText(email);
-      if (copyStatus) copyStatus.textContent = 'Email disalin.';
+      if (copyStatus) setFeedback(copyStatus, 'Email disalin.', 'saved');
     } catch {
-      if (copyStatus) copyStatus.textContent = `Salin manual: ${email}`;
+      if (copyStatus) setFeedback(copyStatus, `Salin manual: ${email}`, 'warning');
     }
   });
 }

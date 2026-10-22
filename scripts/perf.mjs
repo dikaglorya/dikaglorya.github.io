@@ -48,6 +48,7 @@ const BUDGET = {
   htmlBytes: 32 * 1024,
   cssBytesPerPage: 60 * 1024,
   jsBytesPerPage: 16 * 1024,
+  glassBlurLayers: 6,
 };
 
 const browser = await chromium.launch({ headless: true });
@@ -119,6 +120,12 @@ for (const pageInfo of pages) {
     const entry = performance.getEntriesByName('first-contentful-paint')[0];
     return entry ? entry.startTime : 0;
   });
+  const glassBlurLayers = await page.evaluate(() => [...document.querySelectorAll('.liquid-glass')].filter((element) => {
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden'
+      && style.backdropFilter !== 'none' && !style.backdropFilter.startsWith('blur(0px)');
+  }).length);
 
   results.push({
     page: pageInfo.name,
@@ -129,6 +136,7 @@ for (const pageInfo of pages) {
     lcp: Math.round(metrics.lcp),
     lcpElement: metrics.lcpElement,
     cls: Number(metrics.cls.toFixed(4)),
+    glassBlurLayers,
     requests,
     transferKB: Math.round(transferred / 1024),
     byTypeKB: Object.fromEntries(
@@ -161,6 +169,8 @@ for (const result of results) {
   if (result.lcp > BUDGET.lcp) failures.push(`${where}: LCP ${result.lcp}ms > ${BUDGET.lcp}ms`);
   if (result.cls > BUDGET.cls) failures.push(`${where}: CLS ${result.cls} > ${BUDGET.cls}`);
   if (result.ttfb > BUDGET.ttfb) failures.push(`${where}: TTFB ${result.ttfb}ms > ${BUDGET.ttfb}ms`);
+  if (result.glassBlurLayers > BUDGET.glassBlurLayers)
+    failures.push(`${where}: ${result.glassBlurLayers} glass blur layers > ${BUDGET.glassBlurLayers}`);
   if (result.transferKB > BUDGET.transferPerPage / 1024)
     failures.push(`${where}: ${result.transferKB}KB > ${BUDGET.transferPerPage / 1024}KB`);
   if (result.requests > BUDGET.requestsPerPage)
@@ -196,6 +206,7 @@ console.table(
     lcp: r.lcp,
     lcpEl: r.lcpElement,
     cls: r.cls,
+    blurLayers: r.glassBlurLayers,
     req: r.requests,
     cssKB: r.byTypeKB.stylesheet ?? 0,
     jsKB: r.byTypeKB.script ?? 0,

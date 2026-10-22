@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { services } from '../data/services';
 import { site } from '../data/site';
+import StatusIndicator from '../components/StatusIndicator.astro';
 
 const schema = {
   '@context': 'https://schema.org',
@@ -39,7 +40,7 @@ const schema = {
         kita bisa ngobrol dulu.
       </p>
       <div class="page-hero__meta mono">
-        <span class="status">{site.availability}</span>
+        <StatusIndicator state="available" label={site.availability} class="status" />
         <span>{site.location}</span>
         <span>Telegram paling cepat</span>
       </div>

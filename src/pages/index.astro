@@ -12,6 +12,7 @@ import { projects } from '../data/projects';
 import { site, socialLinks } from '../data/site';
 import { currentFocus, technologyGroups } from '../data/technologies';
 import { articles } from '../data/articles';
+import StatusIndicator from '../components/StatusIndicator.astro';
 
 const featured = projects.find((project) => project.slug === 'dikaroute');
 const selected = projects.filter((project) => project.slug !== 'dikaroute').slice(0, 5);
@@ -78,7 +79,7 @@ const homeSchema = {
           </div>
           <div class="hero__meta mono">
             <span>{site.location}</span>
-            <span>{site.availability}</span>
+            <StatusIndicator state="available" label={site.availability} />
           </div>
         </div>
         <div class="hero__visual">
