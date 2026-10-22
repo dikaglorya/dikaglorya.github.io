@@ -3,6 +3,7 @@ import { mainNavigation } from '../data/navigation';
 import { articles } from '../data/articles';
 import { projects } from '../data/projects';
 import { site, socialLinks } from '../data/site';
+import StatusIndicator from './StatusIndicator.astro';
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
@@ -98,7 +99,7 @@ const searchItems = [
     </nav>
 
     <div class="mobile-menu__foot">
-      <p class="status">{site.availability}</p>
+      <StatusIndicator state="available" label={site.availability} class="status" />
       <a class="btn btn--primary" href="/contact/">Hubungi saya</a>
     </div>
   </div>

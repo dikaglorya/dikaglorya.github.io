@@ -1,0 +1,107 @@
+---
+import {
+  Activity,
+  Ban,
+  CalendarClock,
+  CalendarX,
+  Check,
+  CheckCheck,
+  CircleAlert,
+  CircleCheck,
+  CircleDot,
+  CircleMinus,
+  CirclePause,
+  CirclePlay,
+  CircleQuestionMark,
+  CircleStop,
+  CircleX,
+  Clock3,
+  FileCheck,
+  FilePenLine,
+  Info,
+  ListOrdered,
+  LoaderCircle,
+  RefreshCw,
+  Send,
+  ShieldAlert,
+  ShieldCheck,
+  TriangleAlert,
+  Unplug,
+  Upload,
+  Wifi,
+  WifiOff,
+  Wrench,
+} from '@lucide/astro';
+import {
+  resolveStatus,
+  type StatusIconName,
+} from '../lib/status-registry';
+
+interface Props {
+  state: string;
+  label?: string;
+  class?: string;
+  filled?: boolean;
+  showDescription?: boolean;
+}
+
+const {
+  state,
+  label,
+  class: className = '',
+  filled = false,
+  showDescription = false,
+} = Astro.props;
+const resolved = resolveStatus(state);
+const iconComponents = {
+  Activity,
+  Ban,
+  CalendarClock,
+  CalendarX,
+  Check,
+  CheckCheck,
+  CircleAlert,
+  CircleCheck,
+  CircleDot,
+  CircleMinus,
+  CirclePause,
+  CirclePlay,
+  CircleQuestionMark,
+  CircleStop,
+  CircleX,
+  Clock3,
+  FileCheck,
+  FilePenLine,
+  Info,
+  ListOrdered,
+  LoaderCircle,
+  RefreshCw,
+  Send,
+  ShieldAlert,
+  ShieldCheck,
+  TriangleAlert,
+  Unplug,
+  Upload,
+  Wifi,
+  WifiOff,
+  Wrench,
+} satisfies Record<StatusIconName, typeof CircleCheck>;
+const Icon = iconComponents[resolved.icon];
+const text = label ?? resolved.label;
+---
+
+<span
+  class:list={[
+    'status-indicator',
+    `status-indicator--${resolved.variant}`,
+    className,
+    filled && 'status-indicator--filled',
+  ]}
+  data-status={resolved.state}
+  data-variant={resolved.variant}
+  data-icon={resolved.icon}
+>
+  <Icon size={14} stroke-width={1.8} aria-hidden="true" focusable="false" />
+  <span class="status-indicator__label">{text}</span>
+  {showDescription && <span class="sr-only">{resolved.description}</span>}
+</span>

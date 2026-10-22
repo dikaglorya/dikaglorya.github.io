@@ -43,7 +43,7 @@ html[data-glass-quality='fallback'] { --glass-blur: 0px; --glass-saturation: 1; 
   filter: blur(44px);
   opacity: .78;
   animation: glass-ambient 34s ease-in-out infinite alternate;
-  will-change: transform;
+  will-change: auto;
 }
 .wallpaper::after { opacity: .18; }
 @keyframes glass-ambient {
@@ -76,10 +76,26 @@ html[data-glass-quality='fallback'] { --glass-blur: 0px; --glass-saturation: 1; 
     linear-gradient(315deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent 58%),
     var(--glass-tint) !important;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 5%), var(--glass-shadow), var(--glass-accent-glow) !important;
+  /* Translucent gradients still read as glass; only primary planes blur the live DOM. */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  transition: border-color 240ms var(--glass-ease), box-shadow 240ms var(--glass-ease);
+}
+/* Limit composited backdrop regions to the handful of dominant surfaces. */
+.site-header, .hero__scene, .featured, .finder-sidebar, .finder-main,
+.journal-article, .contact-form-wrap, .contact-aside, .project-figure,
+.project-aside, .page-hero > .container, .project-hero > .container,
+.not-found__grid, .contact-block {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  transition: border-color 280ms var(--glass-ease), background 320ms var(--glass-ease),
-    box-shadow 320ms var(--glass-ease), transform 320ms var(--glass-ease);
+}
+html[data-glass-quality='high'] .liquid-glass[data-glass-tilt='true'] { transform-style: preserve-3d; transition: transform 300ms var(--glass-ease); }
+html:not([data-glass-quality='high']) .liquid-glass {
+  transform-style: flat !important;
+  transition-property: border-color, box-shadow !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  html:not([data-glass-quality='high']) .liquid-glass:hover { transform: none !important; }
 }
 /* Pointer-followed specular glint: paint-only update via custom properties. */
 .liquid-glass[data-glass-hover='true']:hover {
@@ -244,8 +260,10 @@ body { padding-top: calc(16px + env(safe-area-inset-top)); }
 /* Responsive GPU budget: mobile uses CSS frosted material only. */
 @media (max-width: 900px) {
   :root { --glass-blur: 13px; --glass-radius: 20px; }
+  html[data-glass-quality='eco'], html[data-glass-quality='balanced'], html[data-glass-quality='high'] { --glass-blur: 12px; }
   .site-header { width: calc(100% - 28px); margin-top: 8px; }
   .liquid-glass-shader { display: none; }
+  .liquid-glass--lens { -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation)); }
   .finder-layout { grid-template-columns: minmax(0, 1fr); }
   .finder-sidebar, .finder-main { width: 100%; }
   .finder-sidebar .filter-bar { flex-wrap: nowrap; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
@@ -253,7 +271,8 @@ body { padding-top: calc(16px + env(safe-area-inset-top)); }
   .project-aside { position: static; }
 }
 @media (max-width: 700px) {
-  :root { --glass-blur: 11px; --glass-radius: 17px; }
+  :root { --glass-blur: 8px; --glass-radius: 17px; }
+  html[data-glass-quality='eco'], html[data-glass-quality='balanced'], html[data-glass-quality='high'] { --glass-blur: 8px; }
   .site-header { top: max(6px, env(safe-area-inset-top)); }
   body { padding-top: calc(14px + env(safe-area-inset-top)); }
   .contact-block { width: calc(100% - 28px); }
@@ -350,4 +369,70 @@ input, select, textarea, button { max-width: 100%; }
     .contact-block, .channel-list li,
     .btn, .header-contact, .spotlight-trigger, .menu-toggle, .mobile-menu__close
   ) { background: #f4f4f6 !important; }
+}
+
+
+/* Semantic status indicators: clear meaning without adding a new glass layer. */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  max-width: 100%;
+  min-width: 0;
+  color: var(--status-neutral);
+  line-height: 1.4;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.status-indicator.status::before { content: none; display: none; }
+.status-indicator__label { min-width: 0; overflow-wrap: anywhere; }
+.status-indicator > svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  color: currentColor;
+  stroke-width: 1.8;
+}
+.status-indicator--success { color: var(--status-success); }
+.status-indicator--warning { color: var(--status-warning); }
+.status-indicator--danger { color: var(--status-danger); }
+.status-indicator--info { color: var(--status-info); }
+.status-indicator--neutral { color: var(--status-neutral); }
+.status-indicator--pending { color: var(--status-pending); }
+.status-indicator--filled {
+  padding: 0.2em 0.55em;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+}
+.status-indicator--success.status-indicator--filled { background: var(--status-success-bg); border-color: var(--status-success-border); }
+.status-indicator--warning.status-indicator--filled { background: var(--status-warning-bg); border-color: var(--status-warning-border); }
+.status-indicator--danger.status-indicator--filled { background: var(--status-danger-bg); border-color: var(--status-danger-border); }
+.status-indicator--info.status-indicator--filled { background: var(--status-info-bg); border-color: var(--status-info-border); }
+.status-indicator--neutral.status-indicator--filled { background: var(--status-neutral-bg); border-color: var(--status-neutral-border); }
+.status-indicator--pending.status-indicator--filled { background: var(--status-pending-bg); border-color: var(--status-pending-border); }
+.status-indicator[data-icon='LoaderCircle'] > svg { animation: status-indicator-spin 1.2s linear infinite; }
+@keyframes status-indicator-spin { to { transform: rotate(360deg); } }
+
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant='success'] { color: var(--status-success); }
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant='warning'] { color: var(--status-warning); }
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant='danger'] { color: var(--status-danger); }
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant='info'] { color: var(--status-info); }
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant='neutral'] { color: var(--status-neutral); }
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant='pending'] { color: var(--status-pending); }
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant]:not(:empty) {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+:is(.form-status, .brief-ready__status, .form-note)[data-status-variant]:not(:empty)::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: 0 0 0.45rem;
+  margin-top: 0.48em;
+  border-radius: 50%;
+  background: currentColor;
+}
+@media (prefers-reduced-motion: reduce) {
+  .status-indicator[data-icon='LoaderCircle'] > svg { animation: none; }
 }

@@ -10,16 +10,19 @@
     "preview": "astro preview",
     "check": "astro check",
     "test:links": "node scripts/check-links.mjs",
+    "test:status": "node --experimental-strip-types scripts/status-registry.test.mjs",
+    "test:status:browser": "node scripts/status-browser.test.mjs",
     "test:a11y": "node scripts/a11y.mjs",
-    "test:visual": "node scripts/visual.mjs",
+    "test:visual": "node scripts/visual.mjs && npm run test:status:browser",
     "brand": "node scripts/generate-brand.mjs",
     "build:assets": "node scripts/build-assets.js",
     "preview:assets": "node scripts/preview-assets.mjs",
-    "test": "npm run check && npm run build && npm run test:links"
+    "test": "npm run check && npm run build && npm run test:links && npm run test:status"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
+    "@lucide/astro": "^1.61.0",
     "astro": "^7.4.1",
     "lenis": "^1.3.27",
     "motion": "^12.43.0",

@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site';
+import StatusIndicator from './StatusIndicator.astro';
 
 interface Props {
   title?: string;
@@ -23,7 +24,7 @@ const {
     </div>
 
     <div class="contact-block__details mono">
-      <p>{site.availability} · {site.locationShort}</p>
+      <p><StatusIndicator state="available" label={site.availability} /> · {site.locationShort}</p>
       <p class="contact-block__links">
         <a href={site.telegramUrl} rel="me" data-outbound="telegram">Telegram @{site.telegram}</a>
         <a href={site.github} rel="me noopener noreferrer" target="_blank" data-outbound="github">GitHub @{site.githubHandle}</a>
