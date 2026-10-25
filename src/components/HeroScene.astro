@@ -6,10 +6,70 @@ const { class: className = '' } = Astro.props;
 ---
 
 <div class:list={['hero__scene', className]} data-hero-scene aria-hidden="true">
-  <canvas data-hero-canvas></canvas>
-  <div class="hero__fallback" data-hero-fallback hidden></div>
+  <canvas data-hero-canvas hidden></canvas>
+  <div class="hero__fallback" data-hero-fallback>
+    <span class="hero__fallback-penguin">🐧</span>
+    <span class="hero__fallback-dolphin">🐬</span>
+  </div>
 </div>
 
 <script>
-  import '../scripts/hero-scene';
+  const bootHeroScene = () => {
+    const root = document.querySelector<HTMLElement>('[data-hero-scene]');
+    if (!root || root.dataset.sceneBooted === 'true') return;
+    root.dataset.sceneBooted = 'true';
+
+    let observer: IntersectionObserver | undefined;
+    let startTimer = 0;
+    let hasEnteredViewport = false;
+    let delayElapsed = false;
+    let started = false;
+    let active = true;
+    const load = () => {
+      if (!active || started || !hasEnteredViewport || !delayElapsed) return;
+      started = true;
+      observer?.disconnect();
+      void import('../scripts/hero-scene')
+        .then(({ initHeroScene }) => {
+          if (active && root.isConnected) initHeroScene(root);
+        })
+        .catch(() => {
+          if (!active || !root.isConnected) return;
+          const canvas = root.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
+          const fallback = root.querySelector<HTMLElement>('[data-hero-fallback]');
+          if (canvas) canvas.hidden = true;
+          if (fallback) fallback.hidden = false;
+          root.setAttribute('data-scene-ready', 'true');
+        });
+    };
+
+    const allowSceneAfterLoad = () => {
+      startTimer = window.setTimeout(() => {
+        delayElapsed = true;
+        load();
+      }, 2200);
+    };
+    const onBeforeSwap = () => {
+      active = false;
+      observer?.disconnect();
+      window.clearTimeout(startTimer);
+    };
+    document.addEventListener('astro:before-swap', onBeforeSwap, { once: true });
+    if (document.readyState === 'complete') allowSceneAfterLoad();
+    else window.addEventListener('load', allowSceneAfterLoad, { once: true });
+
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver((entries) => {
+        hasEnteredViewport = entries.some((entry) => entry.isIntersecting);
+        if (hasEnteredViewport) load();
+      }, { rootMargin: '120px' });
+      observer.observe(root);
+    } else {
+      hasEnteredViewport = true;
+      load();
+    }
+  };
+
+  bootHeroScene();
+  document.addEventListener('astro:page-load', bootHeroScene);
 </script>

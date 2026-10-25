@@ -63,6 +63,16 @@ for (const viewport of viewports) {
       await document.fonts.ready;
     });
 
+    if (pageInfo.path === '/') {
+      await page
+        .waitForFunction(
+          () => document.querySelector('[data-hero-scene]')?.getAttribute('data-scene-ready') === 'true',
+          null,
+          { timeout: 15000 },
+        )
+        .catch(() => {});
+    }
+
     // Scroll through the page so lazy content settles before the full-page screenshot.
     await page.evaluate(async () => {
       const previous = document.documentElement.style.scrollBehavior;
@@ -109,7 +119,7 @@ for (const viewport of viewports) {
       );
     }
 
-    if (metrics.bodyBackground !== 'rgb(8, 9, 11)') {
+    if (metrics.bodyBackground !== 'rgb(7, 8, 10)') {
       issues.push(
         `${pageInfo.name} @ ${viewport.name}: unexpected body background ${metrics.bodyBackground}`,
       );
@@ -262,7 +272,7 @@ for (const viewport of viewports) {
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
   }));
-  if (appearance.background !== 'rgb(238, 243, 244)') {
+  if (appearance.background !== 'rgb(242, 238, 228)') {
     issues.push(`light appearance: unexpected body background ${appearance.background}`);
   }
   if (appearance.scrollWidth > appearance.innerWidth + 1) {

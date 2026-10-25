@@ -1,263 +1,357 @@
-/* Hand-rolled raymarched chrome form with deterministic additive particles. */
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const initHeroScene = () => {
-  const root = document.querySelector<HTMLElement>('[data-hero-scene]');
-  const canvas = root?.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
-  const fallback = root?.querySelector<HTMLElement>('[data-hero-fallback]');
-  if (!root || !canvas || !fallback) return;
+type Tier = 'low' | 'balanced' | 'high';
+type NavigatorWithHints = Navigator & {
+  deviceMemory?: number;
+  connection?: { saveData?: boolean };
+};
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const gl = canvas.getContext('webgl', {
-    alpha: true, antialias: true, depth: false, powerPreference: 'high-performance',
+type QualityProfile = {
+  tier: Tier;
+  pixelRatio: number;
+  frameDelay: number;
+  antialias: boolean;
+  staticOnly: boolean;
+};
+
+const qualityProfile = (): QualityProfile => {
+  const nav = navigator as NavigatorWithHints;
+  const cores = nav.hardwareConcurrency || 4;
+  const memory = nav.deviceMemory || 4;
+  const saveData = nav.connection?.saveData === true;
+  const veryLow = saveData || memory <= 2 || (window.innerWidth <= 360 && cores <= 2);
+  if (veryLow) return { tier: 'low', pixelRatio: 1, frameDelay: 55, antialias: false, staticOnly: true };
+  if (window.innerWidth <= 760 || memory <= 4 || cores <= 4) {
+    return { tier: 'low', pixelRatio: 1, frameDelay: 48, antialias: false, staticOnly: false };
+  }
+  if (window.innerWidth < 1200 || memory <= 8 || cores <= 6) {
+    return { tier: 'balanced', pixelRatio: 1.25, frameDelay: 34, antialias: false, staticOnly: false };
+  }
+  return { tier: 'high', pixelRatio: 1.55, frameDelay: 21, antialias: true, staticOnly: false };
+};
+
+const disposeTree = (object: THREE.Object3D) => {
+  object.traverse((child) => {
+    const mesh = child as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    mesh.geometry.dispose();
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    materials.forEach((material) => material.dispose());
   });
+};
+
+const fitModel = (model: THREE.Object3D, targetHeight: number) => {
+  model.updateMatrixWorld(true);
+  const bounds = new THREE.Box3().setFromObject(model);
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+  const scale = targetHeight / Math.max(size.y, size.x, size.z, 0.001);
+  model.scale.setScalar(scale);
+  model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+  model.updateMatrixWorld(true);
+  return { frontZ: (size.z * scale) / 2, height: size.y * scale };
+};
+
+const setBaseMaterial = (root: THREE.Object3D, color: number, flatShading: boolean) => {
+  const material = new THREE.MeshStandardMaterial({ color, roughness: 0.7, metalness: 0.02, flatShading });
+  root.traverse((child) => {
+    const mesh = child as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const previous = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    previous.forEach((entry) => entry.dispose());
+    mesh.material = material.clone();
+    mesh.castShadow = false;
+    mesh.receiveShadow = false;
+  });
+  material.dispose();
+};
+
+const ellipsoid = (
+  parent: THREE.Object3D,
+  position: [number, number, number],
+  scale: [number, number, number],
+  color: number,
+  segments: number,
+  roughness = 0.68,
+) => {
+  const mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(1, segments, Math.max(8, Math.round(segments * 0.7))),
+    new THREE.MeshStandardMaterial({ color, roughness, metalness: 0.01 }),
+  );
+  mesh.position.set(...position);
+  mesh.scale.set(...scale);
+  mesh.castShadow = false;
+  mesh.receiveShadow = false;
+  parent.add(mesh);
+  return mesh;
+};
+
+const buildPenguinDetails = (group: THREE.Group, frontZ: number, segments: number) => {
+  const white = 0xf5f4ec;
+  const orange = 0xff9b42;
+  const black = 0x121822;
+  const patchZ = frontZ * 0.91;
+  ellipsoid(group, [0, -0.18, patchZ], [0.39, 0.59, 0.105], white, segments);
+  ellipsoid(group, [0, 0.49, patchZ + 0.006], [0.32, 0.235, 0.105], white, segments);
+  for (const side of [-1, 1]) {
+    ellipsoid(group, [side * 0.135, 0.50, frontZ + 0.12], [0.052, 0.066, 0.045], black, segments, 0.26);
+    ellipsoid(group, [side * 0.147, 0.526, frontZ + 0.158], [0.014, 0.018, 0.012], 0xffffff, segments, 0.2);
+    ellipsoid(group, [side * 0.22, -0.99, frontZ * 0.57], [0.19, 0.075, 0.235], orange, segments);
+    const flipper = ellipsoid(group, [side * 0.48, -0.24, 0.02], [0.105, 0.36, 0.135], 0x182230, segments);
+    flipper.rotation.z = -side * 0.2;
+  }
+  const beak = new THREE.Mesh(
+    new THREE.ConeGeometry(0.105, 0.17, Math.max(6, Math.round(segments * 0.55))),
+    new THREE.MeshStandardMaterial({ color: orange, roughness: 0.55 }),
+  );
+  beak.rotation.x = Math.PI / 2;
+  beak.position.set(0, 0.34, frontZ + 0.13);
+  group.add(beak);
+};
+
+const buildDolphinDetails = (group: THREE.Group, frontZ: number, segments: number) => {
+  ellipsoid(group, [-0.39, 0.18, frontZ + 0.075], [0.048, 0.055, 0.035], 0x112232, segments, 0.25);
+  ellipsoid(group, [-0.402, 0.202, frontZ + 0.102], [0.012, 0.014, 0.009], 0xffffff, segments, 0.2);
+};
+
+export const initHeroScene = (root: HTMLElement) => {
+  if (root.dataset.sceneInitialized === 'true') return;
+  root.dataset.sceneInitialized = 'true';
+  const canvas = root.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
+  const fallback = root.querySelector<HTMLElement>('[data-hero-fallback]');
+  if (!canvas || !fallback) return;
+
+  const profile = qualityProfile();
+  root.dataset.renderTier = profile.tier;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const showFallback = () => {
     canvas.hidden = true;
     fallback.hidden = false;
-    root.removeAttribute('data-scene-ready');
+    root.setAttribute('data-scene-ready', 'true');
   };
-  if (!gl) { showFallback(); return; }
+  if (profile.staticOnly) { showFallback(); return; }
 
-  const vertex = `
-    attribute vec2 a;
-    void main() { gl_Position = vec4(a, 0.0, 1.0); }
-  `;
-  const fragment = `
-    precision highp float;
-    uniform vec2 uRes;
-    uniform float uTime;
-    uniform vec2 uPointer;
-    uniform float uScroll;
-    uniform vec3 uRipple;
-    uniform float uFade;
-    uniform float uSteps;
-    mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
-    float smin(float a, float b, float k) {
-      float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
-      return mix(b, a, h) - k * h * (1.0 - h);
-    }
-    float map(vec3 p) {
-      vec3 q = p;
-      q.xz = rot(uTime * 0.11 + uScroll * 0.45) * q.xz;
-      q.xy = rot(0.22 + uTime * 0.08 + uScroll * 0.3) * q.xy;
-      float morph = clamp(uScroll, 0.0, 1.0);
-      vec3 a = vec3(sin(uTime * 0.52) * 0.42, cos(uTime * 0.47) * 0.26, 0.0);
-      vec3 b = vec3(cos(uTime * 0.38 + 1.4) * -0.4, sin(uTime * 0.61) * 0.33, 0.18);
-      vec3 c = vec3(sin(uTime * 0.29 + 2.1) * 0.24, cos(uTime * 0.54 + 0.7) * -0.4, -0.16);
-      a *= 1.0 + morph * 0.2; b.y += morph * 0.28; c.x -= morph * 0.22;
-      float d = length(q - a) - (0.58 - morph * 0.06);
-      d = smin(d, length(q - b) - 0.48, 0.42);
-      d = smin(d, length(q - c) - 0.4, 0.42);
-      d += 0.018 * sin(q.x * 6.0 + uTime * 1.3) * sin(q.y * 5.0 - uTime * 0.9) * sin(q.z * 7.0 + uTime * 0.7);
-      float rippleAge = max(0.0, uTime - uRipple.z);
-      float rippleDist = abs(length(q.xy - uRipple.xy) - rippleAge * 1.8);
-      d -= exp(-rippleDist * 18.0) * exp(-rippleAge * 1.8) * 0.035;
-      return d;
-    }
-    vec3 normalAt(vec3 p) {
-      vec2 e = vec2(0.0015, 0.0);
-      return normalize(vec3(map(p + e.xyy) - map(p - e.xyy), map(p + e.yxy) - map(p - e.yxy), map(p + e.yyx) - map(p - e.yyx)));
-    }
-    float march(vec3 ro, vec3 rd) {
-      float t = 0.0;
-      for (int i = 0; i < 84; i++) {
-        if (float(i) >= uSteps) break;
-        vec3 p = ro + rd * t; float d = map(p);
-        if (d < 0.0015) return t;
-        if (t > 9.0) break;
-        t += d * 0.9;
-      }
-      return 10.0;
-    }
-    vec3 environment(vec3 d) {
-      float y = d.y * 0.5 + 0.5;
-      vec3 base = mix(vec3(0.012, 0.014, 0.022), vec3(0.09, 0.11, 0.18), smoothstep(0.0, 1.0, y));
-      base += vec3(0.95, 0.33, 0.12) * pow(max(d.x, 0.0), 3.0) * 0.75;
-      base += vec3(0.18, 0.30, 0.95) * pow(max(-d.x, 0.0), 3.0) * 0.55;
-      base += vec3(1.0) * pow(max(d.z, 0.0), 8.0) * 0.35;
-      return base;
-    }
-    void main() {
-      vec2 uv = (gl_FragCoord.xy * 2.0 - uRes) / min(uRes.x, uRes.y);
-      vec3 ro = vec3(uPointer.x * 0.42, uPointer.y * 0.28, 4.15);
-      vec3 rd = normalize(vec3(uv, -2.05));
-      rd.xz = rot(uPointer.x * 0.12) * rd.xz; rd.yz = rot(-uPointer.y * 0.08) * rd.yz;
-      float t = march(ro, rd); vec3 color = vec3(0.0); float alpha = 0.0;
-      if (t < 9.0) {
-        vec3 p = ro + rd * t; vec3 n = normalAt(p); vec3 v = -rd; vec3 r = reflect(rd, n);
-        float diff = max(dot(n, normalize(vec3(1.2, 1.8, 2.0))), 0.0);
-        float fresnel = pow(1.0 - max(dot(n, v), 0.0), 3.0);
-        color = environment(r) * (0.4 + 0.6 * diff);
-        color = mix(color, environment(refract(rd, n, 0.72)), 0.18);
-        vec3 film = 0.5 + 0.5 * cos(6.28318 * (vec3(0.0, 0.33, 0.67) + fresnel * 1.8 + dot(n, v)));
-        color += film * fresnel * 0.28;
-        color += vec3(1.0, 0.32, 0.10) * pow(max(dot(n, normalize(vec3(-1.0, 0.2, 0.7))), 0.0), 2.2) * 0.75;
-        color += vec3(0.18, 0.32, 1.0) * fresnel * 0.55;
-        color += vec3(1.0) * pow(max(dot(n, v), 0.0), 22.0) * 0.34; alpha = 1.0;
-      }
-      float grain = fract(sin(dot(gl_FragCoord.xy + uTime, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
-      color += grain * 0.025;
-      float vignette = 1.0 - smoothstep(0.35, 1.35, length(uv));
-      color *= mix(0.48, 1.0, vignette);
-      gl_FragColor = vec4(pow(max(color, 0.0), vec3(0.92)) * uFade, alpha * uFade);
-    }
-  `;
-  const particleVertex = `
-    attribute vec3 aPosition; attribute float aSeed;
-    uniform float uTime; uniform vec2 uPointer; uniform vec2 uRes; uniform float uFade;
-    varying float vAlpha; varying float vBlue;
-    void main() {
-      vec3 p = aPosition;
-      float phase = aSeed * 6.2831853;
-      p.z = mod(p.z + uTime * (0.12 + fract(aSeed * 13.7) * 0.24) + 5.0, 10.0) - 5.0;
-      p.x += sin(uTime * 0.22 + phase) * 0.055 + uPointer.x * (0.05 + aSeed * 0.035);
-      p.y += cos(uTime * 0.18 + phase) * 0.05 + uPointer.y * 0.035;
-      vec4 view = vec4(p, 1.0); float depth = max(1.0, 5.0 - p.z);
-      gl_Position = vec4(p.x / depth * 1.8, p.y / depth * 1.8, 0.0, 1.0);
-      gl_PointSize = clamp((1.2 + fract(aSeed * 19.3) * 2.1) * uRes.y / 700.0 / depth, 1.0, 4.2);
-      vAlpha = (0.22 + 0.55 * fract(aSeed * 7.13)) * uFade * smoothstep(-5.0, -2.0, p.z);
-      vBlue = step(0.52, fract(aSeed * 11.71));
-    }
-  `;
-  const particleFragment = `
-    precision mediump float; varying float vAlpha; varying float vBlue;
-    void main() {
-      vec2 q = gl_PointCoord - 0.5; float d = length(q);
-      float glow = exp(-d * d * 24.0) * (1.0 - smoothstep(0.12, 0.5, d)) * vAlpha;
-      vec3 color = mix(vec3(1.0, 0.34, 0.08), vec3(0.16, 0.43, 1.0), vBlue);
-      gl_FragColor = vec4(color * glow, glow);
-    }
-  `;
-  const compile = (type: number, source: string) => {
-    const shader = gl.createShader(type);
-    if (!shader) return null;
-    gl.shaderSource(shader, source); gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) { gl.deleteShader(shader); return null; }
-    return shader;
-  };
-  const buildProgram = (vsSource: string, fsSource: string) => {
-    const vs = compile(gl.VERTEX_SHADER, vsSource), fs = compile(gl.FRAGMENT_SHADER, fsSource);
-    if (!vs || !fs) { if (vs) gl.deleteShader(vs); if (fs) gl.deleteShader(fs); return null; }
-    const p = gl.createProgram();
-    if (!p) { gl.deleteShader(vs); gl.deleteShader(fs); return null; }
-    gl.attachShader(p, vs); gl.attachShader(p, fs); gl.linkProgram(p);
-    gl.deleteShader(vs); gl.deleteShader(fs);
-    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { gl.deleteProgram(p); return null; }
-    return p;
-  };
-  const program = buildProgram(vertex, fragment), particleProgram = buildProgram(particleVertex, particleFragment);
-  if (!program || !particleProgram) { if (program) gl.deleteProgram(program); if (particleProgram) gl.deleteProgram(particleProgram); showFallback(); return; }
-  const buffer = gl.createBuffer(), particleBuffer = gl.createBuffer();
-  if (!buffer || !particleBuffer) { if (buffer) gl.deleteBuffer(buffer); if (particleBuffer) gl.deleteBuffer(particleBuffer); gl.deleteProgram(program); gl.deleteProgram(particleProgram); showFallback(); return; }
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  const rayAttr = gl.getAttribLocation(program, 'a');
-  if (rayAttr < 0) { gl.deleteBuffer(buffer); gl.deleteBuffer(particleBuffer); gl.deleteProgram(program); gl.deleteProgram(particleProgram); showFallback(); return; }
-  const rayUniforms = {
-    res: gl.getUniformLocation(program, 'uRes'), time: gl.getUniformLocation(program, 'uTime'),
-    pointer: gl.getUniformLocation(program, 'uPointer'), scroll: gl.getUniformLocation(program, 'uScroll'),
-    ripple: gl.getUniformLocation(program, 'uRipple'), fade: gl.getUniformLocation(program, 'uFade'),
-    steps: gl.getUniformLocation(program, 'uSteps'),
-  };
-  const particleUniforms = {
-    time: gl.getUniformLocation(particleProgram, 'uTime'), pointer: gl.getUniformLocation(particleProgram, 'uPointer'),
-    res: gl.getUniformLocation(particleProgram, 'uRes'), fade: gl.getUniformLocation(particleProgram, 'uFade'),
-  };
-  if (Object.values(rayUniforms).some((x) => x === null) || Object.values(particleUniforms).some((x) => x === null)) {
-    gl.deleteBuffer(buffer); gl.deleteBuffer(particleBuffer); gl.deleteProgram(program); gl.deleteProgram(particleProgram); showFallback(); return;
+  let renderer: THREE.WebGLRenderer;
+  try {
+    renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: profile.antialias,
+      powerPreference: profile.tier === 'high' ? 'high-performance' : 'low-power',
+      stencil: false,
+      depth: true,
+      preserveDrawingBuffer: false,
+    });
+  } catch {
+    showFallback();
+    return;
   }
 
-  let width = 1, height = 1, raf = 0, visible = false, destroyed = false;
-  let targetX = 0, targetY = 0, currentX = 0, currentY = 0, scrollTarget = 0, scrollCurrent = 0;
-  let rippleX = 99, rippleY = 99, rippleTime = -100;
-  const started = performance.now();
-  const mobile = () => window.matchMedia('(max-width: 759px)').matches;
-  const seed = (n: number) => { let x = (n + 0x6d2b79f5) | 0; x = Math.imul(x ^ (x >>> 15), x | 1); x ^= x + Math.imul(x ^ (x >>> 7), x | 61); return ((x ^ (x >>> 14)) >>> 0) / 4294967296; };
-  const count = mobile() ? 720 : 1800;
-  const particleData = new Float32Array(count * 4);
-  for (let i = 0; i < count; i++) {
-    const j = i * 4, s = seed(i + 1);
-    particleData[j] = (seed(i * 4 + 10) - 0.5) * 6.2;
-    particleData[j + 1] = (seed(i * 4 + 11) - 0.5) * 4.2;
-    particleData[j + 2] = seed(i * 4 + 12) * 10 - 5;
-    particleData[j + 3] = s;
-  }
-  gl.bindBuffer(gl.ARRAY_BUFFER, particleBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, particleData, gl.STATIC_DRAW);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, profile.pixelRatio));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const mobile = window.matchMedia('(max-width: 760px)').matches;
+  const penguinBaseY = mobile ? 0.12 : 0.22;
+  const camera = new THREE.PerspectiveCamera(mobile ? 38 : 34, 1, 0.1, 80);
+  const focusX = mobile ? 0.42 : 0.65;
+  camera.position.set(focusX, 0.04, mobile ? 7.2 : 6.7);
+  camera.lookAt(focusX, 0.02, 0);
+  scene.add(new THREE.HemisphereLight(0xccecff, 0x152033, 1.8));
+  const key = new THREE.DirectionalLight(0xffefe0, 2.4);
+  key.position.set(-3, 4, 5);
+  scene.add(key);
+  const blueRim = new THREE.PointLight(0x48a9ff, 15, 12);
+  blueRim.position.set(3, 1.8, -2.5);
+  scene.add(blueRim);
+  const warmFill = new THREE.PointLight(0xff8e4d, 8, 10);
+  warmFill.position.set(-3, -1, 3);
+  scene.add(warmFill);
+
+  const stage = new THREE.Group();
+  stage.position.x = mobile ? 0.1 : 0.92;
+  scene.add(stage);
+  const penguin = new THREE.Group();
+  const dolphin = new THREE.Group();
+  stage.add(penguin, dolphin);
+  const detailSegments = profile.tier === 'low' ? 12 : 18;
+  let visible = false;
+  let destroyed = false;
+  let loaded = false;
+  let raf = 0;
+  let timer = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let pointerX = 0;
+  let pointerY = 0;
+  let resizeObserver: ResizeObserver | undefined;
+
   const resize = () => {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, mobile() ? 1.2 : 1.75);
-    width = Math.max(1, Math.round(rect.width * dpr)); height = Math.max(1, Math.round(rect.height * dpr));
-    canvas.width = width; canvas.height = height; gl.viewport(0, 0, width, height);
-  };
-  const updateScroll = () => {
+    if (destroyed) return;
     const rect = root.getBoundingClientRect();
-    scrollTarget = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+    const width = Math.max(1, Math.round(rect.width));
+    const height = Math.max(1, Math.round(rect.height));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, profile.pixelRatio));
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    if (visible && loaded) draw(performance.now());
   };
+
   const draw = (now: number) => {
     raf = 0;
-    if (destroyed || !visible || document.hidden) return;
-    if (!reduceMotion.matches) {
-      currentX += (targetX - currentX) * 0.05; currentY += (targetY - currentY) * 0.05;
-      scrollCurrent += (scrollTarget - scrollCurrent) * 0.045;
+    if (destroyed || !visible || document.hidden || !loaded) return;
+    if (reduceMotion.matches) {
+      stage.rotation.set(0, 0, 0);
+      penguin.position.y = penguinBaseY;
+      penguin.rotation.set(0, 0, 0);
+      dolphin.position.y = mobile ? 0.48 : 0.62;
+      dolphin.rotation.set(0, 0, -0.08);
+      renderer.render(scene, camera);
+      return;
     }
-    const time = reduceMotion.matches ? 0.6 : (now - started) / 1000;
-    const fade = reduceMotion.matches ? 1 : Math.min(1, (now - started) / 2000);
-    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.useProgram(program); gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.enableVertexAttribArray(rayAttr); gl.vertexAttribPointer(rayAttr, 2, gl.FLOAT, false, 0, 0);
-    gl.uniform2f(rayUniforms.res, width, height); gl.uniform1f(rayUniforms.time, time);
-    gl.uniform2f(rayUniforms.pointer, currentX, currentY); gl.uniform1f(rayUniforms.scroll, scrollCurrent);
-    gl.uniform3f(rayUniforms.ripple, rippleX, rippleY, rippleTime); gl.uniform1f(rayUniforms.fade, fade);
-    gl.uniform1f(rayUniforms.steps, mobile() ? 56 : 84); gl.drawArrays(gl.TRIANGLES, 0, 3);
-    gl.useProgram(particleProgram); gl.bindBuffer(gl.ARRAY_BUFFER, particleBuffer);
-    const pos = gl.getAttribLocation(particleProgram, 'aPosition'), seedAttr = gl.getAttribLocation(particleProgram, 'aSeed');
-    gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 3, gl.FLOAT, false, 16, 0);
-    gl.enableVertexAttribArray(seedAttr); gl.vertexAttribPointer(seedAttr, 1, gl.FLOAT, false, 16, 12);
-    gl.uniform1f(particleUniforms.time, time); gl.uniform2f(particleUniforms.pointer, currentX, currentY);
-    gl.uniform2f(particleUniforms.res, width, height); gl.uniform1f(particleUniforms.fade, fade);
-    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE); gl.drawArrays(gl.POINTS, 0, count); gl.disable(gl.BLEND);
-    if (!root.hasAttribute('data-scene-ready')) root.setAttribute('data-scene-ready', 'true');
-    if (!reduceMotion.matches) schedule();
+    const elapsed = now / 1000;
+    const blend = profile.tier === 'low' ? 0.055 : 0.075;
+    pointerX += (targetX - pointerX) * blend;
+    pointerY += (targetY - pointerY) * blend;
+    stage.rotation.y = Math.sin(elapsed * 0.35) * 0.045 + pointerX * 0.1;
+    stage.rotation.x = pointerY * 0.045;
+    penguin.position.y = penguinBaseY + Math.sin(elapsed * 1.05) * 0.035;
+    penguin.rotation.z = Math.sin(elapsed * 0.55) * 0.018;
+    dolphin.position.y = 0.52 + Math.sin(elapsed * 1.3 + 0.6) * 0.075;
+    dolphin.rotation.z = -0.08 + Math.sin(elapsed * 0.8) * 0.035;
+    dolphin.rotation.y = Math.sin(elapsed * 0.45) * 0.07;
+    renderer.render(scene, camera);
+    timer = window.setTimeout(() => {
+      timer = 0;
+      schedule();
+    }, profile.frameDelay);
   };
-  const schedule = () => { if (!raf && !destroyed && visible && !document.hidden && !reduceMotion.matches) raf = requestAnimationFrame(draw); };
-  const renderStatic = () => { if (!destroyed && visible && !document.hidden) draw(performance.now()); };
+
+  const schedule = () => {
+    if (!raf && !timer && !destroyed && visible && !document.hidden && loaded && !reduceMotion.matches) {
+      raf = window.requestAnimationFrame(draw);
+    }
+  };
+  const cancelRender = () => {
+    if (raf) window.cancelAnimationFrame(raf);
+    if (timer) window.clearTimeout(timer);
+    raf = 0;
+    timer = 0;
+  };
+  const renderStatic = () => {
+    if (destroyed || !visible || document.hidden || !loaded) return;
+    cancelRender();
+    stage.rotation.set(0, 0, 0);
+    penguin.position.y = penguinBaseY;
+    penguin.rotation.set(0, 0, 0);
+    dolphin.position.y = mobile ? 0.48 : 0.62;
+    dolphin.rotation.set(0, 0, -0.08);
+    renderer.render(scene, camera);
+  };
+  const onMotionChange = () => {
+    cancelRender();
+    if (reduceMotion.matches) renderStatic();
+    else schedule();
+  };
   const onPointer = (event: PointerEvent) => {
-    if (reduceMotion.matches) return;
-    targetX = (event.clientX / window.innerWidth) * 2 - 1; targetY = -((event.clientY / window.innerHeight) * 2 - 1);
+    if (reduceMotion.matches || profile.tier === 'low') return;
+    const rect = root.getBoundingClientRect();
+    targetX = ((event.clientX - rect.left) / Math.max(1, rect.width) - 0.5) * 2;
+    targetY = -((event.clientY - rect.top) / Math.max(1, rect.height) - 0.5) * 2;
   };
-  const onDown = (event: PointerEvent) => {
-    if (reduceMotion.matches) return;
-    const rect = canvas.getBoundingClientRect();
-    rippleX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    rippleY = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
-    rippleTime = (performance.now() - started) / 1000;
+  const onVisibility = () => {
+    if (document.hidden) cancelRender();
+    else if (reduceMotion.matches) renderStatic();
+    else schedule();
   };
-  const onVisibility = () => { if (document.hidden) { if (raf) cancelAnimationFrame(raf); raf = 0; } else { if (reduceMotion.matches) renderStatic(); else schedule(); } };
-  const onMotionChange = () => { if (raf) cancelAnimationFrame(raf); raf = 0; if (reduceMotion.matches) renderStatic(); else schedule(); };
+  const onContextLost = (event: Event) => {
+    event.preventDefault();
+    showFallback();
+    cleanup();
+  };
   const observer = new IntersectionObserver((entries) => {
     visible = entries.some((entry) => entry.isIntersecting);
-    if (visible) { updateScroll(); if (reduceMotion.matches) renderStatic(); else schedule(); }
-    else if (raf) { cancelAnimationFrame(raf); raf = 0; }
-  });
+    if (!visible) { cancelRender(); return; }
+    if (loaded && reduceMotion.matches) renderStatic();
+    else schedule();
+  }, { threshold: 0.05 });
+
   const cleanup = () => {
-    if (destroyed) return; destroyed = true;
-    if (raf) cancelAnimationFrame(raf); observer.disconnect();
-    window.removeEventListener('resize', onResize); window.removeEventListener('scroll', onScroll);
-    window.removeEventListener('pointermove', onPointer); canvas.removeEventListener('pointerdown', onDown);
+    if (destroyed) return;
+    destroyed = true;
+    cancelRender();
+    observer.disconnect();
+    resizeObserver?.disconnect();
+    window.removeEventListener('resize', resize);
+    window.removeEventListener('pointermove', onPointer);
     document.removeEventListener('visibilitychange', onVisibility);
+    document.removeEventListener('astro:before-swap', cleanup);
+    window.removeEventListener('pagehide', cleanup);
     reduceMotion.removeEventListener('change', onMotionChange);
-    window.removeEventListener('pagehide', cleanup); document.removeEventListener('astro:before-swap', cleanup);
-    gl.deleteBuffer(buffer); gl.deleteBuffer(particleBuffer); gl.deleteProgram(program); gl.deleteProgram(particleProgram);
+    canvas.removeEventListener('webglcontextlost', onContextLost);
+    disposeTree(stage);
+    renderer.dispose();
     root.removeAttribute('data-scene-ready');
   };
-  const onResize = () => { resize(); if (visible && reduceMotion.matches) renderStatic(); };
-  const onScroll = () => { updateScroll(); };
-  resize(); updateScroll(); observer.observe(root);
-  window.addEventListener('resize', onResize, { passive: true }); window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('pointermove', onPointer, { passive: true }); canvas.addEventListener('pointerdown', onDown, { passive: true });
-  document.addEventListener('visibilitychange', onVisibility); reduceMotion.addEventListener('change', onMotionChange);
-  window.addEventListener('pagehide', cleanup); document.addEventListener('astro:before-swap', cleanup);
-  root.setAttribute('data-scene-ready', 'true');
-};
 
-initHeroScene();
+  resize();
+  observer.observe(root);
+  if ('ResizeObserver' in window) {
+    resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(root);
+  }
+  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('pointermove', onPointer, { passive: true });
+  document.addEventListener('visibilitychange', onVisibility);
+  document.addEventListener('astro:before-swap', cleanup);
+  window.addEventListener('pagehide', cleanup);
+  reduceMotion.addEventListener('change', onMotionChange);
+  canvas.addEventListener('webglcontextlost', onContextLost, { once: true });
+
+  const loader = new GLTFLoader();
+  const assetUrl = (name: string) => new URL(`/models/${name}`, window.location.origin).toString();
+  Promise.all([
+    loader.loadAsync(assetUrl('hero-penguin.glb')),
+    loader.loadAsync(assetUrl('hero-dolphin.glb')),
+  ]).then(([penguinGltf, dolphinGltf]) => {
+    if (destroyed) {
+      disposeTree(penguinGltf.scene);
+      disposeTree(dolphinGltf.scene);
+      return;
+    }
+    const penguinModel = penguinGltf.scene;
+    const penguinBounds = fitModel(penguinModel, mobile ? 1.55 : 1.75);
+    setBaseMaterial(penguinModel, 0x17202b, profile.tier === 'low');
+    penguin.add(penguinModel);
+    buildPenguinDetails(penguin, penguinBounds.frontZ, detailSegments);
+    penguin.position.set(mobile ? 0.12 : 0.35, penguinBaseY, 0);
+
+    const dolphinModel = dolphinGltf.scene;
+    const dolphinBounds = fitModel(dolphinModel, mobile ? 0.86 : 0.98);
+    setBaseMaterial(dolphinModel, 0x2c9dd2, profile.tier === 'low');
+    dolphin.add(dolphinModel);
+    buildDolphinDetails(dolphin, dolphinBounds.frontZ, detailSegments);
+    dolphin.position.set(mobile ? 1.12 : 1.45, mobile ? 0.48 : 0.62, 0.18);
+    dolphin.rotation.z = -0.08;
+
+    loaded = true;
+    canvas.hidden = false;
+    fallback.hidden = true;
+    root.setAttribute('data-scene-ready', 'true');
+    if (visible && reduceMotion.matches) renderStatic();
+    else schedule();
+  }).catch(() => {
+    if (!destroyed) showFallback();
+  });
+
+  // Keep a single draw on first visibility even when motion is reduced.
+  const initialStaticFrame = () => {
+    if (visible && loaded && reduceMotion.matches) renderStatic();
+  };
+  window.setTimeout(initialStaticFrame, 0);
+};
