@@ -1,0 +1,74 @@
+/* ==========================================================================
+   ObitoGlory — inner page hero
+   Shared by every route that opens with a page title, lead and meta row.
+   ========================================================================== */
+
+/* ---------- Inner page hero ---------------------------------------------- */
+
+.page-hero {
+  padding-block: clamp(32px, 5vw, 72px) clamp(28px, 4vw, 52px);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-hero .container {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+}
+
+.page-hero h1 {
+  max-width: 20ch;
+}
+
+.page-hero__eyebrow {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-hero__lead {
+  max-width: 54ch;
+  color: var(--text-secondary);
+  font-size: var(--fs-lg);
+  line-height: 1.55;
+  letter-spacing: -0.008em;
+}
+
+.page-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-top: var(--s-1);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.02em;
+}
+
+.page-hero__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.page-hero__meta > span + span::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+/* The status marker already provides its own dot. */
+.page-hero__meta > span.status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-success);
+  outline: 1px solid var(--status-success-border);
+  outline-offset: 2px;
+}

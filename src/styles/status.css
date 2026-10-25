@@ -1,0 +1,143 @@
+/* ==========================================================================
+   ObitoGlory — status components
+
+   Flat, border-defined, zero-shadow. Colour is a semantic token, never a hex.
+   Every variant carries text, so the icon is decorative and the label is the
+   status. The filled pill uses the same triplet as the plain text, which keeps
+   one meaning per variant across badges, banners, and inline labels.
+   ========================================================================== */
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font: inherit;
+  line-height: 1.4;
+  color: var(--status-neutral);
+}
+
+.status-indicator--inline {
+  font-size: var(--fs-xs);
+}
+
+.status-indicator--block {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-indicator__icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
+.status-indicator--block .status-indicator__icon {
+  width: 13px;
+  height: 13px;
+}
+
+.status-indicator__label {
+  min-width: 0;
+}
+
+/* ---------- Variants ---------------------------------------------------- */
+
+.status-indicator--success {
+  color: var(--status-success);
+}
+
+.status-indicator--warning {
+  color: var(--status-warning);
+}
+
+.status-indicator--danger {
+  color: var(--status-danger);
+}
+
+.status-indicator--info {
+  color: var(--status-info);
+}
+
+.status-indicator--neutral {
+  color: var(--status-neutral);
+}
+
+.status-indicator--pending {
+  color: var(--status-pending);
+}
+
+/* ---------- Filled pill -------------------------------------------------
+   Border + tint, no shadow. The border is what separates the pill from the
+   card behind it, which is also why the pill never needs elevation. */
+
+.status-indicator--filled {
+  padding: 1px 7px;
+  border: 1px solid var(--status-neutral-border);
+  border-radius: var(--r-sm);
+  background: var(--status-neutral-bg);
+  color: var(--status-neutral);
+  vertical-align: 2px;
+}
+
+.status-indicator--filled.status-indicator--success {
+  border-color: var(--status-success-border);
+  background: var(--status-success-bg);
+  color: var(--status-success);
+}
+
+.status-indicator--filled.status-indicator--warning {
+  border-color: var(--status-warning-border);
+  background: var(--status-warning-bg);
+  color: var(--status-warning);
+}
+
+.status-indicator--filled.status-indicator--danger {
+  border-color: var(--status-danger-border);
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+}
+
+.status-indicator--filled.status-indicator--info {
+  border-color: var(--status-info-border);
+  background: var(--status-info-bg);
+  color: var(--status-info);
+}
+
+.status-indicator--filled.status-indicator--pending {
+  border-color: var(--status-pending-border);
+  background: var(--status-pending-bg);
+  color: var(--status-pending);
+}
+
+/* Archived work is read-only, not a live condition: dashed reads as "retired"
+   without borrowing a colour that means something else. */
+.status-indicator[data-status='archived'].status-indicator--filled {
+  border-style: dashed;
+}
+
+/* ---------- Loading only ------------------------------------------------
+   A spinner is only honest while something is actually running, so the
+   rotation is scoped to the two states that mean "work in progress". Static
+   icons everywhere else, including errors and completions. */
+
+.status-indicator[data-status='loading'] .status-indicator__icon,
+.status-indicator[data-status='running'] .status-indicator__icon {
+  animation: status-spin 900ms linear infinite;
+}
+
+@keyframes status-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-indicator[data-status='loading'] .status-indicator__icon,
+  .status-indicator[data-status='running'] .status-indicator__icon {
+    animation: none;
+  }
+}

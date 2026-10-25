@@ -1,6 +1,7 @@
 /* ==========================================================================
    ObitoGlory — base layer
    Reset, type scale, layout primitives, controls, utilities.
+   Monochrome rules: flat fills, hairline borders, no shadows, no gradients.
    ========================================================================== */
 
 @import './tokens.css';
@@ -15,8 +16,11 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  background: var(--bg);
+  background: var(--background);
   scroll-behavior: smooth;
+  /* The header is fixed: without this every in-page anchor (#work, #faq,
+     #pricing, the skip link) scrolls its target underneath it. */
+  scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 12px);
   scrollbar-gutter: stable;
   overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
@@ -27,8 +31,8 @@ body {
   min-height: 100svh;
   overflow-x: clip;
   padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
-  background: var(--bg);
-  color: var(--text);
+  background: var(--background);
+  color: var(--text-primary);
   font-family: var(--font-ui);
   font-size: var(--fs-base);
   line-height: var(--lh-body);
@@ -36,11 +40,15 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color var(--dur-3) var(--ease), color var(--dur-3) var(--ease);
+  transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
 
-body.menu-open {
+/* <html> is the scroller, not <body>: locking only body lets the page scroll
+   behind the sheet. Both are set so the lock holds in every engine. */
+body.menu-open,
+html.menu-open {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 #main,
@@ -110,32 +118,32 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 620;
   line-height: var(--lh-heading);
-  letter-spacing: -0.022em;
+  letter-spacing: -0.018em;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
 
 h1 {
   font-size: var(--fs-h1);
-  line-height: 1.04;
-  letter-spacing: -0.032em;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
 }
 
 h2 {
   font-size: var(--fs-h2);
-  letter-spacing: -0.028em;
+  letter-spacing: var(--tracking-h2);
 }
 
 h3 {
   font-size: var(--fs-h3);
-  letter-spacing: -0.018em;
+  letter-spacing: var(--tracking-h3);
 }
 
 h4 {
   font-size: var(--fs-h4);
-  letter-spacing: -0.012em;
+  letter-spacing: -0.008em;
 }
 
 p {
@@ -145,7 +153,7 @@ p {
 }
 
 strong {
-  font-weight: 640;
+  font-weight: 620;
 }
 
 small {
@@ -156,20 +164,32 @@ hr {
   height: 1px;
   border: 0;
   margin: 0;
-  background: var(--divider);
+  background: var(--separator);
 }
 
 [hidden] {
   display: none !important;
 }
 
+/* Zero elevation, enforced once. Section 12.E of the design prompt requires it,
+   and it is also the honest default for this system: hierarchy comes from
+   surfaces and hairline borders, never from a shadow. `!important` is deliberate
+   — it has to beat third-party widgets and any generated style that ships a
+   shadow we do not control. Focus rings are outlines, so they survive. */
+*,
+*::before,
+*::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
 ::selection {
-  background: var(--accent-soft);
-  color: var(--text);
+  background: var(--interactive);
+  color: var(--interactive-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
   border-radius: var(--r-xs);
 }
@@ -181,16 +201,9 @@ dialog {
   background: transparent;
 }
 
+/* A modal overlay is a scrim, not a decorative panel: solid tint, no blur. */
 dialog::backdrop {
-  background: rgb(3 4 6 / 58%);
-  -webkit-backdrop-filter: blur(8px) saturate(1.2);
-  backdrop-filter: blur(8px) saturate(1.2);
-}
-
-@media (prefers-color-scheme: light) {
-  dialog::backdrop {
-    background: rgb(20 24 31 / 28%);
-  }
+  background: var(--scrim);
 }
 
 table {
@@ -209,43 +222,19 @@ table {
   font-variant-ligatures: none;
 }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-
-.eyebrow--accent {
-  color: var(--accent);
-}
-
 .muted {
-  color: var(--text-2);
+  color: var(--text-secondary);
 }
 
 .dim {
-  color: var(--text-3);
-}
-
-.lede {
-  font-size: var(--fs-lg);
-  line-height: 1.55;
-  letter-spacing: -0.011em;
-  color: var(--text-2);
-  max-width: 56ch;
+  color: var(--text-muted);
 }
 
 .status {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-2);
+  color: var(--text-secondary);
   font-size: var(--fs-sm);
 }
 
@@ -255,8 +244,20 @@ table {
   height: 6px;
   flex: 0 0 auto;
   border-radius: 50%;
-  background: var(--ok);
-  box-shadow: 0 0 0 3px var(--ok-soft);
+  background: var(--status-success);
+  /* A hairline ring instead of a soft glow. The dot still reads as "live"
+     without a shadow, and an outline is a border the eye can resolve at 6px. */
+  outline: 1px solid var(--status-success-border);
+  outline-offset: 2px;
+}
+
+/* Status is conveyed by the label; the dot only reinforces it. */
+.status--warning::before {
+  background: var(--status-warning);
+}
+
+.status--error::before {
+  background: var(--status-error);
 }
 
 .sr-only {
@@ -271,23 +272,31 @@ table {
   border: 0;
 }
 
+/* Skip link (WCAG 2.4.1 Bypass Blocks). Hidden with a transform measured
+   against its own height so it can never leave a sliver on screen. */
 .skip-link {
   position: fixed;
   z-index: 500;
-  top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 8px);
-  left: 16px;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  left: 50%;
   padding: 10px 16px;
+  border: 1px solid var(--background);
   border-radius: var(--r-sm);
-  background: var(--accent-fill);
-  color: var(--accent-ink);
+  background: var(--interactive);
+  color: var(--interactive-ink);
   font-size: var(--fs-sm);
   font-weight: 600;
-  transform: translateY(-240%);
-  transition: transform var(--dur-2) var(--ease);
+  transform: translate(-50%, calc(-100% - 24px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--dur-2) var(--ease), opacity var(--dur-1) var(--ease);
 }
 
-.skip-link:focus {
-  transform: translateY(0);
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ---------- Layout primitives ------------------------------------------- */
@@ -298,15 +307,20 @@ table {
   min-width: 0;
 }
 
-.container--narrow {
-  width: min(100% - (2 * var(--gutter)), var(--reading-max));
-  margin-inline: auto;
-  min-width: 0;
-}
-
 .section {
   padding-block: var(--section-y);
   min-width: 0;
+}
+
+/* Consecutive sections share one rhythm: the space between them belongs to the
+   boundary, not to a doubled top + bottom padding. */
+.section + .section {
+  padding-top: calc(var(--section-y) * 0.62);
+}
+
+/* A band change already marks the boundary, so it keeps more air above. */
+.section + .section.section--paper {
+  padding-top: var(--section-y);
 }
 
 .section--tight {
@@ -319,12 +333,14 @@ table {
   min-width: 0;
 }
 
-/* Raised band: a lighter layer of the same material, not an inverted page. */
+.section + .section--tight-2 {
+  padding-top: calc(var(--section-y-tight) * 0.42);
+}
+
+/* Raised band: a tonal step, not an inverted page or a gradient. */
 .section--paper {
-  background:
-    linear-gradient(180deg, var(--surface) 0%, transparent 100%),
-    var(--bg-2);
-  border-block: 1px solid var(--hairline);
+  background: var(--background-secondary);
+  border-block: 1px solid var(--separator);
 }
 
 .stack {
@@ -348,78 +364,57 @@ table {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 0 20px;
+  min-height: var(--tap);
+  padding: 0 18px;
   border: 1px solid var(--border-control);
   border-radius: var(--r-md);
-  background: var(--surface-2);
-  color: var(--text);
+  background: transparent;
+  color: var(--text-primary);
   font-family: var(--font-ui);
   font-size: 0.9375rem;
   font-weight: 560;
   line-height: 1.2;
-  letter-spacing: -0.006em;
+  letter-spacing: -0.004em;
   text-align: center;
   white-space: nowrap;
-  box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-xs);
   transition:
     background-color var(--dur-2) var(--ease),
     border-color var(--dur-2) var(--ease),
-    box-shadow var(--dur-2) var(--ease),
-    color var(--dur-2) var(--ease),
-    transform var(--dur-1) var(--ease);
+    color var(--dur-2) var(--ease);
 }
 
 .btn:hover {
-  background: var(--surface-3);
-  border-color: var(--hairline-strong);
+  background: var(--surface-secondary);
+  border-color: var(--text-muted);
 }
 
 .btn:active {
-  transform: scale(0.98);
+  background: var(--surface-active);
 }
 
 .btn--primary {
-  border-color: transparent;
-  background: var(--accent-fill);
-  color: var(--accent-ink);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    0 1px 2px rgb(0 0 0 / 24%),
-    0 10px 24px -12px var(--accent-fill);
+  border-color: var(--interactive);
+  background: var(--interactive);
+  color: var(--interactive-ink);
 }
 
+/* Darker/lighter by tone, not by glow. */
 .btn--primary:hover {
-  background: var(--accent-fill-hover);
-  border-color: transparent;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 26%),
-    0 2px 4px rgb(0 0 0 / 22%),
-    0 16px 34px -14px var(--accent-fill);
+  border-color: var(--interactive-hover);
+  background: var(--interactive-hover);
+  color: var(--interactive-ink);
 }
 
-.btn--ghost {
-  border-color: transparent;
-  background: transparent;
-  box-shadow: none;
-  color: var(--text-2);
-}
-
-.btn--ghost:hover {
-  background: var(--surface-2);
-  color: var(--text);
-  border-color: transparent;
+.btn--primary:active {
+  background: var(--interactive-active);
+  border-color: var(--interactive-active);
 }
 
 .btn--small {
-  min-height: 34px;
+  min-height: var(--tap);
   padding: 0 14px;
+  border-radius: var(--r-md);
   font-size: var(--fs-sm);
-  border-radius: var(--r-sm);
-}
-
-.btn--wide {
-  width: 100%;
 }
 
 .btn .arrow-icon {
@@ -429,19 +424,22 @@ table {
 .link {
   display: inline-flex;
   align-items: center;
+  min-height: var(--tap, 44px);
   gap: 6px;
-  color: var(--text);
+  padding-block: 6px;
+  color: var(--text-primary);
   font-weight: 540;
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-decoration-color: var(--accent-line);
+  text-decoration-color: var(--border-control);
   text-underline-offset: 0.22em;
-  transition: color var(--dur-2) var(--ease), text-decoration-color var(--dur-2) var(--ease);
+  transition: text-decoration-color var(--dur-2) var(--ease),
+    text-decoration-thickness var(--dur-2) var(--ease);
 }
 
 .link:hover {
-  color: var(--accent);
   text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
 }
 
 .arrow-icon {
@@ -459,47 +457,13 @@ table {
   transform: rotate(90deg);
 }
 
-.link:hover .arrow-icon--down {
-  transform: rotate(90deg) translateX(2px);
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 24px;
-  padding: 2px 9px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-full);
-  background: var(--surface-2);
-  color: var(--text-2);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.4;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.badge--ok {
-  border-color: transparent;
-  background: var(--ok-soft);
-  color: var(--ok);
-}
-
-.badge--accent {
-  border-color: transparent;
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
 /* ---------- Forms ------------------------------------------------------- */
 
 label {
   display: block;
+  color: var(--text-secondary);
   font-size: var(--fs-sm);
   font-weight: 560;
-  color: var(--text-2);
 }
 
 input,
@@ -511,11 +475,12 @@ textarea {
   border: 1px solid var(--border-control);
   border-radius: var(--r-sm);
   background: var(--surface-sunken);
-  color: var(--text);
-  font-size: var(--fs-base);
+  color: var(--text-primary);
+  /* Never below 16px: mobile browsers zoom the page when a focused field is
+     smaller, which then leaves the layout scrolled sideways. */
+  font-size: max(16px, var(--fs-base));
   line-height: 1.4;
-  transition: border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
-    background-color var(--dur-2) var(--ease);
+  transition: border-color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
 }
 
 textarea {
@@ -526,52 +491,72 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--text-3);
+  color: var(--text-muted);
   opacity: 1;
 }
 
 input:hover,
 select:hover,
 textarea:hover {
-  border-color: var(--hairline-strong);
+  border-color: var(--text-muted);
 }
 
+/* Outline, not box-shadow: the focus ring is a real ring in both themes and
+   survives forced-colors mode. */
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: var(--shadow-focus);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+  border-color: var(--text-primary);
 }
 
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (forced-colors: active) {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
+}
+
+/* Native chevron: it follows color-scheme in both themes, needs no image
+   asset, and no palette value leaks out of tokens.css. */
 select {
-  appearance: none;
-  padding-right: 36px;
-  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
-    linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
+  appearance: auto;
+  padding-right: 12px;
 }
 
 /* ---------- Motion ------------------------------------------------------ */
 
+/* No will-change: it promoted every reveal target on the page (dozens of
+   layers on /projects/) for the whole session. */
 .js [data-reveal] {
   opacity: 0;
   transform: translateY(var(--reveal-y));
-  transition:
-    opacity var(--dur-4) var(--ease-out),
-    transform var(--dur-4) var(--ease-out);
+  transition: opacity var(--dur-4) var(--ease-out), transform var(--dur-4) var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
 }
 
 .js [data-reveal].is-in {
   opacity: 1;
   transform: none;
-  will-change: auto;
 }
 
+/* Reduced motion: kill movement and looping, but keep short colour/opacity
+   transitions — those aid comprehension rather than causing vestibular load. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -582,12 +567,37 @@ select {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-property: color, background-color, border-color, outline-color,
+      text-decoration-color, opacity !important;
+    transition-duration: 100ms !important;
     scroll-behavior: auto !important;
   }
 
   .js [data-reveal] {
     opacity: 1;
+    transform: none;
+  }
+}
+
+/* Android has no hover: any :hover transform would stick after a tap. */
+@media (hover: none) {
+  .btn:hover,
+  .link:hover,
+  .project-row:hover,
+  .journal-card:hover,
+  .capability:hover,
+  .filter-btn:hover,
+  .icon-btn:hover,
+  .menu-btn:hover,
+  .site-nav__link:hover,
+  .profile-links a:hover,
+  .theme-btn:hover {
+    transform: none;
+  }
+
+  .link:hover .arrow-icon,
+  .btn:hover .arrow-icon,
+  .project-row:hover .project-row__arrow {
     transform: none;
   }
 }

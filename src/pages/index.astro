@@ -5,6 +5,7 @@ import ProjectRow from '../components/ProjectRow.astro';
 import RouteDiagram from '../components/RouteDiagram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/home.css';
 import Arrow from '../components/Arrow.astro';
 import { facts } from '../data/facts';
 import { projects } from '../data/projects';
@@ -140,7 +141,7 @@ const homeSchema = {
 
       <div class="project-list">
         {selected.map((project, index) => (
-          <div data-reveal style={`--reveal-delay: ${index * 60}ms`}>
+          <div data-reveal>
             <ProjectRow project={project} index={index + 2} />
           </div>
         ))}
@@ -197,7 +198,7 @@ const homeSchema = {
 
       <div class="capability-grid">
         {capabilities.map((capability, index) => (
-          <article class="capability" data-reveal style={`--reveal-delay: ${index * 80}ms`}>
+          <article class="capability" data-reveal>
             <p class="capability__index mono" aria-hidden="true">{`0${index + 1}`}</p>
             <h3>{capability.title}</h3>
             <p>{capability.body}</p>
@@ -211,7 +212,7 @@ const homeSchema = {
     </div>
   </section>
 
-  <section class="section section--tight-2" aria-labelledby="journal-title">
+  <section class="section" aria-labelledby="journal-title">
     <div class="container">
       <SectionHead
         id="journal-title"
@@ -221,8 +222,8 @@ const homeSchema = {
         link={{ href: '/journal/', label: 'Semua catatan' }}
       />
       <div class="journal-list">
-        {articles.slice(0, 2).map((article, index) => (
-          <article class="journal-card" data-reveal style={`--reveal-delay: ${index * 80}ms`}>
+        {articles.slice(0, 2).map((article) => (
+          <article class="journal-card" data-reveal>
             <p class="mono journal-card__meta">
               <time datetime={article.date}>{article.date}</time> · {article.readingTime} menit baca
             </p>
@@ -237,7 +238,7 @@ const homeSchema = {
     </div>
   </section>
 
-  <section class="section section--tight-2" aria-labelledby="stack-title">
+  <section class="section" aria-labelledby="stack-title">
     <div class="container">
       <SectionHead
         id="stack-title"

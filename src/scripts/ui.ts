@@ -1,3 +1,72 @@
+/* ---------- Theme -------------------------------------------------------
+   The inline head script has already resolved the initial value; this keeps
+   the controls, the stored preference, and the browser chrome in sync.
+   ---------------------------------------------------------------------- */
+const THEME_KEY = 'theme';
+const themeRoot = document.documentElement;
+const themeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]'));
+const themeLabels = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-label]'));
+const themeMeta = document.querySelector<HTMLMetaElement>('meta[data-theme-color]');
+const lightQuery = window.matchMedia('(prefers-color-scheme: light)');
+
+const storedTheme = (): 'light' | 'dark' | null => {
+  try {
+    const value = localStorage.getItem(THEME_KEY);
+    return value === 'light' || value === 'dark' ? value : null;
+  } catch {
+    return null;
+  }
+};
+
+const currentTheme = (): 'light' | 'dark' =>
+  themeRoot.dataset.theme === 'light' ? 'light' : 'dark';
+
+const syncThemeUI = () => {
+  const theme = currentTheme();
+  const next = theme === 'dark' ? 'terang' : 'gelap';
+  themeButtons.forEach((button) => {
+    // The sheet row shows "Tema" and the current value, so its accessible name
+    // must include that visible text (WCAG 2.5.3 Label in Name).
+    const isRow = button.classList.contains('theme-row');
+    const label = isRow
+      ? `Tema: ${theme === 'dark' ? 'Gelap' : 'Terang'}. Aktifkan tema ${next}`
+      : `Aktifkan tema ${next}`;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('title', `Aktifkan tema ${next}`);
+  });
+  themeLabels.forEach((label) => {
+    label.textContent = theme === 'dark' ? 'Gelap' : 'Terang';
+  });
+  if (themeMeta) themeMeta.content = theme === 'light' ? '#ffffff' : '#111111';
+};
+
+const applyTheme = (theme: 'light' | 'dark', persist: boolean) => {
+  themeRoot.dataset.theme = theme;
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      /* Storage can be unavailable; the theme still applies for this page. */
+    }
+  }
+  syncThemeUI();
+};
+
+themeButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
+  });
+});
+
+// Follow the OS only while the visitor has not made an explicit choice.
+lightQuery.addEventListener('change', (event) => {
+  if (storedTheme()) return;
+  applyTheme(event.matches ? 'light' : 'dark', false);
+});
+
+syncThemeUI();
+document.addEventListener('astro:page-load', syncThemeUI);
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
 const menuOpen = document.querySelector<HTMLButtonElement>('[data-menu-open]');
@@ -29,7 +98,9 @@ if (menu && menuOpen) {
 
   menu.addEventListener('close', () => {
     setMenuState(false);
-    menuOpen.focus();
+    // The browser restores focus itself on close; re-assert ours afterwards so
+    // keyboard users land back on the trigger, not on <body>.
+    window.requestAnimationFrame(() => menuOpen.focus());
   });
 
   menu.querySelectorAll('a').forEach((link) => {
@@ -81,9 +152,18 @@ const openSpotlight = () => {
 
 if (spotlight && spotlightOpen && spotlightInput) {
   spotlightOpen.addEventListener('click', openSpotlight);
-  spotlight.addEventListener('close', () => spotlightOpen.focus());
+  spotlight.addEventListener('close', () => {
+    window.requestAnimationFrame(() => spotlightOpen.focus());
+  });
   spotlight.addEventListener('click', (event) => {
     if (event.target === spotlight) spotlight.close();
+  });
+  // A focused <input type="search"> swallows the first Escape (Chrome clears
+  // the field instead of closing the dialog), so close it explicitly.
+  spotlight.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !spotlight.open) return;
+    event.preventDefault();
+    spotlight.close();
   });
   spotlightInput.addEventListener('input', updateSpotlightResults);
   spotlightInput.addEventListener('keydown', (event) => {

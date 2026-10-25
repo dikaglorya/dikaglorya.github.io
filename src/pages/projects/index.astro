@@ -2,6 +2,7 @@
 import ContactBlock from '../../components/ContactBlock.astro';
 import ProjectRow from '../../components/ProjectRow.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/detail.css';
 import { projectCategories, projects } from '../../data/projects';
 import { site } from '../../data/site';
 
@@ -35,7 +36,7 @@ const schema = {
   description="Proyek dan software buatan DikaGlorya, dikenal juga sebagai DikaOfc dan DikaCode: website, bot, Android, dan developer tools."
   schema={schema}
 >
-  <section class="page-hero page-hero--projects" aria-labelledby="projects-title">
+  <section class="page-hero" aria-labelledby="projects-title">
     <div class="container">
       <p class="page-hero__eyebrow mono">Portofolio · daftar proyek</p>
       <h1 id="projects-title">Proyek pilihan</h1>
@@ -96,14 +97,14 @@ const schema = {
               <span>Detail</span>
             </div>
             {projects.map((project, index) => (
-              <ProjectRow project={project} index={index + 1} />
+              <ProjectRow project={project} index={index + 1} withQuickLook />
             ))}
           </div>
 
           <div class="empty-state" data-empty-state hidden>
             <p>Tidak ada proyek dalam kategori ini.</p>
             <p>
-              <button class="link" type="button" data-filter="all">Tampilkan semua proyek</button>
+              <button class="link" type="button" data-filter="all" data-filter-reset>Tampilkan semua proyek</button>
             </p>
           </div>
 

@@ -1,0 +1,89 @@
+---
+/* ==========================================================================
+   StatusIndicator — the only place a status is rendered.
+
+   Takes any value (typed state, project maturity word, or junk) and renders the
+   registry's icon, label, and semantic variant. Colour comes from
+   `.status-indicator--<variant>`, never from the caller.
+
+   Accessibility contract:
+   - The icon is always decorative (`aria-hidden`), because the label next to
+     it already says the same thing. Two announcements for one status is noise.
+   - The component never attaches a live region. A status that changes needs to
+     be announced at the boundary that caused the change, not by every badge.
+   - `announce` on the definition is exposed as `data-announce` so that boundary
+     can decide; it is not a live region by itself.
+   ========================================================================== */
+import { resolveStatus, type StatusState } from '../lib/status-registry';
+
+interface Props {
+  /** Registry state, or a project maturity word, or anything at all. */
+  status: StatusState | (string & {});
+  /** Override the visible label, e.g. to localise it. Falls back to the registry. */
+  label?: string;
+  /** Expose the one-sentence description to screen readers. Off by default. */
+  showDescription?: boolean;
+  /** Drop the icon and keep the text. */
+  showIcon?: boolean;
+  /** Render the filled pill instead of plain coloured text. */
+  filled?: boolean;
+  /** `inline` sits in a line of text; `block` matches a standalone badge. */
+  size?: 'inline' | 'block';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  status,
+  label,
+  showDescription = false,
+  showIcon = true,
+  filled = false,
+  size = 'inline',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const resolved = resolveStatus(status);
+const nodes = resolved.icon;
+const text = label ?? resolved.label;
+
+const classes = [
+  'status-indicator',
+  `status-indicator--${resolved.variant}`,
+  `status-indicator--${size}`,
+  filled && 'status-indicator--filled',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<span
+  {...rest}
+  class={classes}
+  data-status={resolved.state}
+  data-variant={resolved.variant}
+  data-announce={resolved.announce ? 'true' : undefined}
+>
+  {showIcon && (
+    <svg
+      class="status-indicator__icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {nodes.map(([tag, attrs]) => {
+        const Tag = tag as 'path';
+        return <Tag {...(attrs as Record<string, string>)} />;
+      })}
+    </svg>
+  )}
+  <span class="status-indicator__label">{text}</span>
+  {showDescription && <span class="sr-only">{resolved.description}</span>}
+</span>

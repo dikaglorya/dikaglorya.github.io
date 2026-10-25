@@ -15,6 +15,10 @@ export type ProjectLink = {
   kind?: 'live' | 'package';
 };
 
+// Honest maturity labels. Nothing here claims a stage the project has not
+// reached: no source repository or running demo means it is not "released".
+export type ProjectStatus = 'released' | 'experimental' | 'in-progress' | 'archived';
+
 export type Project = {
   slug: string;
   name: string;
@@ -28,8 +32,16 @@ export type Project = {
   stack: string[];
   featured: boolean;
   order: number;
+  status: ProjectStatus;
   link?: ProjectLink;
   note?: string;
+};
+
+export const projectStatusLabel: Record<ProjectStatus, string> = {
+  released: 'Rilis',
+  experimental: 'Eksperimen',
+  'in-progress': 'Sedang dikerjakan',
+  archived: 'Arsip',
 };
 
 export const projects: Project[] = [
@@ -53,6 +65,7 @@ export const projects: Project[] = [
     category: 'AI & automasi',
     type: 'Gateway AI',
     stack: ['TypeScript', 'Node.js', 'OpenAI API'],
+    status: 'released',
     featured: true,
     order: 1,
     link: {
@@ -82,6 +95,7 @@ export const projects: Project[] = [
     category: 'Keamanan & automasi',
     type: 'Bot Telegram',
     stack: ['JavaScript', 'Node.js', 'Telegram Bot API'],
+    status: 'in-progress',
     featured: true,
     order: 2,
   },
@@ -104,6 +118,7 @@ export const projects: Project[] = [
     category: 'Tools developer',
     type: 'CLI, AI agent',
     stack: ['TypeScript', 'Bun', 'OpenAI-compatible API'],
+    status: 'experimental',
     featured: true,
     order: 3,
   },
@@ -128,6 +143,7 @@ export const projects: Project[] = [
     category: 'AI & automasi',
     type: 'Userbot Telegram',
     stack: ['Python', 'Telethon', 'OpenAI-compatible API'],
+    status: 'in-progress',
     featured: true,
     order: 4,
   },
@@ -150,6 +166,7 @@ export const projects: Project[] = [
     category: 'Android',
     type: 'Aplikasi Android',
     stack: ['Kotlin', 'Android'],
+    status: 'experimental',
     featured: true,
     order: 5,
   },
@@ -167,6 +184,7 @@ export const projects: Project[] = [
     category: 'Tools developer',
     type: 'Toolkit Android',
     stack: ['Shell', 'Termux', 'glibc', 'Node.js'],
+    status: 'experimental',
     featured: false,
     order: 6,
   },
@@ -189,6 +207,7 @@ export const projects: Project[] = [
     category: 'Tools developer',
     type: 'CLI Android',
     stack: ['TypeScript', 'Termux', 'Node.js'],
+    status: 'experimental',
     featured: false,
     order: 7,
   },
@@ -212,6 +231,7 @@ export const projects: Project[] = [
     category: 'Web',
     type: 'Situs produk dan dokumentasi',
     stack: ['React', 'TypeScript', 'Tailwind CSS v4', 'Framer Motion'],
+    status: 'in-progress',
     featured: false,
     order: 8,
   },
@@ -234,23 +254,25 @@ export const projects: Project[] = [
     category: 'Web',
     type: 'Situs produk',
     stack: ['React', 'Vite', 'TypeScript', 'Express'],
+    status: 'in-progress',
     featured: false,
     order: 9,
   },
   {
     slug: 'website',
-    name: 'dikaofc.github.io',
-    tagline: 'Portofolio sebelumnya, dibangun sebagai aplikasi React satu file.',
+    name: 'Portofolio v1',
+    tagline: 'Portofolio sebelumnya: situs React multi-halaman yang dibangun dari awal.',
     summary:
       'Website portofolio DikaCode sebelumnya, dibuat dengan Vite, React, dan Tailwind sebagai situs multi-halaman.',
     problem:
       'Portofolio ini dibuat untuk menampilkan project dan layanan di satu tempat.',
     approach:
-      'Setiap halaman dibuat sebagai satu file HTML dengan URL yang rapi tanpa ekstensi file.',
-    features: ['Build satu file', 'Multi-halaman', 'URL rapi', 'React + Vite + Tailwind'],
+      'Setiap halaman dibangun dan disajikan sebagai satu file HTML, dengan URL tanpa ekstensi file.',
+    features: ['Build satu file per halaman', 'Multi-halaman', 'URL rapi', 'React + Vite + Tailwind'],
     category: 'Web',
     type: 'Situs pribadi',
     stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
+    status: 'archived',
     featured: false,
     order: 10,
     link: {

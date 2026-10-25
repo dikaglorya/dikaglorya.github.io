@@ -2,6 +2,7 @@
 import ContactBlock from '../components/ContactBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/content.css';
 import { faqs } from '../data/faqs';
 import { processSteps } from '../data/facts';
 import { services } from '../data/services';
@@ -40,7 +41,7 @@ const schema = {
   description="Jasa pembuatan website, bot Telegram, tools custom, dan perbaikan sistem dari DikaGlorya (DikaOfc, DikaCode) di Kendal."
   schema={schema}
 >
-  <section class="page-hero page-hero--services" aria-labelledby="services-title">
+  <section class="page-hero" aria-labelledby="services-title">
     <div class="container">
       <p class="page-hero__eyebrow mono">Layanan · DikaOfc</p>
       <h1 id="services-title">Software praktis, dibuat dengan teliti.</h1>
@@ -56,7 +57,10 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" id="pricing" aria-label="Daftar layanan" data-reveal>
+  {/* `#pricing` and `#faq` are deep-link targets (the legacy /harga/ and /faq/
+      routes redirect here). A data-reveal transform would leave them 14px out
+      of alignment when the browser scrolls the fragment into view. */}
+  <section class="section--tight" id="pricing" aria-label="Daftar layanan">
     <div class="container">
       {services.map((service, index) => (
         <section
@@ -124,7 +128,7 @@ const schema = {
     </div>
   </section>
 
-  <section class="section--tight" id="faq" aria-labelledby="faq-title" data-reveal>
+  <section class="section--tight" id="faq" aria-labelledby="faq-title">
     <div class="container">
       <SectionHead
         id="faq-title"

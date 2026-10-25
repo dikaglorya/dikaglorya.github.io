@@ -46,7 +46,10 @@ const BUDGET = {
   transferPerPage: 420 * 1024,
   requestsPerPage: 14,
   htmlBytes: 32 * 1024,
-  cssBytes: 60 * 1024,
+  // No route may load more than 60KB of CSS. This is the number that affects
+  // render time; the sum of every route's bundles is tracked separately.
+  cssPerPage: 60 * 1024,
+  cssTotal: 80 * 1024,
   jsBytes: 16 * 1024,
 };
 
@@ -67,6 +70,7 @@ for (const pageInfo of pages) {
 
   let transferred = 0;
   let requests = 0;
+  let cssTransferred = 0;
   const byType = {};
   page.on('response', async (response) => {
     requests += 1;
@@ -76,6 +80,7 @@ for (const pageInfo of pages) {
     const bytes = sizes?.responseBodySize ?? 0;
     transferred += bytes;
     byType[type] = (byType[type] ?? 0) + bytes;
+    if (type === 'stylesheet') cssTransferred += bytes;
   });
 
   await page.addInitScript(() => {
@@ -130,6 +135,7 @@ for (const pageInfo of pages) {
     lcpElement: metrics.lcpElement,
     cls: Number(metrics.cls.toFixed(4)),
     requests,
+    cssBytes: cssTransferred,
     transferKB: Math.round(transferred / 1024),
     byTypeKB: Object.fromEntries(
       Object.entries(byType).map(([key, value]) => [key, Math.round(value / 1024)]),
@@ -165,14 +171,17 @@ for (const result of results) {
     failures.push(`${where}: ${result.transferKB}KB > ${BUDGET.transferPerPage / 1024}KB`);
   if (result.requests > BUDGET.requestsPerPage)
     failures.push(`${where}: ${result.requests} requests > ${BUDGET.requestsPerPage}`);
+  if (result.cssBytes > BUDGET.cssPerPage)
+    failures.push(`${where}: CSS ${result.cssBytes}B > ${BUDGET.cssPerPage}B`);
 }
-if (cssBytes > BUDGET.cssBytes) failures.push(`CSS ${cssBytes}B > ${BUDGET.cssBytes}B`);
+if (cssBytes > BUDGET.cssTotal) failures.push(`CSS total ${cssBytes}B > ${BUDGET.cssTotal}B`);
 if (jsBytes > BUDGET.jsBytes) failures.push(`JS ${jsBytes}B > ${BUDGET.jsBytes}B`);
 
+const cssMaxBytes = Math.max(...results.map((result) => result.cssBytes));
 const summary = {
   profile: `slow-4g / cpu-${CPU_SLOWDOWN}x`,
   budget: BUDGET,
-  assets: { cssBytes, jsBytes },
+  assets: { cssBytes, cssMaxBytes, jsBytes },
   pages: results,
 };
 
@@ -181,7 +190,9 @@ if (process.env.PERF_JSON) {
 }
 
 console.log(`profile: ${summary.profile}`);
-console.log(`css ${(cssBytes / 1024).toFixed(1)}KB · js ${(jsBytes / 1024).toFixed(1)}KB`);
+console.log(
+  `css total ${(cssBytes / 1024).toFixed(1)}KB · max per page ${(cssMaxBytes / 1024).toFixed(1)}KB · js ${(jsBytes / 1024).toFixed(1)}KB`,
+);
 console.table(
   results.map((r) => ({
     page: r.page,

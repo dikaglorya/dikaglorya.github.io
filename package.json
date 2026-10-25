@@ -11,20 +11,28 @@
     "check": "astro check",
     "test:links": "node scripts/check-links.mjs",
     "test:a11y": "node scripts/a11y.mjs",
+    "test:audit": "node scripts/audit-mono.mjs",
+    "test:flows": "node scripts/qa-flows.mjs",
+    "test:perf": "node scripts/perf.mjs",
     "test:visual": "node scripts/visual.mjs",
     "brand": "node scripts/generate-brand.mjs",
     "build:assets": "node scripts/build-assets.js",
     "preview:assets": "node scripts/preview-assets.mjs",
-    "test": "npm run check && npm run build && npm run test:links"
+    "test": "npm run check && npm run build && npm run test:status && npm run test:links",
+    "test:status": "node --test tests/status-registry.test.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
     "astro": "^7.4.1",
+    "lucide": "^1.61.0",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.11",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.5",
     "axe-core": "^4.14.0",
     "playwright": "^1.64.1",
     "satori": "^0.63.2",

@@ -26,13 +26,18 @@ const viewports = [
   { name: 'small', width: 320, height: 740 },
 ];
 
+// Both themes get the full sweep: contrast and focus rings differ per palette.
+const themes = ['dark', 'light'];
+
 const browser = await chromium.launch({ headless: true });
 const issues = [];
 
+for (const theme of themes) {
 for (const viewport of viewports) {
   const context = await browser.newContext({
     viewport: { width: viewport.width, height: viewport.height },
     reducedMotion: 'reduce',
+    colorScheme: theme,
   });
 
   for (const pagePath of pages) {
@@ -65,7 +70,7 @@ for (const viewport of viewports) {
     for (const violation of results.violations) {
       issues.push({
         page: pagePath,
-        viewport: viewport.name,
+        viewport: `${theme}/${viewport.name}`,
         id: violation.id,
         impact: violation.impact,
         help: violation.help,
@@ -79,7 +84,7 @@ for (const viewport of viewports) {
     for (const error of consoleErrors) {
       issues.push({
         page: pagePath,
-        viewport: viewport.name,
+        viewport: `${theme}/${viewport.name}`,
         id: 'console-error',
         impact: 'serious',
         help: error,
@@ -91,6 +96,7 @@ for (const viewport of viewports) {
   }
 
   await context.close();
+}
 }
 
 await browser.close();
@@ -108,4 +114,6 @@ if (issues.length) {
   process.exit(1);
 }
 
-console.log(`Accessibility check passed: ${pages.length} pages at ${viewports.length} viewports.`);
+console.log(
+  `Accessibility check passed: ${pages.length} pages at ${viewports.length} viewports in ${themes.length} themes.`,
+);

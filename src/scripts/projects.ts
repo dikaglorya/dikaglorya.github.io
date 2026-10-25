@@ -30,6 +30,10 @@ const applyFilter = (filter: string, updateUrl = true) => {
     button.setAttribute('aria-pressed', String(button.dataset.filter === active));
   });
 
+  if (count) {
+    count.textContent = '';
+  }
+
   items.forEach((item) => {
     const searchText = [
       item.dataset.projectName,
@@ -59,6 +63,13 @@ const applyFilter = (filter: string, updateUrl = true) => {
     } else {
       url.searchParams.set('category', active);
     }
+    // A search query is part of the shareable state too, so a filtered view can
+    // be sent as one link.
+    if (searchQuery) {
+      url.searchParams.set('q', searchQuery);
+    } else {
+      url.searchParams.delete('q');
+    }
     window.history.replaceState({}, '', url);
   }
 };
@@ -69,9 +80,17 @@ filterButtons.forEach((button) => {
   });
 });
 
+// "Show all" in the empty state needs to clear the search box as well, not
+// just reset the category, otherwise the list stays empty.
+document.querySelector('[data-filter-reset]')?.addEventListener('click', () => {
+  if (search) search.value = '';
+  searchQuery = '';
+  applyFilter('all');
+});
+
 search?.addEventListener('input', () => {
   searchQuery = search.value.trim().toLocaleLowerCase();
-  applyFilter(activeFilter, false);
+  applyFilter(activeFilter);
 });
 
 viewButtons.forEach((button) => {
@@ -90,7 +109,9 @@ const openQuickLook = (item: HTMLElement) => {
   if (quickLookSummary) quickLookSummary.textContent = item.dataset.projectSummary ?? '';
   if (quickLookStack) quickLookStack.textContent = item.dataset.projectStack ?? '';
   if (quickLookCategory) quickLookCategory.textContent = item.dataset.category ?? '';
-  if (quickLookLink) quickLookLink.href = item.getAttribute('href') ?? '/projects/';
+  if (quickLookLink) {
+    quickLookLink.href = item.dataset.projectHref ?? item.getAttribute('href') ?? '/projects/';
+  }
   if (typeof quickLook.showModal === 'function') quickLook.showModal();
   else quickLook.setAttribute('open', '');
   quickLookClose?.focus();
@@ -103,41 +124,27 @@ if (quickLook) {
   });
 }
 
-let holdTimer = 0;
-let holdOpened = false;
-
-items.forEach((item) => {
-  item.addEventListener('keydown', (event) => {
-    if (event.code === 'Space') {
-      event.preventDefault();
-      openQuickLook(item);
-    }
-  });
-
-  item.addEventListener('pointerdown', (event) => {
-    if (event.pointerType !== 'touch') return;
-    holdOpened = false;
-    holdTimer = window.setTimeout(() => {
-      holdOpened = true;
-      openQuickLook(item);
-    }, 500);
-  });
-
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach((eventName) => {
-    item.addEventListener(eventName, () => window.clearTimeout(holdTimer));
-  });
-
-  item.addEventListener('click', (event) => {
-    if (!holdOpened) return;
-    event.preventDefault();
-    holdOpened = false;
+// Quick Look is reached by an explicit "Pratinjau" button per row. It used to
+// open on Space and on a 500 ms touch-hold, which duplicated the link and stole
+// normal scrolling/tapping gestures on Android.
+document.querySelectorAll<HTMLButtonElement>('[data-quick-look-open]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const row = button
+      .closest('.project-row-wrap')
+      ?.querySelector<HTMLElement>('[data-project-item]');
+    if (row) openQuickLook(row);
   });
 });
 
-const initial = new URL(window.location.href).searchParams.get('category') ?? 'all';
-applyFilter(initial, false);
+const initialParams = new URL(window.location.href).searchParams;
+const initialFilter = initialParams.get('category') ?? 'all';
+searchQuery = (initialParams.get('q') ?? '').trim().toLocaleLowerCase();
+if (search && searchQuery) search.value = initialParams.get('q') ?? '';
+applyFilter(initialFilter, false);
 
 window.addEventListener('popstate', () => {
-  const filter = new URL(window.location.href).searchParams.get('category') ?? 'all';
-  applyFilter(filter, false);
+  const params = new URL(window.location.href).searchParams;
+  searchQuery = (params.get('q') ?? '').trim().toLocaleLowerCase();
+  if (search) search.value = params.get('q') ?? '';
+  applyFilter(params.get('category') ?? 'all', false);
 });

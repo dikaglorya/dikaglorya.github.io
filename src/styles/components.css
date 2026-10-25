@@ -2,27 +2,12 @@
    ObitoGlory — components
    Window chrome, section heads, project rows, journal cards, stack grid,
    contact block, portrait frame, request diagram.
+   Every surface is flat; separation comes from a 1px border or a tonal step.
    ========================================================================== */
 
-/* ---------- Window chrome ----------------------------------------------- */
+/* ---------- Window chrome (shared traffic-light row) --------------------- */
 
-.window {
-  overflow: hidden;
-  border-radius: var(--r-xl);
-  background: var(--surface);
-  box-shadow: var(--shadow-window);
-}
-
-.window__bar {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  min-height: 38px;
-  padding: 0 var(--s-3) 0 14px;
-  border-bottom: 1px solid var(--hairline);
-  background: linear-gradient(180deg, var(--surface-2), var(--surface));
-}
-
+/* Monochrome window chrome: three neutral dots, no traffic-light colour. */
 .dots {
   display: flex;
   gap: 6px;
@@ -30,43 +15,19 @@
 }
 
 .dots > span {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--border-strong);
   border-radius: 50%;
-  background: var(--dot-red);
-  box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 18%);
+  background: var(--surface);
 }
 
 .dots > span:nth-child(2) {
-  background: var(--dot-yellow);
+  background: var(--surface-active);
 }
 
 .dots > span:nth-child(3) {
-  background: var(--dot-green);
-}
-
-.window__title {
-  overflow: hidden;
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.02em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.window__actions {
-  margin-left: auto;
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.window__body {
-  min-width: 0;
+  background: var(--surface-secondary);
 }
 
 /* ---------- Section head ------------------------------------------------ */
@@ -75,14 +36,14 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--s-2);
-  margin-bottom: var(--s-7);
+  margin-bottom: var(--s-6);
   min-width: 0;
 }
 
 .section-head__index {
-  color: var(--accent);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--fs-micro);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -97,7 +58,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--s-2);
-  color: var(--text-2);
+  color: var(--text-secondary);
   font-size: var(--fs-sm);
   line-height: 1.55;
 }
@@ -144,7 +105,7 @@
   flex-direction: column;
   gap: 0;
   min-width: 0;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--border);
 }
 
 .project-list__head {
@@ -154,60 +115,169 @@
 .project-row {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'index body arrow'
+    '.     side side';
   align-items: start;
-  gap: var(--s-1) var(--s-4);
+  gap: var(--s-2) var(--s-3);
   padding: var(--s-5) var(--s-2) var(--s-5) 0;
-  border-bottom: 1px solid var(--hairline);
-  color: var(--text);
-  transition: background-color var(--dur-2) var(--ease), padding var(--dur-2) var(--ease);
-}
-
-.project-row::before {
-  content: '';
-  position: absolute;
-  inset: 4px -12px;
-  z-index: -1;
-  border-radius: var(--r-md);
-  background: var(--surface);
-  opacity: 0;
-  transform: scaleY(0.96);
-  transition: opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-}
-
-.project-row:hover::before,
-.project-row:focus-visible::before {
-  opacity: 1;
-  transform: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  transition: background-color var(--dur-2) var(--ease);
 }
 
 .project-row__index {
-  color: var(--text-3);
+  grid-area: index;
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--fs-micro);
   line-height: 1.9;
 }
 
 .project-row__body {
+  grid-area: body;
   display: grid;
   gap: 5px;
   min-width: 0;
 }
 
+.project-row__side {
+  grid-area: side;
+}
+
+.project-row__arrow {
+  grid-area: arrow;
+  align-self: start;
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  transition: color var(--dur-2) var(--ease);
+}
+
+/* Hover is a tonal wash plus a border shift, not an accent flood. */
+.project-row::before {
+  content: '';
+  position: absolute;
+  inset: 4px calc(-1 * var(--s-2));
+  z-index: -1;
+  border-radius: var(--r-sm);
+  background: var(--surface-secondary);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease);
+}
+
+.project-row:hover::before,
+.project-row:focus-visible::before {
+  opacity: 1;
+}
+
+.project-row:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 0;
+}
+
 .project-row__name {
   font-family: var(--font-display);
   font-size: 1.125rem;
-  font-weight: 640;
-  letter-spacing: -0.018em;
+  font-weight: 620;
+  letter-spacing: -0.014em;
   line-height: 1.3;
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 .project-row__summary {
-  color: var(--text-2);
+  color: var(--text-secondary);
   font-size: var(--fs-sm);
   line-height: 1.55;
   max-width: 56ch;
+}
+
+/* Maturity label: reads as metadata, never as a badge competing with the name.
+   The fill/border/colour triplet lives in status.css (single owner); this rule
+   only positions the shared StatusIndicator inside the project name. */
+.project-row__status {
+  margin-left: var(--s-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 2px;
+}
+
+/* ---------- Project row + optional Quick Look trigger -------------------- */
+
+.project-row-wrap {
+  position: relative;
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-row-wrap .project-row {
+  border-bottom: 0;
+}
+
+.project-row__peek {
+  position: absolute;
+  right: 0;
+  bottom: var(--s-3);
+  z-index: 1;
+  min-height: 44px;
+  padding: 0 var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--background);
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+    background-color var(--dur-2) var(--ease);
+}
+
+.project-row__peek:hover,
+.project-row__peek:focus-visible {
+  border-color: var(--border-strong);
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+}
+
+/* Below 800px the Quick Look trigger sits in normal flow under the row instead
+   of floating over it: at 320–430px the meta line ran underneath the button. */
+@media (max-width: 799.98px) {
+  .project-row-wrap {
+    padding-bottom: var(--s-3);
+  }
+
+  .project-row__peek {
+    position: static;
+    justify-self: end;
+    margin-right: var(--s-2);
+  }
+}
+
+@media (min-width: 800px) {
+  .project-row__peek {
+    top: var(--s-4);
+    right: 0;
+    bottom: auto;
+    min-height: 32px;
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease), color var(--dur-2) var(--ease),
+      border-color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
+  }
+
+  .project-row-wrap:hover .project-row__peek,
+  .project-row-wrap:focus-within .project-row__peek,
+  .project-row__peek:focus-visible {
+    opacity: 1;
+  }
+
+  .project-row-wrap .project-row {
+    padding-right: calc(var(--s-5) + 76px);
+  }
 }
 
 .project-row__side {
@@ -215,9 +285,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 14px;
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.02em;
   line-height: 1.6;
 }
@@ -226,37 +296,35 @@
   display: none;
 }
 
-.project-row__arrow {
-  align-self: center;
-  width: 16px;
-  height: 16px;
-  color: var(--text-3);
-  transition: color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-}
-
 .project-row:hover .project-row__arrow,
 .project-row:focus-visible .project-row__arrow {
-  color: var(--accent);
-  transform: translateX(3px);
+  color: var(--text-primary);
 }
 
 @media (min-width: 800px) {
   .project-list__head,
   .project-row {
     display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) minmax(150px, 210px) 24px;
+    /* The last column holds the 16px arrow in rows and the "Detail" heading in
+       the header; 24px clipped that heading (46px of text). */
+    grid-template-columns: 3rem minmax(0, 1fr) minmax(150px, 210px) 3.5rem;
     align-items: center;
     gap: var(--s-5);
   }
 
+  .project-list__head > :last-child {
+    justify-self: start;
+    white-space: nowrap;
+  }
+
   .project-list__head {
     padding: var(--s-3) var(--s-5) var(--s-3) 0;
-    color: var(--text-3);
+    color: var(--text-muted);
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: var(--fs-micro);
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    border-bottom: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--border);
   }
 
   .project-row {
@@ -290,16 +358,20 @@
   display: none;
 }
 
-.project-list[data-view='grid'] .project-row {
+.project-list[data-view='grid'] .project-row-wrap {
+  border-bottom: 0;
+  padding: 0;
+}
+
+.project-list[data-view='grid'] .project-row-wrap .project-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 20px;
   align-items: start;
   gap: var(--s-2);
   padding: var(--s-5);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
   background: var(--surface);
-  box-shadow: inset 0 1px 0 var(--highlight);
 }
 
 .project-list[data-view='grid'] .project-row::before {
@@ -307,8 +379,8 @@
 }
 
 .project-list[data-view='grid'] .project-row:hover {
-  border-color: var(--accent-line);
-  box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-sm);
+  border-color: var(--border-strong);
+  background: var(--surface-secondary);
 }
 
 .project-list[data-view='grid'] .project-row__index {
@@ -328,12 +400,20 @@
   margin-top: 4px;
 }
 
+/* In grid view the preview button sits inside the card, not on top of the link. */
+.project-list[data-view='grid'] .project-row__peek {
+  position: static;
+  justify-self: end;
+  margin: 0 var(--s-5) var(--s-4);
+  opacity: 1;
+}
+
 /* ---------- Journal cards ------------------------------------------------ */
 
 .journal-list {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-4);
+  gap: var(--s-3);
   min-width: 0;
 }
 
@@ -343,29 +423,23 @@
   align-content: start;
   gap: var(--s-2);
   padding: var(--s-6);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
   background: var(--surface);
-  box-shadow: inset 0 1px 0 var(--highlight);
-  transition:
-    border-color var(--dur-2) var(--ease),
-    background-color var(--dur-2) var(--ease),
-    transform var(--dur-2) var(--ease),
-    box-shadow var(--dur-2) var(--ease);
+  transition: border-color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
 }
 
 .journal-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-line);
-  box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-md);
+  border-color: var(--border-strong);
+  background: var(--surface-secondary);
 }
 
 .journal-card__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 8px;
-  color: var(--text-3);
-  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-size: var(--fs-micro);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -374,22 +448,24 @@
 .journal-card h3 {
   font-size: var(--fs-h3);
   line-height: 1.28;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.016em;
 }
 
 .journal-card h2 a,
 .journal-card h3 a {
   color: inherit;
-  transition: color var(--dur-2) var(--ease);
+  transition: text-decoration-color var(--dur-2) var(--ease);
 }
 
 .journal-card:hover h2 a,
 .journal-card:hover h3 a {
-  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
 .journal-card p {
-  color: var(--text-2);
+  color: var(--text-secondary);
   font-size: var(--fs-sm);
   line-height: 1.58;
   max-width: 54ch;
@@ -404,11 +480,11 @@
 
 .journal-tags li {
   padding: 2px 8px;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--border);
   border-radius: var(--r-full);
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -438,19 +514,19 @@
   align-content: start;
   gap: var(--s-3);
   padding: var(--s-5);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
   background: var(--surface);
   min-width: 0;
   transition: border-color var(--dur-2) var(--ease);
 }
 
 .stack-group:hover {
-  border-color: var(--hairline-strong);
+  border-color: var(--border-strong);
 }
 
 .stack-group h3 {
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-ui);
   font-size: var(--fs-eyebrow);
   font-weight: 600;
@@ -465,13 +541,13 @@
 }
 
 .stack-group li {
-  padding: 3px 10px;
-  border: 1px solid var(--hairline);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
   border-radius: var(--r-full);
-  background: var(--surface-2);
-  color: var(--text-2);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--fs-xs);
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -480,7 +556,7 @@
 
 .contact-block {
   padding-block: var(--section-y-tight);
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--border);
 }
 
 .contact-block__inner {
@@ -488,13 +564,10 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--s-6);
   align-items: center;
-  padding: clamp(24px, 4vw, 48px);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-2xl);
-  background:
-    radial-gradient(120% 150% at 0% 0%, var(--accent-soft), transparent 60%),
-    var(--surface);
-  box-shadow: inset 0 1px 0 var(--highlight), var(--shadow-md);
+  padding: clamp(24px, 4vw, 40px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
 }
 
 .contact-block__main {
@@ -509,7 +582,7 @@
 }
 
 .contact-block__copy {
-  color: var(--text-2);
+  color: var(--text-secondary);
   font-size: var(--fs-sm);
   max-width: 44ch;
 }
@@ -518,8 +591,8 @@
   display: grid;
   gap: var(--s-3);
   justify-items: start;
-  color: var(--text-2);
-  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  font-size: var(--fs-micro);
 }
 
 .contact-block__details p {
@@ -536,16 +609,19 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 34px;
-  color: var(--text);
+  min-height: var(--tap);
+  color: var(--text-primary);
   font-family: var(--font-ui);
   font-size: var(--fs-sm);
   overflow-wrap: anywhere;
-  transition: color var(--dur-2) var(--ease);
+  text-decoration: underline;
+  text-decoration-color: var(--border-control);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--dur-2) var(--ease);
 }
 
 .contact-block__links a:hover {
-  color: var(--accent);
+  text-decoration-color: currentColor;
 }
 
 @media (min-width: 800px) {
@@ -571,15 +647,9 @@
   gap: 0;
   margin: 0;
   overflow: hidden;
-  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
   background: var(--surface);
-  box-shadow: var(--shadow-window);
-  transition: transform var(--dur-3) var(--ease), box-shadow var(--dur-3) var(--ease);
-}
-
-.portrait-frame:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg), 0 0 0 1px var(--hairline);
 }
 
 .portrait-frame__media {
@@ -594,6 +664,12 @@
   height: 100%;
   object-fit: cover;
   object-position: center 28%;
+  filter: grayscale(1) contrast(1.04);
+  transition: filter var(--dur-3) var(--ease);
+}
+
+.portrait-frame:hover img {
+  filter: grayscale(1) contrast(1.12);
 }
 
 .portrait-frame__caption {
@@ -603,18 +679,18 @@
   gap: var(--s-3);
   min-height: 40px;
   padding: 10px var(--s-4);
-  border-top: 1px solid var(--hairline);
-  background: var(--surface-2);
-  color: var(--text-3);
+  border-top: 1px solid var(--border);
+  background: var(--surface-secondary);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
 .portrait-frame__caption span:first-child {
   overflow: hidden;
-  color: var(--text-2);
+  color: var(--text-secondary);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -627,9 +703,13 @@
 
 .route-diagram {
   overflow: hidden;
-  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
   background: var(--surface);
-  box-shadow: var(--shadow-window);
+  /* The diagram sits in a narrow column on the homepage and a wide one on the
+     project page. Size the flow from the diagram's own width, not the viewport,
+     so the five-column layout never collapses into overlapping labels. */
+  container-type: inline-size;
 }
 
 .route-diagram__bar {
@@ -638,28 +718,37 @@
   gap: var(--s-3);
   min-height: 38px;
   padding: 0 var(--s-3) 0 14px;
-  border-bottom: 1px solid var(--hairline);
-  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-secondary);
 }
 
+/* Flex children default to min-width:auto, so this label refused to shrink and
+   collapsed to 0px next to the non-wrapping tag at 320px. */
 .route-diagram__title {
+  flex: 1 1 0;
+  min-width: 0;
   overflow: hidden;
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--fs-micro);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .route-diagram__tag {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 45%;
+  overflow: hidden;
   margin-left: auto;
   padding: 2px 7px;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--border);
   border-radius: var(--r-full);
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.06em;
+  text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -675,21 +764,21 @@
   gap: 3px;
   min-width: 0;
   padding: var(--s-3) var(--s-4);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
   background: var(--surface-sunken);
 }
 
 .route-diagram__node strong {
   font-family: var(--font-display);
   font-size: 0.9375rem;
-  font-weight: 640;
-  letter-spacing: -0.015em;
+  font-weight: 620;
+  letter-spacing: -0.012em;
   line-height: 1.3;
 }
 
 .route-diagram__node > span:not(.route-diagram__index):not(.route-diagram__gateway-foot) {
-  color: var(--text-2);
+  color: var(--text-secondary);
   font-size: 0.75rem;
   line-height: 1.5;
 }
@@ -697,31 +786,30 @@
 .route-diagram__index {
   display: flex;
   gap: 6px;
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.06em;
 }
 
 .route-diagram__index span {
-  color: var(--text-3);
-  opacity: 0.75;
+  color: var(--text-secondary);
 }
 
 .route-diagram__gateway {
-  border-color: var(--accent-line);
-  background: var(--accent-soft);
+  border-color: var(--border-strong);
+  background: var(--surface-secondary);
 }
 
 .route-diagram__gateway strong {
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 .route-diagram__gateway-foot {
   margin-top: 2px;
-  color: var(--accent);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.05em;
 }
 
@@ -730,7 +818,7 @@
   justify-items: center;
   gap: 3px;
   padding-block: 2px;
-  color: var(--text-3);
+  color: var(--text-muted);
 }
 
 .route-diagram__connector-line {
@@ -738,7 +826,7 @@
   display: block;
   width: 1px;
   height: 18px;
-  background: var(--hairline-strong);
+  background: var(--border-strong);
 }
 
 .route-diagram__connector-line::after {
@@ -748,17 +836,17 @@
   bottom: 0;
   width: 5px;
   height: 5px;
-  border-right: 1px solid var(--text-3);
-  border-bottom: 1px solid var(--text-3);
+  border-right: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--text-muted);
   transform: rotate(45deg);
 }
 
 .route-diagram__connector-label {
   font-family: var(--font-mono);
-  font-size: 0.5rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-3);
+  color: var(--text-muted);
 }
 
 .route-diagram__providers {
@@ -773,9 +861,9 @@
   justify-content: space-between;
   gap: var(--s-3);
   padding-bottom: 2px;
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -783,9 +871,9 @@
 .route-diagram__provider {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 8px 10px;
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--border);
   border-radius: var(--r-sm);
   background: var(--surface-sunken);
   min-width: 0;
@@ -793,7 +881,7 @@
 
 .route-diagram__provider--fallback {
   border-style: dashed;
-  border-color: var(--accent-line);
+  border-color: var(--border-strong);
 }
 
 .route-diagram__provider-mark {
@@ -802,16 +890,17 @@
   width: 22px;
   height: 22px;
   flex: none;
-  border-radius: 6px;
-  background: var(--surface-3);
-  color: var(--text-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  background: var(--surface-active);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: var(--fs-micro);
 }
 
 .route-diagram__provider--fallback .route-diagram__provider-mark {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--surface-secondary);
+  color: var(--text-primary);
 }
 
 .route-diagram__provider-copy {
@@ -826,21 +915,21 @@
 }
 
 .route-diagram__provider-copy small {
-  color: var(--text-3);
-  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-size: var(--fs-micro);
   line-height: 1.4;
 }
 
 .route-diagram__state {
   margin-left: auto;
   flex: none;
-  color: var(--text-3);
+  color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.5625rem;
+  font-size: var(--fs-micro);
   letter-spacing: 0.06em;
 }
 
-@media (min-width: 900px) {
+@container (min-width: 620px) {
   .route-diagram__flow {
     grid-template-columns: minmax(0, 0.85fr) auto minmax(0, 1fr) auto minmax(0, 1.15fr);
     align-items: center;
@@ -855,16 +944,16 @@
   .route-diagram__connector-line {
     width: 22px;
     height: 1px;
-    background: linear-gradient(90deg, var(--hairline-strong), var(--text-3));
+    background: var(--border-strong);
   }
 
   .route-diagram__connector-line::after {
     right: 0;
     bottom: auto;
     top: -2px;
-    border-right: 1px solid var(--text-3);
+    border-right: 1px solid var(--text-muted);
     border-bottom: 0;
-    border-top: 1px solid var(--text-3);
+    border-top: 1px solid var(--text-muted);
     transform: rotate(45deg);
   }
 }

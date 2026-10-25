@@ -14,14 +14,16 @@ export type BriefData = {
 // Everything visual therefore lives in attributes or inline styles.
 const FONT =
   "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-const INK = '#1d1d1f';
-const MUTED = '#6e6e73';
-const ACCENT = '#0063cc';
-const ACCENT_SOFT = '#e8f1fc';
-const LINE = '#e5e7eb';
-const CHROME = '#f5f5f7';
-const SUNKEN = '#f2f3f5';
+// Monochrome, matching the site: neutral ink, hairline rules, no shadow.
+const INK = '#171717';
+const MUTED = '#5c5c5c';
+const ACCENT = '#171717';
+const ACCENT_SOFT = '#eaeaea';
+const LINE = '#e5e5e5';
+const CHROME = '#f7f7f7';
+const SUNKEN = '#f7f7f7';
 const PAPER = '#ffffff';
+const DOT = '#c9c9c9';
 
 const singleLine = (value: string) => value.replace(/\s+/g, ' ').trim();
 
@@ -109,9 +111,9 @@ export const buildBriefFragment = (data: BriefData) => {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
     <td align="center" style="padding:0;">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="${PAPER}" style="width:100%;max-width:600px;border-collapse:separate;border-spacing:0;background:${PAPER};border:1px solid ${LINE};border-radius:16px;overflow:hidden;box-shadow:0 18px 44px -28px rgb(15 23 42 / 45%);font-family:${FONT};">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="${PAPER}" style="width:100%;max-width:600px;border-collapse:separate;border-spacing:0;background:${PAPER};border:1px solid ${LINE};border-radius:8px;overflow:hidden;font-family:${FONT};">
         <tr>
-          <td height="3" bgcolor="${ACCENT}" style="height:3px;line-height:3px;font-size:0;background:${ACCENT};border-radius:15px 15px 0 0;">&nbsp;</td>
+          <td height="2" bgcolor="${ACCENT}" style="height:2px;line-height:2px;font-size:0;background:${ACCENT};">&nbsp;</td>
         </tr>
         <tr>
           <td bgcolor="${CHROME}" style="padding:11px 16px;background:${CHROME};border-bottom:1px solid ${LINE};">
@@ -120,11 +122,11 @@ export const buildBriefFragment = (data: BriefData) => {
                 <td width="60" style="width:60px;font-size:0;line-height:0;">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                     <tr>
-                      <td width="11" height="11" style="width:11px;height:11px;border-radius:6px;background:#ff5f57;font-size:0;line-height:0;">&nbsp;</td>
+                      <td width="9" height="9" style="width:9px;height:9px;border-radius:5px;background:${DOT};font-size:0;line-height:0;">&nbsp;</td>
                       <td width="7" style="width:7px;font-size:0;line-height:0;">&nbsp;</td>
-                      <td width="11" height="11" style="width:11px;height:11px;border-radius:6px;background:#febc2e;font-size:0;line-height:0;">&nbsp;</td>
+                      <td width="9" height="9" style="width:9px;height:9px;border-radius:5px;background:${DOT};font-size:0;line-height:0;">&nbsp;</td>
                       <td width="7" style="width:7px;font-size:0;line-height:0;">&nbsp;</td>
-                      <td width="11" height="11" style="width:11px;height:11px;border-radius:6px;background:#28c840;font-size:0;line-height:0;">&nbsp;</td>
+                      <td width="9" height="9" style="width:9px;height:9px;border-radius:5px;background:${DOT};font-size:0;line-height:0;">&nbsp;</td>
                     </tr>
                   </table>
                 </td>
@@ -141,7 +143,7 @@ export const buildBriefFragment = (data: BriefData) => {
                 <td width="52" valign="middle" style="width:52px;font-size:0;line-height:0;">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                     <tr>
-                      <td width="40" height="40" align="center" valign="middle" bgcolor="${ACCENT_SOFT}" style="width:40px;height:40px;border-radius:20px;background:${ACCENT_SOFT};font-family:${FONT};font-size:14px;line-height:40px;font-weight:600;color:${ACCENT};">${escapeHtml(getInitials(values.name))}</td>
+                      <td width="40" height="40" align="center" valign="middle" bgcolor="${ACCENT_SOFT}" style="width:40px;height:40px;border-radius:20px;background:${ACCENT_SOFT};font-family:${FONT};font-size:14px;line-height:40px;font-weight:600;color:${INK};">${escapeHtml(getInitials(values.name))}</td>
                     </tr>
                   </table>
                 </td>
@@ -177,7 +179,7 @@ export const buildBriefFragment = (data: BriefData) => {
         </tr>
         <tr>
           <td style="padding:18px 24px 0;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${SUNKEN}" style="border-collapse:separate;background:${SUNKEN};border-radius:12px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${SUNKEN}" style="border-collapse:separate;background:${SUNKEN};border:1px solid ${LINE};border-radius:6px;">
               <tr>
                 <td style="padding:16px 18px;font-family:${FONT};">
                   <div style="font-size:12px;line-height:1.4;color:${MUTED};font-weight:600;">Kebutuhan</div>
@@ -190,7 +192,7 @@ export const buildBriefFragment = (data: BriefData) => {
         <tr>
           <td style="padding:20px 24px 24px;font-family:${FONT};">
             <div style="border-top:1px solid ${LINE};padding-top:14px;font-size:12px;line-height:1.6;color:${MUTED};">
-              Dikirim dari <a href="${escapeHtml(source.href)}" target="_blank" style="color:${ACCENT};text-decoration:none;">${escapeHtml(source.label)}</a><br>
+              Dikirim dari <a href="${escapeHtml(source.href)}" target="_blank" style="color:${INK};text-decoration:underline;">${escapeHtml(source.label)}</a><br>
               ${escapeHtml(values.siteName)}, ${escapeHtml(values.location)}
             </div>
           </td>

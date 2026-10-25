@@ -1,11 +1,12 @@
 ---
 import '../styles/fonts.css';
-import '../styles/tokens.css';
-import '../styles/global.css';
-import '../styles/pages.css';
+import '../styles/base.css';
+import '../styles/chrome.css';
+import '../styles/components.css';
+import '../styles/status.css';
+import '../styles/page-hero.css';
 
 import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -91,13 +92,31 @@ const pageSchemas = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#0a0b0c" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#111111" data-theme-color />
+    <meta name="color-scheme" content="dark light" />
+    <script is:inline>
+      // Resolve the theme before the first paint so neither theme flashes.
+      // The chosen value is stored under the same key the toggle writes.
+      (() => {
+        const root = document.documentElement;
+        let choice = null;
+        try {
+          choice = localStorage.getItem('theme');
+        } catch {
+          choice = null;
+        }
+        if (choice !== 'light' && choice !== 'dark') {
+          choice = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        root.dataset.theme = choice;
+        const meta = document.querySelector('meta[data-theme-color]');
+        if (meta) meta.setAttribute('content', choice === 'light' ? '#ffffff' : '#111111');
+      })();
+    </script>
     <meta name="author" content={site.personName} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-    <link rel="preload" as="font" type="font/woff2" href={newsreaderFont} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={interFont} crossorigin />
     <script is:inline>
       document.documentElement.classList.add('js');
@@ -112,6 +131,7 @@ const pageSchemas = [
     <meta name="description" content={description} />
     {!noindex && <link rel="canonical" href={canonicalURL} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.svg" sizes="any" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap.xml" />
     {socialLinks.map((link) => <link rel="me" href={link.href} />)}
@@ -143,7 +163,7 @@ const pageSchemas = [
   <body id="top" class={bodyClass}>
     <a class="skip-link" href="#main">Lewati ke konten</a>
     <Header />
-    <main id="main">
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />

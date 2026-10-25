@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/content.css';
 import { services } from '../data/services';
 import { site } from '../data/site';
 
@@ -31,7 +32,7 @@ const schema = {
   description="Hubungi DikaGlorya (DikaOfc, DikaCode), programmer dari Kendal, untuk jasa website, bot, tools, dan perbaikan sistem."
   schema={schema}
 >
-  <section class="page-hero page-hero--contact" aria-labelledby="contact-title">
+  <section class="page-hero" aria-labelledby="contact-title">
     <div class="container">
       <p class="page-hero__eyebrow mono">Kontak · DikaOfc</p>
       <h1 id="contact-title">Mari bahas proyekmu.</h1>
@@ -163,20 +164,28 @@ const schema = {
         <h2>Kontak langsung</h2>
         <ul class="channel-list">
           <li>
-            <a href={site.telegramUrl} rel="me">Telegram</a>
-            <span>@{site.telegram}</span>
+            <a class="channel-list__row" href={site.telegramUrl} rel="me">
+              <span class="channel-list__name">Telegram</span>
+              <span class="channel-list__handle">@{site.telegram}</span>
+            </a>
           </li>
           <li>
-            <a href={`mailto:${site.email}`}>Email</a>
-            <span>{site.email}</span>
+            <a class="channel-list__row" href={`mailto:${site.email}`}>
+              <span class="channel-list__name">Email</span>
+              <span class="channel-list__handle">{site.email}</span>
+            </a>
           </li>
           <li>
-            <a href={site.github} rel="me noopener noreferrer" target="_blank">GitHub</a>
-            <span>@{site.githubHandle}</span>
+            <a class="channel-list__row" href={site.github} rel="me noopener noreferrer" target="_blank">
+              <span class="channel-list__name">GitHub</span>
+              <span class="channel-list__handle">@{site.githubHandle}</span>
+            </a>
           </li>
           <li>
-            <a href={site.instagram} rel="me noopener noreferrer" target="_blank">Instagram</a>
-            <span>@xxcdicka</span>
+            <a class="channel-list__row" href={site.instagram} rel="me noopener noreferrer" target="_blank">
+              <span class="channel-list__name">Instagram</span>
+              <span class="channel-list__handle">@xxcdicka</span>
+            </a>
           </li>
         </ul>
 

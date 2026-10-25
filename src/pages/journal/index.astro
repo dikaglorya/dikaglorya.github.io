@@ -2,6 +2,7 @@
 import ContactBlock from '../../components/ContactBlock.astro';
 import SectionHead from '../../components/SectionHead.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/detail.css';
 import { articles } from '../../data/articles';
 import { site } from '../../data/site';
 
@@ -46,7 +47,7 @@ const schema = {
   <section class="section--tight" aria-labelledby="notes-title" data-reveal>
     <div class="container">
       <SectionHead id="notes-title" index="01 / Arsip" title="Catatan terbit" meta="Setiap artikel merujuk pada detail implementasi nyata." />
-      <div class="journal-list journal-list--index">
+      <div class="journal-list">
         {articles.map((article) => (
           <article class="journal-card">
             <p class="mono journal-card__meta">

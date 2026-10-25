@@ -1,546 +1,388 @@
 /* ==========================================================================
-   OBITOGLORY — design tokens and base layer
-   Dark editorial system: ink, warm paper, one glacier accent, Newsreader.
+   ObitoGlory — design tokens
+   A monochrome, macOS-inspired system: neutral greys, hairline borders, tight
+   type, no shadows, no gradients, no translucency. Dark is authored first and
+   is the fallback; light is applied by system preference or an explicit
+   [data-theme] choice.
+
+   Two layers live here on purpose:
+     1. semantic tokens (--background, --foreground, ...) — use these in new CSS
+     2. compatibility aliases (--bg, --text, --accent, ...) — the older names the
+        existing stylesheets already reference, remapped onto the semantic layer
+   Never hardcode a palette value outside this file.
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
-  /* Colour --------------------------------------------------------------- */
-  --ink: #0a0b0c;
-  --ink-2: #101315;
-  --ink-3: #171b1e;
-  --paper: #edeae3;
-  --paper-2: #e2ded5;
-  --paper-ink: #111315;
+  /* ---------- Semantic: dark ------------------------------------------- */
+  --background: #111111;
+  --background-secondary: #181818;
+  --surface: #181818;
+  --surface-secondary: #202020;
+  --surface-elevated: #202020;
+  --surface-sunken: #0c0c0c;
+  --surface-active: #262626;
 
-  --text: #f0eee8;
-  --text-2: #b3b1aa;
-  --text-3: #85857f;
-  --text-ink: #111315;
-  --text-ink-2: #4d4f4b;
+  --foreground: #f5f5f5;
+  --text-primary: #f5f5f5;
+  --text-secondary: #a1a1a1;
+  --text-muted: #939393;
+  --text-inverse: #111111;
 
-  --accent: #9bdce8;
-  --accent-deep: #0a6572;
-  --accent-soft: rgb(155 220 232 / 13%);
-  --accent-ink: #07181b;
+  --border: #303030;
+  --border-strong: #444444;
+  --border-control: #666666;
+  --separator: #252525;
+  --focus-ring: #f5f5f5;
+  --scrim: rgb(0 0 0 / 58%);
 
-  --line: rgb(240 238 232 / 16%);
-  --line-soft: rgb(240 238 232 / 9%);
-  --line-strong: rgb(240 238 232 / 30%);
-  --line-paper: rgb(17 19 21 / 18%);
-  --line-paper-strong: rgb(17 19 21 / 42%);
+  --interactive: #f5f5f5;
+  --interactive-hover: #ffffff;
+  --interactive-active: #d4d4d4;
+  --interactive-soft: rgb(255 255 255 / 7%);
+  --interactive-line: #4a4a4a;
+  --interactive-ink: #111111;
 
-  --field: #101315;
-  --field-2: #15191c;
-  --ok: #8fe0a6;
-  --danger: #ff9c93;
+  /* Status may use restrained hue for meaning; it is never the only signal.
+     Each variant is a triplet: foreground, fill, border. The foreground is the
+     only value allowed to carry text, and it clears 4.5:1 on its own fill, on
+     --surface and on --background. Pending is deliberately the neutral triplet:
+     "waiting" is carried by the icon and the label, not by a colour. */
+  --status-success: #7cc79c;
+  --status-warning: #d8b26a;
+  --status-danger: #e89696;
+  --status-info: #a8bedb;
+  --status-neutral: #a1a1a1;
+  --status-pending: var(--status-neutral);
 
-  /* Type ----------------------------------------------------------------- */
-  --font-display: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  --font-ui: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --status-success-bg: #15201a;
+  --status-warning-bg: #201b12;
+  --status-danger-bg: #221616;
+  --status-info-bg: #151a21;
+  --status-neutral-bg: #1c1c1c;
+  --status-pending-bg: var(--status-neutral-bg);
 
-  --step--1: clamp(0.75rem, 0.72rem + 0.1vw, 0.8125rem);
-  --step-0: clamp(1rem, 0.97rem + 0.18vw, 1.125rem);
-  --step-1: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
-  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
-  --step-3: clamp(2rem, 1.6rem + 1.8vw, 3rem);
-  --step-4: clamp(2.75rem, 2rem + 3.4vw, 4.75rem);
-  --step-5: clamp(3.25rem, 2rem + 5.6vw, 6.25rem);
-  --step-hero: clamp(3.8rem, 13.6vw, 12rem);
+  --status-success-border: #2a3d31;
+  --status-warning-border: #3d3323;
+  --status-danger-border: #442b2b;
+  --status-info-border: #2b3646;
+  --status-neutral-border: #303030;
+  --status-pending-border: var(--status-neutral-border);
 
-  --leading-none: 0.82;
-  --leading-tight: 1.05;
-  --leading-snug: 1.3;
-  --leading-body: 1.62;
+  /* Legacy names still referenced by older stylesheets. */
+  --status-error: var(--status-danger);
+  --status-success-soft: var(--status-success-bg);
+  --status-warning-soft: var(--status-warning-bg);
+  --status-error-soft: var(--status-danger-bg);
+  --status-info-soft: var(--status-info-bg);
 
-  /* Space ---------------------------------------------------------------- */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
-  --space-10: 8rem;
-  --space-11: 10rem;
-  --space-12: 12rem;
+  /* ---------- Compatibility aliases ------------------------------------ */
+  --bg: var(--background);
+  --bg-2: var(--background-secondary);
+  --surface-2: var(--surface-secondary);
+  --surface-3: var(--surface-active);
+  /* Sits behind the header; opaque, because there is no backdrop blur. */
+  --material: var(--background);
+  --material-strong: var(--surface-elevated);
+  --material-thin: var(--background-secondary);
 
-  --section: clamp(5.5rem, 10vw, 9.5rem);
-  --section-tight: clamp(3.5rem, 6vw, 6rem);
-  --gutter: clamp(1.25rem, 4vw, 4.5rem);
-  --container: 1440px;
-  --reading: 720px;
+  --text: var(--text-primary);
+  --text-2: var(--text-secondary);
+  --text-3: var(--text-muted);
+
+  --accent: var(--interactive);
+  --accent-hover: var(--interactive-hover);
+  --accent-fill: var(--interactive);
+  --accent-fill-hover: var(--interactive-active);
+  --accent-ink: var(--interactive-ink);
+  --accent-soft: var(--interactive-soft);
+  --accent-line: var(--interactive-line);
+
+  --ok: var(--status-success);
+  --ok-soft: var(--status-success-bg);
+  --warn: var(--status-warning);
+  --danger: var(--status-danger);
+  --info: var(--status-info);
+
+  --hairline: var(--separator);
+  --hairline-strong: var(--border);
+  --divider: var(--separator);
+  /* No inset highlight anywhere: a 1px light line is a shadow, not a border. */
+  --highlight: transparent;
+
+  --dot: var(--text-muted);
+
+  /* ---------- Type ------------------------------------------------------ */
+  /* Native first: Apple gets SF, Windows gets Segoe, everything else Inter.
+     No webfont is fetched on Apple platforms. */
+  --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable Text',
+    'Segoe UI', 'Inter Variable', Inter, system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display',
+    'Segoe UI', 'Inter Variable', Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'JetBrains Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+
+  /* Fluid ladder. Floors are real mobile values rather than a desktop clamp
+     bottoming out, so 320-430px gets tuned steps. Nothing renders below 11px. */
+  --fs-micro: 0.6875rem;
+  --fs-eyebrow: 0.6875rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --fs-lg: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --fs-h4: 1.0625rem;
+  --fs-h3: clamp(1.1875rem, 1.1rem + 0.45vw, 1.375rem);
+  --fs-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.125rem);
+  --fs-h1: clamp(1.875rem, 1.45rem + 2vw, 2.75rem);
+  --fs-display: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem);
+  --fs-title: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+
+  --lh-tight: 1.06;
+  --lh-heading: 1.18;
+  --lh-body: 1.6;
+
+  --tracking-display: -0.028em;
+  --tracking-h2: -0.02em;
+  --tracking-h3: -0.012em;
+
+  /* ---------- Space ----------------------------------------------------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-7: 32px;
+  --s-8: 40px;
+  --s-9: 48px;
+  --s-10: 64px;
+  --s-11: 80px;
+  --s-12: 96px;
+  --s-13: 128px;
+  --s-14: 160px;
+
+  /* Width ladder: grows with the monitor instead of floating a fixed column
+     in the middle of a 2560px screen. */
+  --gutter: clamp(20px, 4.2vw, 56px);
+  --page-max: 1200px;
+  --reading-max: 720px;
   --measure: 66ch;
 
-  /* Shape and depth ------------------------------------------------------ */
-  --radius: 2px;
-  --radius-md: 4px;
-  --radius-round: 999px;
-  --shadow-plate: 0 36px 90px -50px rgb(0 0 0 / 72%);
-  --shadow-lift: 0 18px 50px -30px rgb(0 0 0 / 60%);
+  /* 56px on Android (reclaims 4px of first screen), 64px once there is room. */
+  --header-h: 56px;
+  /* Minimum interactive target (WCAG 2.2 2.5.5, Android thumbs). */
+  --tap: 44px;
+  --toolbar-h: 48px;
+  --row-h: 56px;
+  --section-y: clamp(56px, 5vw + 24px, 120px);
+  --section-y-tight: clamp(40px, 4vw + 8px, 80px);
+  --gap: clamp(16px, 2vw, 24px);
 
-  /* Motion --------------------------------------------------------------- */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring: cubic-bezier(0.34, 1.26, 0.64, 1);
-  --dur-1: 140ms;
-  --dur-2: 240ms;
-  --dur-3: 420ms;
-  --dur-4: 760ms;
+  /* Small, software-like corners. macOS windows are 10-12px, not 22-28px. */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 10px;
+  --r-2xl: 12px;
+  --r-tile: 6px;
+  --r-full: 999px;
 
-  --header-h: 68px;
+  /* Kept as names so old declarations cannot resurrect a shadow. */
+  --shadow-1: none;
+  --shadow-2: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-window: none;
+  --shadow-plate: none;
+  --shadow-focus: none;
+
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 100ms;
+  --dur-2: 160ms;
+  --dur-3: 240ms;
+  --dur-4: 420ms;
+
+  --reveal-y: 8px;
+  --progress: 0;
 }
 
-/* Reset ------------------------------------------------------------------ */
+/* ---------- Semantic: light ---------------------------------------------
+   Applied when the system asks for light and the visitor has not chosen dark.
+   Keep this block in sync with the explicit [data-theme='light'] below.
+   ------------------------------------------------------------------------ */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+    --background: #ffffff;
+    --background-secondary: #f7f7f7;
+    --surface: #ffffff;
+    --surface-secondary: #f7f7f7;
+    --surface-elevated: #ffffff;
+    --surface-sunken: #f7f7f7;
+    --surface-active: #efefef;
 
-html {
-  -webkit-text-size-adjust: 100%;
-  background: var(--ink);
-  scroll-behavior: smooth;
-}
+    --foreground: #171717;
+    --text-primary: #171717;
+    --text-secondary: #5c5c5c;
+    --text-muted: #666666;
+    --text-inverse: #ffffff;
 
-@media (hover: hover) and (pointer: fine) {
-  html {
-    scrollbar-gutter: stable;
+    --border: #e5e5e5;
+    --border-strong: #c9c9c9;
+    --border-control: #8a8a8a;
+    --separator: #efefef;
+    --focus-ring: #171717;
+    --scrim: rgb(23 23 23 / 32%);
+
+    --interactive: #171717;
+    --interactive-hover: #000000;
+    --interactive-active: #3a3a3a;
+    --interactive-soft: rgb(0 0 0 / 4%);
+    --interactive-line: #c9c9c9;
+    --interactive-ink: #ffffff;
+
+    --status-success: #1d6b43;
+    --status-warning: #7a5200;
+    --status-danger: #a3241c;
+    --status-info: #1f4f86;
+    --status-neutral: #5c5c5c;
+    --status-pending: var(--status-neutral);
+
+    --status-success-bg: #eaf3ee;
+    --status-warning-bg: #f7f0e2;
+    --status-danger-bg: #f9e9e8;
+    --status-info-bg: #e9eef5;
+    --status-neutral-bg: #f0f0f0;
+    --status-pending-bg: var(--status-neutral-bg);
+
+    --status-success-border: #c3ddcd;
+    --status-warning-border: #e0cfae;
+    --status-danger-border: #e8bdb9;
+    --status-info-border: #c2d0e2;
+    --status-neutral-border: #dcdcdc;
+    --status-pending-border: var(--status-neutral-border);
+
+    --status-error: var(--status-danger);
+    --status-success-soft: var(--status-success-bg);
+    --status-warning-soft: var(--status-warning-bg);
+    --status-error-soft: var(--status-danger-bg);
+    --status-info-soft: var(--status-info-bg);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+/* Explicit choice wins over the system preference. */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --background: #ffffff;
+  --background-secondary: #f7f7f7;
+  --surface: #ffffff;
+  --surface-secondary: #f7f7f7;
+  --surface-elevated: #ffffff;
+  --surface-sunken: #f7f7f7;
+  --surface-active: #efefef;
+
+  --foreground: #171717;
+  --text-primary: #171717;
+  --text-secondary: #5c5c5c;
+  --text-muted: #666666;
+  --text-inverse: #ffffff;
+
+  --border: #e5e5e5;
+  --border-strong: #c9c9c9;
+  --border-control: #8a8a8a;
+  --separator: #efefef;
+  --focus-ring: #171717;
+  --scrim: rgb(23 23 23 / 32%);
+
+  --interactive: #171717;
+  --interactive-hover: #000000;
+  --interactive-active: #3a3a3a;
+  --interactive-soft: rgb(0 0 0 / 4%);
+  --interactive-line: #c9c9c9;
+  --interactive-ink: #ffffff;
+
+  --status-success: #1d6b43;
+  --status-warning: #7a5200;
+  --status-danger: #a3241c;
+  --status-info: #1f4f86;
+  --status-neutral: #5c5c5c;
+  --status-pending: var(--status-neutral);
+
+  --status-success-bg: #eaf3ee;
+  --status-warning-bg: #f7f0e2;
+  --status-danger-bg: #f9e9e8;
+  --status-info-bg: #e9eef5;
+  --status-neutral-bg: #f0f0f0;
+  --status-pending-bg: var(--status-neutral-bg);
+
+  --status-success-border: #c3ddcd;
+  --status-warning-border: #e0cfae;
+  --status-danger-border: #e8bdb9;
+  --status-info-border: #c2d0e2;
+  --status-neutral-border: #dcdcdc;
+  --status-pending-border: var(--status-neutral-border);
+
+  --status-error: var(--status-danger);
+  --status-success-soft: var(--status-success-bg);
+  --status-warning-soft: var(--status-warning-bg);
+  --status-error-soft: var(--status-danger-bg);
+  --status-info-soft: var(--status-info-bg);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* ---------- Width ladder -------------------------------------------------
+   Without this, 1920 and 2560 render the same 1200px column with 673px of
+   dead gutter on each side.
+   ------------------------------------------------------------------------ */
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 64px;
+    --row-h: 64px;
   }
 }
 
-body {
-  margin: 0;
-  min-height: 100svh;
-  background: var(--ink);
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: var(--step-0);
-  font-weight: 400;
-  line-height: var(--leading-body);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: clip;
-  overscroll-behavior-y: none;
-}
-
-body.menu-open {
-  overflow: hidden;
-}
-
-#main,
-#main > *,
-.container,
-.container > * {
-  min-width: 0;
-}
-
-img,
-svg,
-video,
-canvas {
-  display: block;
-  max-width: 100%;
-}
-
-img {
-  height: auto;
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-p,
-figure,
-blockquote,
-dl,
-dd,
-dt {
-  margin: 0;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-display);
-  font-weight: 360;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-p {
-  max-width: var(--measure);
-  text-wrap: pretty;
-}
-
-strong,
-b {
-  font-weight: 600;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-[id],
-a,
-button,
-input,
-select,
-textarea,
-summary {
-  scroll-margin-top: calc(var(--header-h) + 24px);
-}
-
-::selection {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-  border-radius: var(--radius);
-}
-
-/* Utilities -------------------------------------------------------------- */
-
-.container {
-  width: min(100% - (2 * var(--gutter)), var(--container));
-  margin-inline: auto;
-}
-
-.container--narrow {
-  width: min(100% - (2 * var(--gutter)), var(--reading));
-}
-
-.mono {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-}
-
-.muted {
-  color: var(--text-2);
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.skip-link {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 500;
-  padding: 12px 18px;
-  border: 1px solid var(--ink);
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  transform: translateY(-200%);
-  transition: transform var(--dur-2) var(--ease-out);
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
-/* Shared marks ----------------------------------------------------------- */
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  line-height: 1.4;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-
-.status::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  background: var(--ok);
-  box-shadow: 0 0 0 4px rgb(143 224 166 / 12%);
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-2);
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.eyebrow::before {
-  content: '';
-  width: 28px;
-  height: 1px;
-  flex: 0 0 auto;
-  background: var(--accent);
-}
-
-/* Links and buttons ------------------------------------------------------ */
-
-.link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  color: var(--text);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  text-decoration: none;
-  background-image: linear-gradient(var(--accent), var(--accent));
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 100% 1px;
-  transition: color var(--dur-2) var(--ease-out), background-size var(--dur-2) var(--ease-out);
-}
-
-.link:hover,
-.link:focus-visible {
-  color: var(--accent);
-  background-size: 0 1px;
-}
-
-.link .arrow-icon {
-  transition: transform var(--dur-2) var(--ease-out);
-}
-
-.link:hover .arrow-icon {
-  transform: translateX(4px);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 48px;
-  padding: 12px 22px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  background: transparent;
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 0.9375rem;
-  font-weight: 520;
-  line-height: 1.2;
-  letter-spacing: -0.005em;
-  text-align: center;
-  text-decoration: none;
-  transition:
-    background-color var(--dur-2) var(--ease-out),
-    border-color var(--dur-2) var(--ease-out),
-    color var(--dur-2) var(--ease-out),
-    transform var(--dur-2) var(--ease-out);
-}
-
-.btn:hover {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--ink);
-}
-
-.btn:active {
-  transform: translateY(1px);
-}
-
-.btn--primary {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-
-.btn--primary:hover {
-  border-color: var(--paper);
-  background: var(--paper);
-  color: var(--paper-ink);
-}
-
-.btn--small {
-  min-height: 44px;
-  padding: 9px 16px;
-  font-size: 0.875rem;
-}
-
-.btn .arrow-icon {
-  transition: transform var(--dur-2) var(--ease-out);
-}
-
-.btn:hover .arrow-icon {
-  transform: translateX(3px);
-}
-
-/* Paper fields invert the whole component set. */
-.paper {
-  background: var(--paper);
-  color: var(--text-ink);
-}
-
-.paper .mono,
-.paper .muted {
-  color: var(--text-ink-2);
-}
-
-.paper .link {
-  color: var(--text-ink);
-  background-image: linear-gradient(var(--accent-deep), var(--accent-deep));
-}
-
-.paper .link:hover {
-  color: var(--accent-deep);
-}
-
-.paper .btn {
-  border-color: var(--line-paper-strong);
-  color: var(--text-ink);
-}
-
-.paper .btn:hover {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.paper .btn--primary {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.paper .btn--primary:hover {
-  border-color: var(--accent-deep);
-  background: var(--accent-deep);
-  color: var(--paper);
-}
-
-.paper :focus-visible {
-  outline-color: var(--accent-deep);
-}
-
-/* Arrow icon ------------------------------------------------------------- */
-
-.arrow-icon {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: square;
-}
-
-.arrow-icon--down {
-  transform: rotate(90deg);
-}
-
-.arrow-icon--up {
-  transform: rotate(-90deg);
-}
-
-/* Reveal primitives. Content stays visible without JS; the `.js` class is
-   added in the document head, so a failed script can never hide the page. */
-
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(22px);
-}
-
-.js [data-reveal].is-in {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 700ms var(--ease-out),
-    transform 700ms var(--ease-out);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.js [data-reveal='fade'] {
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .js [data-reveal],
-  .js [data-reveal].is-in {
-    opacity: 1;
-    transform: none;
-    transition: none;
+@media (min-width: 1440px) {
+  :root {
+    --page-max: 1280px;
+    --gutter: clamp(40px, 5vw, 72px);
+    --section-y: clamp(80px, 6vw, 136px);
   }
+}
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+@media (min-width: 1920px) {
+  :root {
+    --page-max: 1400px;
+    --gutter: 96px;
+    --section-y: 152px;
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --page-max: 1520px;
+    --gutter: 120px;
+  }
+}
+
+/* ---------- Environment preferences ------------------------------------- */
+
+/* "Reduce transparency" is a no-op by design: nothing is translucent. */
+
+/* macOS "Increase contrast": firm up hairlines and secondary text. */
+@media (prefers-contrast: more) {
+  :root {
+    --border: var(--border-strong);
+    --separator: var(--border-strong);
+    --text-muted: var(--text-secondary);
   }
 }

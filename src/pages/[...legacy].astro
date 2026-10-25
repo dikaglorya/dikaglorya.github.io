@@ -40,21 +40,33 @@ const targetURL = new URL(target, site.url).href;
     <link rel="canonical" href={targetURL} />
     <title>Dipindahkan ke {label} | ObitoGlory</title>
     <style>
+      :root {
+        color-scheme: light dark;
+      }
       body {
         display: grid;
         min-height: 100svh;
         margin: 0;
         place-items: center;
-        background: #08090b;
-        color: #e4eaf2;
-        font-family: system-ui, sans-serif;
+        background: #ffffff;
+        color: #171717;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
       }
       main {
         max-width: 36rem;
         padding: 2rem;
+        line-height: 1.6;
       }
       a {
-        color: #8ec9dc;
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #111111;
+          color: #f5f5f5;
+        }
       }
     </style>
   </head>

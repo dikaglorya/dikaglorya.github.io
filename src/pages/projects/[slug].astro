@@ -1,8 +1,11 @@
 ---
 import ContactBlock from '../../components/ContactBlock.astro';
 import RouteDiagram from '../../components/RouteDiagram.astro';
+import StatusIndicator from '../../components/StatusIndicator.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getNextProject, projects, type Project } from '../../data/projects';
+import '../../styles/detail.css';
+import { getNextProject, projects, projectStatusLabel, type Project } from '../../data/projects';
+import { PROJECT_STATUS_STATES } from '../../lib/status-registry';
 import { site } from '../../data/site';
 
 export function getStaticPaths() {
@@ -71,6 +74,11 @@ const schema = {
         </nav>
 
         <div class="project-hero__meta mono">
+          <StatusIndicator
+            status={PROJECT_STATUS_STATES[project.status]}
+            label={projectStatusLabel[project.status]}
+            size="block"
+          />
           <span>Proyek {paddedOrder}</span>
           <span>{project.type}</span>
           <span>{project.category}</span>
@@ -155,6 +163,15 @@ const schema = {
           <div class="spec__row">
             <dt class="spec__label mono">Jenis</dt>
             <dd class="spec__value">{project.type}</dd>
+          </div>
+          <div class="spec__row">
+            <dt class="spec__label mono">Status</dt>
+            <dd class="spec__value">
+              <StatusIndicator
+                status={PROJECT_STATUS_STATES[project.status]}
+                label={projectStatusLabel[project.status]}
+              />
+            </dd>
           </div>
           <div class="spec__row">
             <dt class="spec__label mono">Kategori</dt>

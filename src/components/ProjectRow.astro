@@ -1,36 +1,69 @@
 ---
 import Arrow from './Arrow.astro';
-import type { Project } from '../data/projects';
+import StatusIndicator from './StatusIndicator.astro';
+import { projectStatusLabel, type Project } from '../data/projects';
+import { PROJECT_STATUS_STATES } from '../lib/status-registry';
 
 interface Props {
   project: Project;
   index: number;
+  // Only the projects index renders a Quick Look button; the homepage rows stay
+  // a single clean link.
+  withQuickLook?: boolean;
 }
 
-const { project, index } = Astro.props;
+const { project, index, withQuickLook = false } = Astro.props;
 const paddedIndex = String(index).padStart(2, '0');
+
+const status = project.status;
+// Maturity word -> registry state. Colour and icon come from the registry; the
+// Indonesian label stays here because that is copy, not semantics.
+const statusState = PROJECT_STATUS_STATES[status];
 ---
 
-<a
-  class="project-row"
-  href={`/projects/${project.slug}/`}
-  data-project-item
-  data-category={project.category}
-  data-project-name={project.name}
-  data-project-summary={project.summary}
-  data-project-stack={project.stack.join(' · ')}
->
-  <span class="project-row__index mono" aria-hidden="true">{paddedIndex}</span>
-  <span class="project-row__body">
-    <span class="project-row__name">{project.name}</span>
-    <span class="project-row__summary">{project.summary}</span>
-  </span>
-  <span class="project-row__side">
-    <span class="project-row__type mono">{project.type}</span>
-    <span class="project-row__availability mono">
-      {project.link ? project.link.label : 'Source belum publik'}
+<div class="project-row-wrap">
+  <a
+    class="project-row"
+    href={`/projects/${project.slug}/`}
+    data-project-item
+    data-category={project.category}
+    data-project-name={project.name}
+    data-project-summary={project.summary}
+    data-project-stack={project.stack.join(' · ')}
+    data-project-status={projectStatusLabel[status]}
+    data-project-href={`/projects/${project.slug}/`}
+  >
+    <span class="project-row__index mono" aria-hidden="true">{paddedIndex}</span>
+    <span class="project-row__body">
+      <span class="project-row__name">
+        {project.name}
+        <StatusIndicator
+          status={statusState}
+          label={projectStatusLabel[status]}
+          filled
+          size="block"
+          class="project-row__status"
+        />
+      </span>
+      <span class="project-row__summary">{project.summary}</span>
     </span>
-    <span class="project-row__stack mono">{project.stack.join(' · ')}</span>
-  </span>
-  <Arrow class="project-row__arrow" />
-</a>
+    <span class="project-row__side">
+      <span class="project-row__type mono">{project.type}</span>
+      <span class="project-row__availability mono">
+        {project.link ? project.link.label : 'Source belum publik'}
+      </span>
+      <span class="project-row__stack mono">{project.stack.join(' · ')}</span>
+    </span>
+    <Arrow class="project-row__arrow" />
+  </a>
+  {withQuickLook && (
+    <button
+      class="project-row__peek mono"
+      type="button"
+      data-quick-look-open
+      aria-label={`Pratinjau cepat ${project.name}`}
+    >
+      Pratinjau
+    </button>
+  )}
+</div>
