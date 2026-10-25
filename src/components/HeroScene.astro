@@ -1,0 +1,15 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['hero__scene', className]} data-hero-scene aria-hidden="true">
+  <canvas data-hero-canvas></canvas>
+  <div class="hero__fallback" data-hero-fallback hidden></div>
+</div>
+
+<script>
+  import '../scripts/hero-scene';
+</script>

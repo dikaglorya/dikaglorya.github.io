@@ -1,0 +1,14 @@
+/* TEAM */
+  Developer: DikaGlorya (DikaOfc, DikaCode)
+  Site: ObitoGlory
+  Location: Kendal, Jawa Tengah, Indonesia
+  Contact: dikasukasukaa@gmail.com
+  Telegram: @dikaacode
+
+/* SITE */
+  Standards: HTML, CSS, TypeScript, Astro
+  Components: WebGL, SVG, CSS motion
+  Language: Indonesian
+  Doctype: HTML5
+  Software: Astro, Node.js
+  Last update: 2026-10-25

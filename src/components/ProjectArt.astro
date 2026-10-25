@@ -1,0 +1,304 @@
+---
+interface Props {
+  slug: string;
+  name: string;
+  index?: number | string;
+  class?: string;
+}
+
+const { slug, name, index = '01', class: className = '' } = Astro.props;
+const uid = slug.replace(/[^a-z0-9]/g, '') || 'project';
+const order = String(index).padStart(2, '0');
+const known = [
+  'dikaroute',
+  'pentesterbot',
+  'obitobuff',
+  'telegrambot-ai',
+  'remoteuniversal',
+  'freebuff-patch',
+  'agentbuff',
+  'dikaroute-website',
+  'pentesterbot-website',
+  'website',
+];
+const variant = known.includes(slug) ? slug : 'website';
+---
+
+<svg
+  class:list={['project-art', className]}
+  viewBox="0 0 800 600"
+  role="presentation"
+  aria-hidden="true"
+  preserveAspectRatio="xMidYMid slice"
+>
+  <defs>
+    <linearGradient id={`${uid}-chrome`} x1="180" y1="120" x2="640" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f2eee4" />
+      <stop offset="0.22" stop-color="#3b5bff" />
+      <stop offset="0.52" stop-color="#171922" />
+      <stop offset="0.8" stop-color="#ff5a1f" />
+      <stop offset="1" stop-color="#f2eee4" />
+    </linearGradient>
+    <linearGradient id={`${uid}-face`} x1="240" y1="160" x2="560" y2="460" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2a2d38" />
+      <stop offset="0.55" stop-color="#121318" />
+      <stop offset="1" stop-color="#07080a" />
+    </linearGradient>
+    <linearGradient id={`${uid}-orange`} x1="300" y1="200" x2="520" y2="460" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffb59a" />
+      <stop offset="0.45" stop-color="#ff5a1f" />
+      <stop offset="1" stop-color="#a92f08" />
+    </linearGradient>
+    <radialGradient id={`${uid}-glow`} cx="0" cy="0" r="1" gradientTransform="translate(430 330) rotate(90) scale(230 140)">
+      <stop stop-color="#ff5a1f" stop-opacity="0.24" />
+      <stop offset="0.6" stop-color="#3b5bff" stop-opacity="0.08" />
+      <stop offset="1" stop-color="#07080a" stop-opacity="0" />
+    </radialGradient>
+    <filter id={`${uid}-shadow`} x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18" />
+    </filter>
+    <filter id={`${uid}-soft`} x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="600" fill="#08090b" />
+  <rect width="800" height="600" fill={`url(#${uid}-glow)`} />
+
+  <g class="stage" opacity="0.55">
+    {Array.from({ length: 9 }, (_, i) => {
+      const y = 420 + i * 20;
+      return <line x1={70 + i * 8} y1={y} x2={730 - i * 8} y2={y} stroke="#f2eee4" stroke-opacity="0.06" />;
+    })}
+    {Array.from({ length: 11 }, (_, i) => {
+      const x = 120 + i * 56;
+      return <line x1={x} y1="380" x2={400 + (x - 400) * 1.45} y2="600" stroke="#f2eee4" stroke-opacity="0.05" />;
+    })}
+    <ellipse cx="410" cy="470" rx="210" ry="42" fill="#000" opacity="0.65" filter={`url(#${uid}-shadow)`} />
+  </g>
+
+  <g class="object">
+    {variant === 'dikaroute' && (
+      <g transform="translate(400 300)">
+        <ellipse cx="0" cy="0" rx="200" ry="76" transform="rotate(-18)" stroke={`url(#${uid}-chrome)`} stroke-width="34" fill="none" />
+        <ellipse cx="0" cy="0" rx="200" ry="76" transform="rotate(24)" stroke="#f2eee4" stroke-opacity="0.28" stroke-width="1.4" fill="none" />
+        <ellipse cx="0" cy="0" rx="118" ry="44" transform="rotate(-18)" stroke="#07080a" stroke-opacity="0.5" stroke-width="2" fill="none" />
+        <circle cx="0" cy="0" r="72" fill={`url(#${uid}-face)`} stroke="#f2eee4" stroke-opacity="0.4" />
+        <circle cx="-20" cy="-22" r="18" fill="#f2eee4" opacity="0.55" filter={`url(#${uid}-soft)`} />
+        <circle cx="200" cy="-58" r="7" fill="#ff5a1f" />
+        <circle cx="-196" cy="54" r="5" fill="#3b5bff" />
+        <circle cx="146" cy="92" r="4" fill="#f2eee4" opacity="0.7" />
+      </g>
+    )}
+
+    {variant === 'pentesterbot' && (
+      <g transform="translate(400 310)">
+        <g transform="translate(0 54)">
+          <polygon points="-150,20 -40,-34 150,20 40,74" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.24" />
+          <polygon points="-150,20 40,74 40,124 -150,70" fill={`url(#${uid}-chrome)`} opacity="0.9" />
+          <polygon points="40,74 150,20 150,70 40,124" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.18" />
+        </g>
+        <g transform="translate(0 -12)">
+          <polygon points="-112,-4 -28,-46 112,-4 28,38" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-112,-4 28,38 28,76 -112,34" fill={`url(#${uid}-face)`} />
+          <polygon points="28,38 112,-4 112,34 28,76" fill="#07080a" />
+          <path d="M-86 16 4 60M-70 34 20 78" stroke="#ff5a1f" stroke-opacity="0.8" stroke-width="3" />
+        </g>
+        <g transform="translate(0 -86)">
+          <polygon points="-76,-20 -20,-48 76,-20 20,8" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-76,-20 20,8 20,42 -76,14" fill={`url(#${uid}-chrome)`} />
+          <polygon points="20,8 76,-20 76,14 20,42" fill="#07080a" />
+          <circle cx="0" cy="-8" r="9" fill="#ff5a1f" />
+        </g>
+        <path d="M0 -150v-38M-22 -180a22 22 0 0 1 44 0" stroke="#f2eee4" stroke-opacity="0.5" stroke-width="2" />
+        <path d="M-60 -132a60 60 0 0 1 120 0" stroke="#ff5a1f" stroke-opacity="0.35" stroke-width="2" stroke-dasharray="4 8" />
+      </g>
+    )}
+
+    {variant === 'obitobuff' && (
+      <g transform="translate(400 310)">
+        <g transform="translate(-12 0)">
+          <polygon points="-92,-150 22,-196 116,-148 2,-102" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-92,-150 2,-102 2,96 -92,48" fill={`url(#${uid}-chrome)`} opacity="0.9" />
+          <polygon points="2,-102 116,-148 116,50 2,96" fill="#07080a" stroke="#f2eee4" stroke-opacity="0.2" />
+          <rect x="-72" y="-104" width="58" height="8" fill="#ff5a1f" />
+          <path d="M-72 -76h92M-72 -52h68M-72 -28h82M-72 -4h54M-72 20h72" stroke="#07080a" stroke-opacity="0.55" stroke-width="3" />
+        </g>
+        <g transform="translate(150 -70) rotate(16)">
+          <polygon points="-24,-24 0,-36 24,-24 0,-12" fill="#f2eee4" />
+          <polygon points="-24,-24 0,-12 0,12 -24,0" fill={`url(#${uid}-chrome)`} />
+          <polygon points="0,-12 24,-24 24,0 0,12" fill="#0b0c10" />
+        </g>
+        <g transform="translate(168 74) rotate(-12)">
+          <polygon points="-18,-18 0,-27 18,-18 0,-9" fill="#ff5a1f" />
+          <polygon points="-18,-18 0,-9 0,9 -18,0" fill="#a92f08" />
+          <polygon points="0,-9 18,-18 18,0 0,9" fill="#07080a" />
+        </g>
+        <path d="M100 -110c50 0 90 32 96 82" stroke="#3b5bff" stroke-opacity="0.5" stroke-width="2" stroke-dasharray="3 7" />
+      </g>
+    )}
+
+    {variant === 'telegrambot-ai' && (
+      <g transform="translate(400 300)">
+        <circle cx="0" cy="0" r="118" fill={`url(#${uid}-face)`} stroke="#f2eee4" stroke-opacity="0.28" />
+        <circle cx="-34" cy="-38" r="30" fill="#f2eee4" opacity="0.24" filter={`url(#${uid}-soft)`} />
+        <ellipse cx="0" cy="0" rx="188" ry="62" transform="rotate(-20)" stroke="#ff5a1f" stroke-opacity="0.5" stroke-width="2" fill="none" />
+        <ellipse cx="0" cy="0" rx="154" ry="48" transform="rotate(28)" stroke="#3b5bff" stroke-opacity="0.5" stroke-width="2" fill="none" />
+        <ellipse cx="0" cy="0" rx="220" ry="76" transform="rotate(4)" stroke="#f2eee4" stroke-opacity="0.16" stroke-width="1" fill="none" />
+        <g transform="translate(-42 38)">
+          <polygon points="-34,-18 32,-28 46,-4 12,16 -34,12" fill="#ff5a1f" />
+          <polygon points="-34,12 12,16 12,34 -34,30" fill="#a92f08" />
+          <circle cx="-4" cy="8" r="3" fill="#07080a" />
+          <circle cx="10" cy="6" r="3" fill="#07080a" />
+          <circle cx="24" cy="4" r="3" fill="#07080a" />
+        </g>
+        <circle cx="124" cy="-92" r="6" fill="#ff5a1f" />
+        <circle cx="-142" cy="76" r="4" fill="#3b5bff" />
+      </g>
+    )}
+
+    {variant === 'remoteuniversal' && (
+      <g transform="translate(400 300) rotate(-8)">
+        <g transform="translate(0 12)">
+          <rect x="-78" y="-150" width="156" height="286" rx="34" fill={`url(#${uid}-face)`} stroke="#f2eee4" stroke-opacity="0.3" />
+          <rect x="-62" y="-132" width="124" height="70" rx="18" fill={`url(#${uid}-chrome)`} opacity="0.9" />
+          <circle cx="0" cy="-18" r="18" fill="#07080a" />
+          <circle cx="0" cy="-18" r="7" fill="#ff5a1f" />
+          <rect x="-54" y="62" width="108" height="10" rx="5" fill="#f2eee4" opacity="0.28" />
+          <rect x="-54" y="88" width="70" height="10" rx="5" fill="#f2eee4" opacity="0.18" />
+          <circle cx="0" cy="126" r="11" fill="#ff5a1f" />
+        </g>
+        <path d="M-120 -96a120 120 0 0 1 240 0" stroke="#ff5a1f" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="4 9" />
+        <path d="M-160 -132a160 160 0 0 1 320 0" stroke="#3b5bff" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="3 10" />
+      </g>
+    )}
+
+    {variant === 'freebuff-patch' && (
+      <g transform="translate(400 300)">
+        <g transform="translate(-58 -18) rotate(-7)">
+          <polygon points="-96,-100 16,-154 96,-114 16,-60" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-96,-100 16,-60 16,88 -96,44" fill={`url(#${uid}-chrome)`} opacity="0.9" />
+          <polygon points="16,-60 96,-114 96,34 16,88" fill="#07080a" stroke="#f2eee4" stroke-opacity="0.18" />
+          <path d="M-74 -62 6 -22M-74 -34 6 6M-74 -6 6 34" stroke="#07080a" stroke-opacity="0.5" stroke-width="3" />
+        </g>
+        <g transform="translate(62 6) rotate(7)">
+          <polygon points="-72,-94 30,-140 104,-100 2,-54" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.26" />
+          <polygon points="-72,-94 2,-54 2,84 -72,40" fill="#07080a" />
+          <polygon points="2,-54 104,-100 104,38 2,84" fill={`url(#${uid}-face)`} stroke="#f2eee4" stroke-opacity="0.2" />
+          <path d="M24 -38 84 -66M24 -12 84 -40M24 14 72 -8" stroke="#f2eee4" stroke-opacity="0.22" stroke-width="2" />
+        </g>
+        <g transform="rotate(-14)">
+          <rect x="-18" y="-124" width="36" height="248" fill={`url(#${uid}-orange)`} />
+          <rect x="-8" y="-108" width="16" height="216" fill="#07080a" opacity="0.35" />
+          <path d="M-14 -84h28M-14 -56h28M-14 -28h28M-14 0h28M-14 28h28M-14 56h28M-14 84h28" stroke="#f2eee4" stroke-opacity="0.55" stroke-width="2" />
+        </g>
+      </g>
+    )}
+
+    {variant === 'agentbuff' && (
+      <g transform="translate(400 310)">
+        <g transform="translate(0 84)">
+          <polygon points="-120,20 -20,-30 120,20 20,70" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.24" />
+          <polygon points="-120,20 20,70 20,120 -120,70" fill={`url(#${uid}-chrome)`} opacity="0.85" />
+          <polygon points="20,70 120,20 120,70 20,120" fill="#07080a" />
+        </g>
+        <g transform="translate(0 0)">
+          <polygon points="-92,16 -12,-26 92,16 12,58" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-92,16 12,58 12,104 -92,62" fill={`url(#${uid}-face)`} />
+          <polygon points="12,58 92,16 92,62 12,104" fill={`url(#${uid}-orange)`} />
+          <path d="M-68 38 4 74M-56 56 16 92" stroke="#ff5a1f" stroke-opacity="0.7" stroke-width="3" />
+        </g>
+        <g transform="translate(0 -84)">
+          <polygon points="-62,-4 0,-36 62,-4 0,28" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-62,-4 0,28 0,60 -62,28" fill={`url(#${uid}-chrome)`} />
+          <polygon points="0,28 62,-4 62,28 0,60" fill="#07080a" />
+          <circle cx="0" cy="0" r="7" fill="#ff5a1f" />
+        </g>
+        <path d="M130 -100c46 22 58 62 38 108" stroke="#3b5bff" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="3 8" />
+      </g>
+    )}
+
+    {variant === 'dikaroute-website' && (
+      <g transform="translate(400 300)">
+        <g transform="translate(-86 0) rotate(-8)">
+          <polygon points="-150,-96 0,-146 0,92 -150,42" fill={`url(#${uid}-face)`} stroke="#f2eee4" stroke-opacity="0.26" />
+          <path d="M-126 -64 -24 -98M-126 -40 -24 -74M-126 -16 -24 -50M-126 8 -70 -14" stroke="#f2eee4" stroke-opacity="0.3" stroke-width="3" />
+          <rect x="-126" y="-112" width="100" height="10" fill="#ff5a1f" />
+        </g>
+        <g transform="translate(86 0) rotate(8)">
+          <polygon points="0,-146 150,-96 150,42 0,92" fill="#07080a" stroke="#f2eee4" stroke-opacity="0.22" />
+          <path d="M24 -98 126 -64M24 -74 126 -40M24 -50 126 -16M24 -26 80 -6" stroke="#f2eee4" stroke-opacity="0.24" stroke-width="3" />
+          <rect x="24" y="-112" width="100" height="10" fill="#3b5bff" />
+        </g>
+        <path d="M0 -146V92" stroke="#ff5a1f" stroke-width="2" />
+        <circle cx="0" cy="-146" r="5" fill="#ff5a1f" />
+      </g>
+    )}
+
+    {variant === 'pentesterbot-website' && (
+      <g transform="translate(400 300)">
+        {[0, 1, 2, 3].map((layer) => (
+          <g transform={`translate(${layer * 18} ${layer * -22})`}>
+            <polygon
+              points="-150,30 0,-48 150,30 0,108"
+              fill={layer === 0 ? '#0b0c10' : `url(#${uid}-face)`}
+              stroke={layer === 3 ? '#ff5a1f' : '#f2eee4'}
+              stroke-opacity={layer === 3 ? '0.65' : '0.2'}
+            />
+            <path d="M-100 34 0 -18 100 34" stroke="#f2eee4" stroke-opacity="0.18" />
+          </g>
+        ))}
+        <g transform="translate(0 120)">
+          <polygon points="-110,14 0,-40 110,14 0,68" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.24" />
+          <polygon points="-110,14 0,68 0,102 -110,48" fill={`url(#${uid}-chrome)`} opacity="0.8" />
+          <polygon points="0,68 110,14 110,48 0,102" fill="#07080a" />
+        </g>
+      </g>
+    )}
+
+    {variant === 'website' && (
+      <g transform="translate(400 300) rotate(-6)">
+        <g transform="translate(0 20)">
+          <polygon points="-118,-156 18,-210 118,-160 18,-106" fill="#0b0c10" stroke="#f2eee4" stroke-opacity="0.3" />
+          <polygon points="-118,-156 18,-106 18,100 -118,50" fill={`url(#${uid}-face)`} />
+          <polygon points="18,-106 118,-160 118,46 18,100" fill="#07080a" stroke="#f2eee4" stroke-opacity="0.18" />
+          <rect x="-94" y="-112" width="78" height="10" fill="#ff5a1f" />
+          <path d="M-94 -82h100M-94 -54h74M-94 -26h88M-94 2h58M-94 30h82" stroke="#f2eee4" stroke-opacity="0.28" stroke-width="3" />
+          <rect x="46" y="-74" width="48" height="10" fill="#3b5bff" opacity="0.7" />
+        </g>
+        <path d="M-160 80 160 80" stroke="#ff5a1f" stroke-opacity="0.35" stroke-dasharray="4 8" />
+        <circle cx="148" cy="-182" r="6" fill="#ff5a1f" />
+      </g>
+    )}
+  </g>
+
+  <g class="plate" font-family="JetBrains Mono, monospace" fill="#f2eee4">
+    <text x="40" y="552" font-size="13" letter-spacing="2" opacity="0.55">{name.toUpperCase()}</text>
+    <text x="760" y="552" font-size="13" letter-spacing="2" opacity="0.35" text-anchor="end">{order} / OBJ</text>
+    <path d="M40 568h720" stroke="#f2eee4" stroke-opacity="0.12" />
+  </g>
+</svg>
+
+<style>
+  .object {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: art-float 9s ease-in-out infinite;
+  }
+
+  @keyframes art-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .object {
+      animation: none;
+    }
+  }
+</style>

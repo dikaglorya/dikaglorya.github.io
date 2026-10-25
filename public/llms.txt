@@ -1,0 +1,35 @@
+# ObitoGlory
+
+> Portofolio dan layanan DikaGlorya, developer independen di Kendal, Jawa Tengah,
+> Indonesia. Nama publik lain: DikaOfc, DikaCode, DikaGlory. Brand website:
+> ObitoGlory.
+
+## Fokus
+
+- Pembuatan website dan landing page responsif
+- Bot Telegram, WhatsApp, dan Discord
+- Tools developer, CLI, dan automasi workflow
+- Gateway AI dan routing multi-provider
+- Perbaikan, maintenance, dan optimasi sistem yang sudah berjalan
+
+## Halaman utama
+
+- [Beranda](https://dikaglorya.github.io/): portofolio, proyek, dan kontak
+- [Proyek](https://dikaglorya.github.io/projects/): studi kasus teknis
+- [Layanan](https://dikaglorya.github.io/services/): lingkup, proses, dan FAQ
+- [Jasa website Kendal](https://dikaglorya.github.io/kendal/): layanan lokal
+- [Tentang](https://dikaglorya.github.io/about/): identitas dan cara kerja
+- [Jurnal](https://dikaglorya.github.io/journal/): catatan implementasi
+- [Kontak](https://dikaglorya.github.io/contact/): brief proyek
+- [Privasi dan cookie](https://dikaglorya.github.io/privacy/)
+
+## Kontak
+
+- Telegram: https://t.me/dikaacode
+- Email: dikasukasukaa@gmail.com
+- GitHub: https://github.com/dikaglorya
+
+## Catatan
+
+Situs ini statis. Formulir kontak menyusun brief di perangkat pengunjung dan tidak
+mengirim data ke server. Tidak ada pixel iklan pihak ketiga yang dimuat.

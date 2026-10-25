@@ -1,9 +1,5 @@
-/* ---------- Theme -------------------------------------------------------
-   The inline head script has already resolved the initial value; this keeps
-   the controls, the stored preference, and the browser chrome in sync.
-   ---------------------------------------------------------------------- */
 const THEME_KEY = 'theme';
-const themeRoot = document.documentElement;
+const root = document.documentElement;
 const themeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]'));
 const themeLabels = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-label]'));
 const themeMeta = document.querySelector<HTMLMetaElement>('meta[data-theme-color]');
@@ -18,15 +14,12 @@ const storedTheme = (): 'light' | 'dark' | null => {
   }
 };
 
-const currentTheme = (): 'light' | 'dark' =>
-  themeRoot.dataset.theme === 'light' ? 'light' : 'dark';
+const currentTheme = (): 'light' | 'dark' => (root.dataset.theme === 'light' ? 'light' : 'dark');
 
 const syncThemeUI = () => {
   const theme = currentTheme();
   const next = theme === 'dark' ? 'terang' : 'gelap';
   themeButtons.forEach((button) => {
-    // The sheet row shows "Tema" and the current value, so its accessible name
-    // must include that visible text (WCAG 2.5.3 Label in Name).
     const isRow = button.classList.contains('theme-row');
     const label = isRow
       ? `Tema: ${theme === 'dark' ? 'Gelap' : 'Terang'}. Aktifkan tema ${next}`
@@ -37,16 +30,16 @@ const syncThemeUI = () => {
   themeLabels.forEach((label) => {
     label.textContent = theme === 'dark' ? 'Gelap' : 'Terang';
   });
-  if (themeMeta) themeMeta.content = theme === 'light' ? '#ffffff' : '#111111';
+  if (themeMeta) themeMeta.content = theme === 'light' ? '#f2eee4' : '#07080a';
 };
 
 const applyTheme = (theme: 'light' | 'dark', persist: boolean) => {
-  themeRoot.dataset.theme = theme;
+  root.dataset.theme = theme;
   if (persist) {
     try {
       localStorage.setItem(THEME_KEY, theme);
     } catch {
-      /* Storage can be unavailable; the theme still applies for this page. */
+      /* Storage may be unavailable; the theme still applies to this page. */
     }
   }
   syncThemeUI();
@@ -58,16 +51,65 @@ themeButtons.forEach((button) => {
   });
 });
 
-// Follow the OS only while the visitor has not made an explicit choice.
 lightQuery.addEventListener('change', (event) => {
   if (storedTheme()) return;
   applyTheme(event.matches ? 'light' : 'dark', false);
 });
 
 syncThemeUI();
-document.addEventListener('astro:page-load', syncThemeUI);
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+/* ---------- Header and progress ----------------------------------------- */
+
+const header = document.querySelector<HTMLElement>('[data-header]');
+const progress = document.querySelector<HTMLElement>('[data-progress]');
+
+const syncHeader = () => {
+  header?.toggleAttribute('data-scrolled', window.scrollY > 8);
+};
+
+let progressFrame = 0;
+const updateProgress = () => {
+  progressFrame = 0;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const value = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  root.style.setProperty('--progress', value.toFixed(4));
+};
+
+const scheduleProgress = () => {
+  if (progressFrame) return;
+  progressFrame = window.requestAnimationFrame(updateProgress);
+};
+
+if (header) {
+  window.addEventListener('scroll', syncHeader, { passive: true });
+  syncHeader();
+}
+
+if (progress) {
+  window.addEventListener('scroll', scheduleProgress, { passive: true });
+  window.addEventListener('resize', scheduleProgress, { passive: true });
+  updateProgress();
+}
+
+/* ---------- Local clock ------------------------------------------------- */
+
+const clock = document.querySelector<HTMLElement>('[data-clock]');
+if (clock) {
+  const format = new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Jakarta',
+    hour12: false,
+  });
+  const tick = () => {
+    clock.textContent = `Kendal · ${format.format(new Date())} WIB`;
+  };
+  tick();
+  window.setInterval(tick, 30_000);
+}
+
+/* ---------- Mobile menu ------------------------------------------------- */
+
 const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
 const menuOpen = document.querySelector<HTMLButtonElement>('[data-menu-open]');
 const menuClose = document.querySelector<HTMLButtonElement>('[data-menu-close]');
@@ -83,13 +125,9 @@ const closeMenu = () => {
 };
 
 if (menu && menuOpen) {
-  menuOpen.setAttribute('aria-expanded', 'false');
   menuOpen.addEventListener('click', () => {
-    if (typeof menu.showModal === 'function') {
-      menu.showModal();
-    } else {
-      menu.setAttribute('open', '');
-    }
+    if (typeof menu.showModal === 'function') menu.showModal();
+    else menu.setAttribute('open', '');
     setMenuState(true);
     menuClose?.focus();
   });
@@ -98,29 +136,24 @@ if (menu && menuOpen) {
 
   menu.addEventListener('close', () => {
     setMenuState(false);
-    // The browser restores focus itself on close; re-assert ours afterwards so
-    // keyboard users land back on the trigger, not on <body>.
     window.requestAnimationFrame(() => menuOpen.focus());
   });
 
   menu.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      closeMenu();
-    });
+    link.addEventListener('click', closeMenu);
   });
 
-  const desktop = window.matchMedia('(min-width: 901px)');
-  desktop.addEventListener('change', (event) => {
+  window.matchMedia('(min-width: 1101px)').addEventListener('change', (event) => {
     if (event.matches) closeMenu();
   });
 }
 
+/* ---------- Search palette --------------------------------------------- */
+
 const spotlight = document.querySelector<HTMLDialogElement>('[data-spotlight]');
 const spotlightOpen = document.querySelector<HTMLButtonElement>('[data-spotlight-open]');
 const spotlightInput = document.querySelector<HTMLInputElement>('[data-spotlight-input]');
-const spotlightItems = Array.from(
-  document.querySelectorAll<HTMLLIElement>('[data-search-item]'),
-);
+const spotlightItems = Array.from(document.querySelectorAll<HTMLLIElement>('[data-search-item]'));
 const spotlightEmpty = document.querySelector<HTMLElement>('[data-spotlight-empty]');
 let activeResult = -1;
 
@@ -158,8 +191,6 @@ if (spotlight && spotlightOpen && spotlightInput) {
   spotlight.addEventListener('click', (event) => {
     if (event.target === spotlight) spotlight.close();
   });
-  // A focused <input type="search"> swallows the first Escape (Chrome clears
-  // the field instead of closing the dialog), so close it explicitly.
   spotlight.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || !spotlight.open) return;
     event.preventDefault();
@@ -174,8 +205,7 @@ if (spotlight && spotlightOpen && spotlightInput) {
       const direction = event.key === 'ArrowDown' ? 1 : -1;
       activeResult = (activeResult + direction + results.length) % results.length;
       results.forEach((item, index) => {
-        const link = item.querySelector('a');
-        link?.classList.toggle('is-active', index === activeResult);
+        item.querySelector('a')?.classList.toggle('is-active', index === activeResult);
       });
     } else if (event.key === 'Enter' && activeResult >= 0) {
       const href = results[activeResult]?.querySelector('a')?.href;
@@ -196,39 +226,62 @@ if (spotlight && spotlightOpen && spotlightInput) {
   });
 }
 
-const progress = document.querySelector<HTMLElement>('[data-progress]');
-const header = document.querySelector<HTMLElement>('[data-header]');
+/* ---------- Cursor, tilt, and magnetic controls ------------------------- */
 
-const syncHeader = () => {
-  header?.toggleAttribute('data-scrolled', window.scrollY > 8);
-};
+const finePointer = window.matchMedia('(pointer: fine)');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const cursor = document.querySelector<HTMLElement>('[data-cursor]');
 
-if (header) {
-  window.addEventListener('scroll', syncHeader, { passive: true });
-  syncHeader();
+if (cursor && finePointer.matches && !reduceMotion.matches) {
+  document.body.classList.add('cursor-ready');
+  let x = window.innerWidth / 2;
+  let y = window.innerHeight / 2;
+  let currentX = x;
+  let currentY = y;
+  let frame = 0;
+
+  const renderCursor = () => {
+    frame = 0;
+    currentX += (x - currentX) * 0.18;
+    currentY += (y - currentY) * 0.18;
+    cursor.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
+    frame = window.requestAnimationFrame(renderCursor);
+  };
+
+  window.addEventListener(
+    'pointermove',
+    (event) => {
+      x = event.clientX;
+      y = event.clientY;
+      if (!frame) frame = window.requestAnimationFrame(renderCursor);
+    },
+    { passive: true },
+  );
+
+  document.addEventListener('pointerover', (event) => {
+    const target = event.target as HTMLElement;
+    document.body.classList.toggle(
+      'cursor-active',
+      Boolean(target.closest('a, button, [data-cursor-active]')),
+    );
+  });
 }
 
-if (progress) {
-  let ticking = false;
-  const updateProgress = () => {
-    ticking = false;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const value = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    document.documentElement.style.setProperty('--progress', value.toFixed(4));
-  };
-  const requestUpdate = () => {
-    if (ticking) return;
-    ticking = true;
-    window.requestAnimationFrame(updateProgress);
-  };
-  window.addEventListener('scroll', requestUpdate, { passive: true });
-  window.addEventListener('resize', requestUpdate, { passive: true });
-  updateProgress();
-}
-
-const reduceMotionState = () => reduceMotion.matches;
-if (reduceMotionState()) {
-  document.documentElement.classList.remove('js');
+const tiltItems = Array.from(document.querySelectorAll<HTMLElement>('[data-tilt]'));
+if (tiltItems.length && finePointer.matches && !reduceMotion.matches) {
+  tiltItems.forEach((item) => {
+    item.addEventListener('pointermove', (event) => {
+      const rect = item.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width - 0.5;
+      const py = (event.clientY - rect.top) / rect.height - 0.5;
+      item.style.setProperty('--tilt-x', `${(-py * 4).toFixed(2)}deg`);
+      item.style.setProperty('--tilt-y', `${(px * 6).toFixed(2)}deg`);
+    });
+    item.addEventListener('pointerleave', () => {
+      item.style.setProperty('--tilt-x', '0deg');
+      item.style.setProperty('--tilt-y', '0deg');
+    });
+  });
 }
 
 export {};

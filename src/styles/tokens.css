@@ -1,388 +1,151 @@
 /* ==========================================================================
-   ObitoGlory — design tokens
-   A monochrome, macOS-inspired system: neutral greys, hairline borders, tight
-   type, no shadows, no gradients, no translucency. Dark is authored first and
-   is the fallback; light is applied by system preference or an explicit
-   [data-theme] choice.
-
-   Two layers live here on purpose:
-     1. semantic tokens (--background, --foreground, ...) — use these in new CSS
-     2. compatibility aliases (--bg, --text, --accent, ...) — the older names the
-        existing stylesheets already reference, remapped onto the semantic layer
-   Never hardcode a palette value outside this file.
+   Kendal Signal — design tokens
+   A night-gallery identity: obsidian ground, bone paper, signal orange, and
+   electric blue used only as a rim light inside 3D art. Dark is authored
+   first; light is a working inversion, not an afterthought.
    ========================================================================== */
 
 :root {
   color-scheme: dark;
 
-  /* ---------- Semantic: dark ------------------------------------------- */
-  --background: #111111;
-  --background-secondary: #181818;
-  --surface: #181818;
-  --surface-secondary: #202020;
-  --surface-elevated: #202020;
-  --surface-sunken: #0c0c0c;
-  --surface-active: #262626;
+  /* Core palette */
+  --ink: #07080a;
+  --ink-2: #0c0d10;
+  --ink-3: #121318;
+  --bone: #f2eee4;
+  --bone-2: #e6dfd0;
+  --orange: #ff5a1f;
+  --orange-2: #ff7a4a;
+  --blue: #3b5bff;
+  --muted: #8c877b;
 
-  --foreground: #f5f5f5;
-  --text-primary: #f5f5f5;
-  --text-secondary: #a1a1a1;
-  --text-muted: #939393;
-  --text-inverse: #111111;
+  /* Semantic surfaces */
+  --bg: var(--ink);
+  --bg-2: var(--ink-2);
+  --surface: #101116;
+  --surface-2: #16171d;
+  --surface-3: #1d1e25;
+  --fg: var(--bone);
+  --fg-2: #b9b3a6;
+  --fg-3: #8c877b;
+  --fg-inverse: var(--ink);
+  --line: rgb(242 238 228 / 14%);
+  --line-strong: rgb(242 238 228 / 30%);
+  --line-soft: rgb(242 238 228 / 8%);
+  --accent: var(--orange);
+  --accent-hover: var(--orange-2);
+  --accent-fill: var(--orange);
+  --accent-ink: var(--ink);
+  --accent-soft: rgb(255 90 31 / 12%);
+  --rim: var(--blue);
+  --focus: var(--orange);
+  --scrim: rgb(7 8 10 / 78%);
+  --selection: var(--orange);
 
-  --border: #303030;
-  --border-strong: #444444;
-  --border-control: #666666;
-  --separator: #252525;
-  --focus-ring: #f5f5f5;
-  --scrim: rgb(0 0 0 / 58%);
+  /* Status: foreground / fill / border. All text clears 4.5:1 on its fill. */
+  --ok: #7ed7a5;
+  --ok-bg: #10231a;
+  --ok-border: #23543a;
+  --warn: #f0c36a;
+  --warn-bg: #251c0d;
+  --warn-border: #5a4318;
+  --danger: #ff8a7a;
+  --danger-bg: #2a1310;
+  --danger-border: #6a2a20;
+  --info: #8fb4ff;
+  --info-bg: #111a2c;
+  --info-border: #2a3e6a;
+  --neutral: #b9b3a6;
+  --neutral-bg: #17181d;
+  --neutral-border: #33353d;
 
-  --interactive: #f5f5f5;
-  --interactive-hover: #ffffff;
-  --interactive-active: #d4d4d4;
-  --interactive-soft: rgb(255 255 255 / 7%);
-  --interactive-line: #4a4a4a;
-  --interactive-ink: #111111;
+  /* Type */
+  --font-display: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Status may use restrained hue for meaning; it is never the only signal.
-     Each variant is a triplet: foreground, fill, border. The foreground is the
-     only value allowed to carry text, and it clears 4.5:1 on its own fill, on
-     --surface and on --background. Pending is deliberately the neutral triplet:
-     "waiting" is carried by the icon and the label, not by a colour. */
-  --status-success: #7cc79c;
-  --status-warning: #d8b26a;
-  --status-danger: #e89696;
-  --status-info: #a8bedb;
-  --status-neutral: #a1a1a1;
-  --status-pending: var(--status-neutral);
-
-  --status-success-bg: #15201a;
-  --status-warning-bg: #201b12;
-  --status-danger-bg: #221616;
-  --status-info-bg: #151a21;
-  --status-neutral-bg: #1c1c1c;
-  --status-pending-bg: var(--status-neutral-bg);
-
-  --status-success-border: #2a3d31;
-  --status-warning-border: #3d3323;
-  --status-danger-border: #442b2b;
-  --status-info-border: #2b3646;
-  --status-neutral-border: #303030;
-  --status-pending-border: var(--status-neutral-border);
-
-  /* Legacy names still referenced by older stylesheets. */
-  --status-error: var(--status-danger);
-  --status-success-soft: var(--status-success-bg);
-  --status-warning-soft: var(--status-warning-bg);
-  --status-error-soft: var(--status-danger-bg);
-  --status-info-soft: var(--status-info-bg);
-
-  /* ---------- Compatibility aliases ------------------------------------ */
-  --bg: var(--background);
-  --bg-2: var(--background-secondary);
-  --surface-2: var(--surface-secondary);
-  --surface-3: var(--surface-active);
-  /* Sits behind the header; opaque, because there is no backdrop blur. */
-  --material: var(--background);
-  --material-strong: var(--surface-elevated);
-  --material-thin: var(--background-secondary);
-
-  --text: var(--text-primary);
-  --text-2: var(--text-secondary);
-  --text-3: var(--text-muted);
-
-  --accent: var(--interactive);
-  --accent-hover: var(--interactive-hover);
-  --accent-fill: var(--interactive);
-  --accent-fill-hover: var(--interactive-active);
-  --accent-ink: var(--interactive-ink);
-  --accent-soft: var(--interactive-soft);
-  --accent-line: var(--interactive-line);
-
-  --ok: var(--status-success);
-  --ok-soft: var(--status-success-bg);
-  --warn: var(--status-warning);
-  --danger: var(--status-danger);
-  --info: var(--status-info);
-
-  --hairline: var(--separator);
-  --hairline-strong: var(--border);
-  --divider: var(--separator);
-  /* No inset highlight anywhere: a 1px light line is a shadow, not a border. */
-  --highlight: transparent;
-
-  --dot: var(--text-muted);
-
-  /* ---------- Type ------------------------------------------------------ */
-  /* Native first: Apple gets SF, Windows gets Segoe, everything else Inter.
-     No webfont is fetched on Apple platforms. */
-  --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable Text',
-    'Segoe UI', 'Inter Variable', Inter, system-ui, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display',
-    'Segoe UI', 'Inter Variable', Inter, system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'JetBrains Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
-
-  /* Fluid ladder. Floors are real mobile values rather than a desktop clamp
-     bottoming out, so 320-430px gets tuned steps. Nothing renders below 11px. */
+  --fs-display: clamp(4.4rem, 14vw, 13rem);
+  --fs-h1: clamp(2.7rem, 6.6vw, 6.4rem);
+  --fs-h2: clamp(2.1rem, 4.6vw, 4.4rem);
+  --fs-h3: clamp(1.35rem, 2.2vw, 2.1rem);
+  --fs-h4: clamp(1.1rem, 1.4vw, 1.35rem);
+  --fs-body: clamp(1rem, 0.35vw + 0.93rem, 1.15rem);
+  --fs-small: clamp(0.82rem, 0.2vw + 0.78rem, 0.92rem);
   --fs-micro: 0.6875rem;
-  --fs-eyebrow: 0.6875rem;
-  --fs-xs: 0.75rem;
-  --fs-sm: 0.875rem;
-  --fs-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
-  --fs-lg: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
-  --fs-h4: 1.0625rem;
-  --fs-h3: clamp(1.1875rem, 1.1rem + 0.45vw, 1.375rem);
-  --fs-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.125rem);
-  --fs-h1: clamp(1.875rem, 1.45rem + 2vw, 2.75rem);
-  --fs-display: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem);
-  --fs-title: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
 
-  --lh-tight: 1.06;
-  --lh-heading: 1.18;
-  --lh-body: 1.6;
+  --lh-tight: 0.92;
+  --lh-heading: 1.02;
+  --lh-body: 1.65;
 
-  --tracking-display: -0.028em;
-  --tracking-h2: -0.02em;
-  --tracking-h3: -0.012em;
+  /* Layout */
+  --container: 1500px;
+  --gutter: clamp(1.15rem, 4vw, 4.5rem);
+  --header-h: 76px;
+  --section: clamp(5.5rem, 13vw, 11rem);
+  --section-tight: clamp(3.5rem, 8vw, 7rem);
 
-  /* ---------- Space ----------------------------------------------------- */
-  --s-1: 4px;
-  --s-2: 8px;
-  --s-3: 12px;
-  --s-4: 16px;
-  --s-5: 20px;
-  --s-6: 24px;
-  --s-7: 32px;
-  --s-8: 40px;
-  --s-9: 48px;
-  --s-10: 64px;
-  --s-11: 80px;
-  --s-12: 96px;
-  --s-13: 128px;
-  --s-14: 160px;
+  /* Shape and depth */
+  --r-1: 2px;
+  --r-2: 10px;
+  --r-3: 24px;
+  --r-pill: 999px;
+  --shadow-art: 0 40px 100px -50px rgb(0 0 0 / 90%);
+  --shadow-panel: 0 24px 70px -40px rgb(0 0 0 / 80%);
 
-  /* Width ladder: grows with the monitor instead of floating a fixed column
-     in the middle of a 2560px screen. */
-  --gutter: clamp(20px, 4.2vw, 56px);
-  --page-max: 1200px;
-  --reading-max: 720px;
-  --measure: 66ch;
-
-  /* 56px on Android (reclaims 4px of first screen), 64px once there is room. */
-  --header-h: 56px;
-  /* Minimum interactive target (WCAG 2.2 2.5.5, Android thumbs). */
-  --tap: 44px;
-  --toolbar-h: 48px;
-  --row-h: 56px;
-  --section-y: clamp(56px, 5vw + 24px, 120px);
-  --section-y-tight: clamp(40px, 4vw + 8px, 80px);
-  --gap: clamp(16px, 2vw, 24px);
-
-  /* Small, software-like corners. macOS windows are 10-12px, not 22-28px. */
-  --r-xs: 2px;
-  --r-sm: 4px;
-  --r-md: 6px;
-  --r-lg: 8px;
-  --r-xl: 10px;
-  --r-2xl: 12px;
-  --r-tile: 6px;
-  --r-full: 999px;
-
-  /* Kept as names so old declarations cannot resurrect a shadow. */
-  --shadow-1: none;
-  --shadow-2: none;
-  --shadow-xs: none;
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
-  --shadow-window: none;
-  --shadow-plate: none;
-  --shadow-focus: none;
-
-  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --dur-1: 100ms;
-  --dur-2: 160ms;
-  --dur-3: 240ms;
-  --dur-4: 420ms;
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-fast: 180ms;
+  --dur: 420ms;
+  --dur-slow: 900ms;
 
-  --reveal-y: 8px;
-  --progress: 0;
+  /* Layers */
+  --z-base: 1;
+  --z-art: 2;
+  --z-header: 50;
+  --z-cursor: 70;
+  --z-cookie: 80;
+  --z-menu: 90;
 }
 
-/* ---------- Semantic: light ---------------------------------------------
-   Applied when the system asks for light and the visitor has not chosen dark.
-   Keep this block in sync with the explicit [data-theme='light'] below.
-   ------------------------------------------------------------------------ */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme='dark']) {
-    color-scheme: light;
-
-    --background: #ffffff;
-    --background-secondary: #f7f7f7;
-    --surface: #ffffff;
-    --surface-secondary: #f7f7f7;
-    --surface-elevated: #ffffff;
-    --surface-sunken: #f7f7f7;
-    --surface-active: #efefef;
-
-    --foreground: #171717;
-    --text-primary: #171717;
-    --text-secondary: #5c5c5c;
-    --text-muted: #666666;
-    --text-inverse: #ffffff;
-
-    --border: #e5e5e5;
-    --border-strong: #c9c9c9;
-    --border-control: #8a8a8a;
-    --separator: #efefef;
-    --focus-ring: #171717;
-    --scrim: rgb(23 23 23 / 32%);
-
-    --interactive: #171717;
-    --interactive-hover: #000000;
-    --interactive-active: #3a3a3a;
-    --interactive-soft: rgb(0 0 0 / 4%);
-    --interactive-line: #c9c9c9;
-    --interactive-ink: #ffffff;
-
-    --status-success: #1d6b43;
-    --status-warning: #7a5200;
-    --status-danger: #a3241c;
-    --status-info: #1f4f86;
-    --status-neutral: #5c5c5c;
-    --status-pending: var(--status-neutral);
-
-    --status-success-bg: #eaf3ee;
-    --status-warning-bg: #f7f0e2;
-    --status-danger-bg: #f9e9e8;
-    --status-info-bg: #e9eef5;
-    --status-neutral-bg: #f0f0f0;
-    --status-pending-bg: var(--status-neutral-bg);
-
-    --status-success-border: #c3ddcd;
-    --status-warning-border: #e0cfae;
-    --status-danger-border: #e8bdb9;
-    --status-info-border: #c2d0e2;
-    --status-neutral-border: #dcdcdc;
-    --status-pending-border: var(--status-neutral-border);
-
-    --status-error: var(--status-danger);
-    --status-success-soft: var(--status-success-bg);
-    --status-warning-soft: var(--status-warning-bg);
-    --status-error-soft: var(--status-danger-bg);
-    --status-info-soft: var(--status-info-bg);
-  }
-}
-
-/* Explicit choice wins over the system preference. */
-:root[data-theme='light'] {
+[data-theme='light'] {
   color-scheme: light;
 
-  --background: #ffffff;
-  --background-secondary: #f7f7f7;
-  --surface: #ffffff;
-  --surface-secondary: #f7f7f7;
-  --surface-elevated: #ffffff;
-  --surface-sunken: #f7f7f7;
-  --surface-active: #efefef;
+  --bg: var(--bone);
+  --bg-2: #eae4d6;
+  --surface: #f8f5ec;
+  --surface-2: #e3dccd;
+  --surface-3: #d8d0be;
+  --fg: #0a0b0d;
+  --fg-2: #4a473f;
+  --fg-3: #6a665c;
+  --fg-inverse: var(--bone);
+  --line: rgb(10 11 13 / 16%);
+  --line-strong: rgb(10 11 13 / 34%);
+  --line-soft: rgb(10 11 13 / 8%);
+  --accent: #b83308;
+  --accent-hover: #a92f08;
+  --accent-fill: var(--orange);
+  --accent-ink: var(--ink);
+  --accent-soft: rgb(255 90 31 / 14%);
+  --rim: #2440d8;
+  --focus: #b83308;
+  --scrim: rgb(242 238 228 / 82%);
+  --selection: #ffb59a;
 
-  --foreground: #171717;
-  --text-primary: #171717;
-  --text-secondary: #5c5c5c;
-  --text-muted: #666666;
-  --text-inverse: #ffffff;
-
-  --border: #e5e5e5;
-  --border-strong: #c9c9c9;
-  --border-control: #8a8a8a;
-  --separator: #efefef;
-  --focus-ring: #171717;
-  --scrim: rgb(23 23 23 / 32%);
-
-  --interactive: #171717;
-  --interactive-hover: #000000;
-  --interactive-active: #3a3a3a;
-  --interactive-soft: rgb(0 0 0 / 4%);
-  --interactive-line: #c9c9c9;
-  --interactive-ink: #ffffff;
-
-  --status-success: #1d6b43;
-  --status-warning: #7a5200;
-  --status-danger: #a3241c;
-  --status-info: #1f4f86;
-  --status-neutral: #5c5c5c;
-  --status-pending: var(--status-neutral);
-
-  --status-success-bg: #eaf3ee;
-  --status-warning-bg: #f7f0e2;
-  --status-danger-bg: #f9e9e8;
-  --status-info-bg: #e9eef5;
-  --status-neutral-bg: #f0f0f0;
-  --status-pending-bg: var(--status-neutral-bg);
-
-  --status-success-border: #c3ddcd;
-  --status-warning-border: #e0cfae;
-  --status-danger-border: #e8bdb9;
-  --status-info-border: #c2d0e2;
-  --status-neutral-border: #dcdcdc;
-  --status-pending-border: var(--status-neutral-border);
-
-  --status-error: var(--status-danger);
-  --status-success-soft: var(--status-success-bg);
-  --status-warning-soft: var(--status-warning-bg);
-  --status-error-soft: var(--status-danger-bg);
-  --status-info-soft: var(--status-info-bg);
-}
-
-:root[data-theme='dark'] {
-  color-scheme: dark;
-}
-
-/* ---------- Width ladder -------------------------------------------------
-   Without this, 1920 and 2560 render the same 1200px column with 673px of
-   dead gutter on each side.
-   ------------------------------------------------------------------------ */
-@media (min-width: 1024px) {
-  :root {
-    --header-h: 64px;
-    --row-h: 64px;
-  }
-}
-
-@media (min-width: 1440px) {
-  :root {
-    --page-max: 1280px;
-    --gutter: clamp(40px, 5vw, 72px);
-    --section-y: clamp(80px, 6vw, 136px);
-  }
-}
-
-@media (min-width: 1920px) {
-  :root {
-    --page-max: 1400px;
-    --gutter: 96px;
-    --section-y: 152px;
-  }
-}
-
-@media (min-width: 2560px) {
-  :root {
-    --page-max: 1520px;
-    --gutter: 120px;
-  }
-}
-
-/* ---------- Environment preferences ------------------------------------- */
-
-/* "Reduce transparency" is a no-op by design: nothing is translucent. */
-
-/* macOS "Increase contrast": firm up hairlines and secondary text. */
-@media (prefers-contrast: more) {
-  :root {
-    --border: var(--border-strong);
-    --separator: var(--border-strong);
-    --text-muted: var(--text-secondary);
-  }
+  --ok: #1d6b42;
+  --ok-bg: #dff3e7;
+  --ok-border: #a9d8bd;
+  --warn: #7a5410;
+  --warn-bg: #f8ecd2;
+  --warn-border: #dfc38a;
+  --danger: #a12d1c;
+  --danger-bg: #f9dfda;
+  --danger-border: #e5b0a7;
+  --info: #24408f;
+  --info-bg: #e1e8fb;
+  --info-border: #b5c4ee;
+  --neutral: #4a473f;
+  --neutral-bg: #ece7db;
+  --neutral-border: #cfc7b7;
 }

@@ -2,7 +2,14 @@ import type { APIRoute } from 'astro';
 import { site } from '../data/site';
 
 export const GET: APIRoute = () => {
-  const body = `User-agent: *\nAllow: /\n\nSitemap: ${new URL('/sitemap.xml', site.url).href}\n`;
+  const body = [
+    'User-agent: *',
+    'Allow: /',
+    '',
+    `Host: ${new URL(site.url).host}`,
+    `Sitemap: ${new URL('/sitemap.xml', site.url).href}`,
+    '',
+  ].join('\n');
 
   return new Response(body, {
     headers: {

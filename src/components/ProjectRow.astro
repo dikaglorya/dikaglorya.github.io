@@ -1,5 +1,6 @@
 ---
 import Arrow from './Arrow.astro';
+import ProjectArt from './ProjectArt.astro';
 import StatusIndicator from './StatusIndicator.astro';
 import { projectStatusLabel, type Project } from '../data/projects';
 import { PROJECT_STATUS_STATES } from '../lib/status-registry';
@@ -34,6 +35,9 @@ const statusState = PROJECT_STATUS_STATES[status];
     data-project-href={`/projects/${project.slug}/`}
   >
     <span class="project-row__index mono" aria-hidden="true">{paddedIndex}</span>
+    <span class="project-row__art">
+      <ProjectArt slug={project.slug} name={project.name} index={paddedIndex} />
+    </span>
     <span class="project-row__body">
       <span class="project-row__name">
         {project.name}

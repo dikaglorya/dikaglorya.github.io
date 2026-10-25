@@ -1,0 +1,227 @@
+---
+import ContactBlock from '../components/ContactBlock.astro';
+import SectionHead from '../components/SectionHead.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/pages.css';
+import { faqs } from '../data/faqs';
+import { processSteps } from '../data/facts';
+import { services } from '../data/services';
+import { site } from '../data/site';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${site.url}/kendal/#service`,
+    name: 'ObitoGlory, jasa website Kendal',
+    alternateName: ['DikaGlorya', 'DikaOfc', 'DikaCode'],
+    url: `${site.url}/kendal/`,
+    description:
+      'Jasa pembuatan website, bot, tools, dan perbaikan sistem di Kendal, Jawa Tengah oleh DikaGlorya.',
+    founder: { '@id': `${site.url}/#person` },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kendal',
+      addressRegion: 'Jawa Tengah',
+      addressCountry: 'ID',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: site.geo.latitude,
+      longitude: site.geo.longitude,
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Kendal' },
+      { '@type': 'City', name: 'Weleri' },
+      { '@type': 'City', name: 'Semarang' },
+      { '@type': 'City', name: 'Ungaran' },
+      { '@type': 'City', name: 'Batang' },
+      { '@type': 'City', name: 'Pekalongan' },
+      { '@type': 'AdministrativeArea', name: 'Jawa Tengah' },
+    ],
+    priceRange: 'Rp50.000 - Rp3.000.000+',
+    sameAs: [site.github, site.telegramUrl, site.instagram, site.tiktok],
+    makesOffer: services.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+      },
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'IDR',
+        description: `${service.priceFrom}. ${service.priceNote}`,
+      },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Beranda', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Kendal', item: `${site.url}/kendal/` },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Jasa Website Kendal | DikaGlorya (DikaOfc)"
+  description="Jasa pembuatan website di Kendal oleh DikaGlorya (DikaOfc, DikaCode). Landing page, company profile, portofolio, bot, dan tools untuk Kendal dan sekitarnya."
+  schema={schema}
+>
+  <section class="page-hero" aria-labelledby="kendal-title">
+    <div class="container">
+      <p class="page-hero__eyebrow mono">Kendal · Jawa Tengah</p>
+      <h1 id="kendal-title">Jasa pembuatan website di <em>Kendal.</em></h1>
+      <p class="page-hero__lead">
+        Website, bot, dan tools yang dibuat untuk dipakai. Dikerjakan langsung oleh DikaGlorya
+        (DikaOfc, DikaCode) dari Kendal, dengan lingkup dan harga yang jelas sebelum mulai.
+      </p>
+      <div class="page-hero__meta mono">
+        <span>Melayani Kendal dan sekitarnya</span>
+        <span>Konsultasi lewat Telegram</span>
+        <span>{site.availability}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="why-title">
+    <div class="container">
+      <SectionHead
+        id="why-title"
+        index="01 / Alasan"
+        title="Dekat, jelas, dan bisa dihubungi."
+        meta="Bukan agensi besar. Satu orang yang mengerjakan dan menjelaskan pekerjaannya."
+      />
+      <div class="local-grid">
+        <article class="local-card">
+          <span class="local-card__index mono">01</span>
+          <h3>Langsung ke developer</h3>
+          <p>
+            Kamu bicara dengan orang yang menulis kodenya, bukan perantara. Pertanyaan teknis
+            dijawab tanpa diterjemahkan ulang.
+          </p>
+        </article>
+        <article class="local-card">
+          <span class="local-card__index mono">02</span>
+          <h3>Lingkup disepakati dulu</h3>
+          <p>
+            Fitur, revisi, harga, dan estimasi waktu dibahas sebelum pekerjaan dimulai. Tidak ada
+            biaya kejutan di tengah jalan.
+          </p>
+        </article>
+        <article class="local-card">
+          <span class="local-card__index mono">03</span>
+          <h3>Hasil bisa diperiksa</h3>
+          <p>
+            Website diuji di desktop dan ponsel, tautan diperiksa, dan struktur dibuat agar mudah
+            dirawat setelah serah terima.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="services-title">
+    <div class="container">
+      <SectionHead
+        id="services-title"
+        index="02 / Layanan"
+        title="Yang bisa dikerjakan."
+        meta="Harga awal adalah titik mulai, bukan patokan akhir. Semua bergantung pada lingkup."
+      />
+      <div class="service-list">
+        {services.map((service, index) => (
+          <article class="service-item">
+            <span class="service-item__index mono">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{service.name}</h3>
+              <p>{service.short}</p>
+            </div>
+            <span class="service-item__price">Mulai {service.priceFrom}</span>
+          </article>
+        ))}
+      </div>
+      <p class="service-list-note mono muted">
+        <a class="link" href="/services/">Detail lingkup dan batasan layanan</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="process-title">
+    <div class="container">
+      <SectionHead
+        id="process-title"
+        index="03 / Proses"
+        title="Alur kerja."
+        meta="Empat langkah, tanpa tahap yang tidak perlu."
+      />
+      <ol class="process-list">
+        {processSteps.map((step, index) => (
+          <li class="process-step">
+            <span class="mono">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="coverage-title">
+    <div class="container">
+      <SectionHead
+        id="coverage-title"
+        index="04 / Jangkauan"
+        title="Kendal dan sekitarnya."
+        meta="Pekerjaan dilakukan remote. Pertemuan fisik bisa dibahas bila memang diperlukan."
+      />
+      <ul class="local-cover" aria-label="Area layanan">
+        <li>Kendal</li>
+        <li>Weleri</li>
+        <li>Kaliwungu</li>
+        <li>Boja</li>
+        <li>Semarang</li>
+        <li>Ungaran</li>
+        <li>Batang</li>
+        <li>Pekalongan</li>
+        <li>Jawa Tengah</li>
+      </ul>
+      <p class="mono muted local-cover-note">
+        Di luar area tersebut tetap bisa dibahas selama komunikasi dan serah terima berjalan jelas.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="faq-title">
+    <div class="container">
+      <SectionHead
+        id="faq-title"
+        index="05 / FAQ"
+        title="Pertanyaan yang sering muncul."
+        meta="Jawaban singkat sebelum kamu mengirim brief."
+      />
+      <div class="faq-list">
+        {faqs.map((faq) => (
+          <details class="faq-item">
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ContactBlock id="kendal-contact-title" title="Butuh website untuk usaha di Kendal?" />
+</BaseLayout>

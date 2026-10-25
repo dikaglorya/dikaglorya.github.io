@@ -1,15 +1,17 @@
 ---
 import '../styles/fonts.css';
+import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/chrome.css';
 import '../styles/components.css';
-import '../styles/status.css';
-import '../styles/page-hero.css';
 
 import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 
+import CookieConsent from '../components/CookieConsent.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { services } from '../data/services';
 import { site, socialLinks } from '../data/site';
 
 interface Props {
@@ -50,6 +52,28 @@ const personSchema = {
   jobTitle: 'Developer independen',
   description: site.description,
   email: `mailto:${site.email}`,
+  knowsLanguage: ['id', 'en'],
+  nationality: { '@type': 'Country', name: 'Indonesia' },
+  homeLocation: {
+    '@type': 'Place',
+    name: 'Kendal, Jawa Tengah',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kendal',
+      addressRegion: 'Jawa Tengah',
+      addressCountry: 'ID',
+    },
+  },
+  workLocation: {
+    '@type': 'Place',
+    name: 'Kendal, Jawa Tengah',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kendal',
+      addressRegion: 'Jawa Tengah',
+      addressCountry: 'ID',
+    },
+  },
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Kendal',
@@ -58,11 +82,22 @@ const personSchema = {
   },
   knowsAbout: [
     'Pengembangan web',
+    'Astro',
     'Bot Telegram',
     'Gateway AI',
     'Automasi keamanan',
     'Pengembangan Android',
+    'Termux',
   ],
+  hasOccupation: {
+    '@type': 'Occupation',
+    name: 'Developer independen',
+    occupationLocation: {
+      '@type': 'City',
+      name: 'Kendal',
+    },
+    skills: 'Web development, Telegram bots, AI gateways, developer tools, automation',
+  },
   sameAs: socialLinks.map((link) => link.href),
 };
 
@@ -74,14 +109,62 @@ const websiteSchema = {
   url: site.url,
   description: site.description,
   inLanguage: 'id',
-  author: {
-    '@id': `${site.url}/#person`,
+  publisher: { '@id': `${site.url}/#person` },
+  author: { '@id': `${site.url}/#person` },
+};
+
+const studioSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${site.url}/#studio`,
+  name: site.name,
+  alternateName: ['DikaCode', 'DikaOfc', 'DikaGlorya'],
+  url: site.url,
+  image: imageURL.href,
+  description:
+    'Layanan pembuatan website, bot, tools custom, dan perbaikan sistem oleh DikaGlorya di Kendal, Jawa Tengah.',
+  founder: { '@id': `${site.url}/#person` },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Kendal',
+    addressRegion: 'Jawa Tengah',
+    addressCountry: 'ID',
   },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -6.921,
+    longitude: 110.202,
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Kendal' },
+    { '@type': 'City', name: 'Semarang' },
+    { '@type': 'City', name: 'Batang' },
+    { '@type': 'City', name: 'Pekalongan' },
+    { '@type': 'AdministrativeArea', name: 'Jawa Tengah' },
+    { '@type': 'Country', name: 'Indonesia' },
+  ],
+  priceRange: 'Rp50.000 - Rp3.000.000+',
+  sameAs: socialLinks.map((link) => link.href),
+  makesOffer: services.map((service) => ({
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: service.name,
+      description: service.description,
+      provider: { '@id': `${site.url}/#studio` },
+    },
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      priceCurrency: 'IDR',
+      description: `${service.priceFrom}. ${service.priceNote}`,
+    },
+  })),
 };
 
 const pageSchemas = [
   personSchema,
   websiteSchema,
+  studioSchema,
   ...(Array.isArray(schema) ? schema : schema ? [schema] : []),
 ];
 ---
@@ -92,11 +175,9 @@ const pageSchemas = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#111111" data-theme-color />
+    <meta name="theme-color" content="#07080a" data-theme-color />
     <meta name="color-scheme" content="dark light" />
     <script is:inline>
-      // Resolve the theme before the first paint so neither theme flashes.
-      // The chosen value is stored under the same key the toggle writes.
       (() => {
         const root = document.documentElement;
         let choice = null;
@@ -110,14 +191,23 @@ const pageSchemas = [
         }
         root.dataset.theme = choice;
         const meta = document.querySelector('meta[data-theme-color]');
-        if (meta) meta.setAttribute('content', choice === 'light' ? '#ffffff' : '#111111');
+        if (meta) meta.setAttribute('content', choice === 'light' ? '#f2eee4' : '#07080a');
       })();
     </script>
     <meta name="author" content={site.personName} />
-    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    <meta
+      name="keywords"
+      content="DikaGlorya, DikaOfc, DikaCode, developer Kendal, jasa website Kendal, pembuatan website Kendal, bot Telegram, developer tools, ObitoGlory"
+    />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="geo.region" content="ID-JT" />
+    <meta name="geo.placename" content="Kendal, Jawa Tengah" />
+    <meta name="geo.position" content="-6.921;110.202" />
+    <meta name="ICBM" content="-6.921, 110.202" />
 
     <link rel="preload" as="font" type="font/woff2" href={interFont} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={newsreaderFont} crossorigin />
     <script is:inline>
       document.documentElement.classList.add('js');
       window.setTimeout(() => {
@@ -133,7 +223,10 @@ const pageSchemas = [
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate icon" href="/favicon.svg" sizes="any" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Jurnal ObitoGlory" href="/rss.xml" />
+    <link rel="author" href={`${site.url}/about/`} />
     {socialLinks.map((link) => <link rel="me" href={link.href} />)}
 
     <meta property="og:type" content={type} />
@@ -167,6 +260,8 @@ const pageSchemas = [
       <slot />
     </main>
     <Footer />
+    <CookieConsent />
+    <div class="cursor" data-cursor aria-hidden="true"></div>
     <script>
       import '../scripts/ui';
       import '../scripts/motion';

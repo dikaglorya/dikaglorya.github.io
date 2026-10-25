@@ -1,12 +1,7 @@
 /* ==========================================================================
-   ObitoGlory — base layer
-   Reset, type scale, layout primitives, controls, utilities.
-   Monochrome rules: flat fills, hairline borders, no shadows, no gradients.
+   Kendal Signal — base
+   Reset, typography, layout primitives, controls, and the shared motion layer.
    ========================================================================== */
-
-@import './tokens.css';
-
-/* ---------- Reset ------------------------------------------------------- */
 
 *,
 *::before,
@@ -16,54 +11,50 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  background: var(--background);
   scroll-behavior: smooth;
-  /* The header is fixed: without this every in-page anchor (#work, #faq,
-     #pricing, the skip link) scrolls its target underneath it. */
-  scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 12px);
-  scrollbar-gutter: stable;
-  overflow-x: clip;
-  -webkit-tap-highlight-color: transparent;
+  scrollbar-color: var(--line-strong) var(--bg);
 }
 
 body {
   margin: 0;
   min-height: 100svh;
   overflow-x: clip;
-  padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
-  background: var(--background);
-  color: var(--text-primary);
-  font-family: var(--font-ui);
-  font-size: var(--fs-base);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
   line-height: var(--lh-body);
-  font-synthesis-weight: none;
+  font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
 
-/* <html> is the scroller, not <body>: locking only body lets the page scroll
-   behind the sheet. Both are set so the lock holds in every engine. */
-body.menu-open,
-html.menu-open {
-  overflow: hidden;
-  overscroll-behavior: none;
+body::after {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
 }
 
-#main,
-#main > *,
-.page {
-  min-width: 0;
+::selection {
+  background: var(--selection);
+  color: var(--ink);
 }
 
 img,
 svg,
 video,
-canvas,
-iframe {
+canvas {
   display: block;
   max-width: 100%;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 img {
@@ -80,13 +71,26 @@ textarea {
 
 button {
   cursor: pointer;
-  background: none;
-  border: 0;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
 }
 
 ul,
@@ -99,464 +103,495 @@ ol {
 h1,
 h2,
 h3,
-h4,
-h5,
-h6,
-p,
-figure,
-blockquote,
-dl,
-dd,
-pre {
-  margin: 0;
-}
-
-/* ---------- Typography -------------------------------------------------- */
-
-h1,
-h2,
-h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 620;
+  font-weight: 400;
   line-height: var(--lh-heading);
-  letter-spacing: -0.018em;
+  letter-spacing: -0.035em;
   text-wrap: balance;
-  overflow-wrap: break-word;
 }
 
 h1 {
   font-size: var(--fs-h1);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--tracking-display);
 }
 
 h2 {
   font-size: var(--fs-h2);
-  letter-spacing: var(--tracking-h2);
 }
 
 h3 {
   font-size: var(--fs-h3);
-  letter-spacing: var(--tracking-h3);
+  letter-spacing: -0.02em;
 }
 
 h4 {
   font-size: var(--fs-h4);
-  letter-spacing: -0.008em;
-}
-
-p {
-  max-width: var(--measure);
-  overflow-wrap: break-word;
-  text-wrap: pretty;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 strong {
-  font-weight: 620;
+  font-weight: 600;
 }
 
 small {
-  font-size: 0.9em;
+  font-size: var(--fs-small);
 }
 
 hr {
   height: 1px;
   border: 0;
-  margin: 0;
-  background: var(--separator);
-}
-
-[hidden] {
-  display: none !important;
-}
-
-/* Zero elevation, enforced once. Section 12.E of the design prompt requires it,
-   and it is also the honest default for this system: hierarchy comes from
-   surfaces and hairline borders, never from a shadow. `!important` is deliberate
-   — it has to beat third-party widgets and any generated style that ships a
-   shadow we do not control. Focus rings are outlines, so they survive. */
-*,
-*::before,
-*::after {
-  box-shadow: none !important;
-  text-shadow: none !important;
-}
-
-::selection {
-  background: var(--interactive);
-  color: var(--interactive-ink);
+  background: var(--line);
 }
 
 :focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
-  border-radius: var(--r-xs);
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
 }
 
-dialog {
-  padding: 0;
-  border: 0;
-  color: inherit;
-  background: transparent;
-}
-
-/* A modal overlay is a scrim, not a decorative panel: solid tint, no blur. */
-dialog::backdrop {
-  background: var(--scrim);
-}
-
-table {
-  border-collapse: collapse;
-  max-width: 100%;
-}
-
-/* ---------- Utilities --------------------------------------------------- */
-
-.mono {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-  font-variant-ligatures: none;
-}
-
-.muted {
-  color: var(--text-secondary);
-}
-
-.dim {
-  color: var(--text-muted);
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: var(--fs-sm);
-}
-
-.status::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  background: var(--status-success);
-  /* A hairline ring instead of a soft glow. The dot still reads as "live"
-     without a shadow, and an outline is a border the eye can resolve at 6px. */
-  outline: 1px solid var(--status-success-border);
-  outline-offset: 2px;
-}
-
-/* Status is conveyed by the label; the dot only reinforces it. */
-.status--warning::before {
-  background: var(--status-warning);
-}
-
-.status--error::before {
-  background: var(--status-error);
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Skip link (WCAG 2.4.1 Bypass Blocks). Hidden with a transform measured
-   against its own height so it can never leave a sliver on screen. */
-.skip-link {
-  position: fixed;
-  z-index: 500;
-  top: calc(env(safe-area-inset-top, 0px) + 8px);
-  left: 50%;
-  padding: 10px 16px;
-  border: 1px solid var(--background);
-  border-radius: var(--r-sm);
-  background: var(--interactive);
-  color: var(--interactive-ink);
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  transform: translate(-50%, calc(-100% - 24px));
-  opacity: 0;
-  pointer-events: none;
-  transition: transform var(--dur-2) var(--ease), opacity var(--dur-1) var(--ease);
-}
-
-.skip-link:focus,
-.skip-link:focus-visible {
-  transform: translate(-50%, 0);
-  opacity: 1;
-  pointer-events: auto;
+:target {
+  scroll-margin-top: calc(var(--header-h) + 2rem);
 }
 
 /* ---------- Layout primitives ------------------------------------------- */
 
 .container {
-  width: min(100% - (2 * var(--gutter)), var(--page-max));
+  width: min(var(--container), 100% - (var(--gutter) * 2));
   margin-inline: auto;
-  min-width: 0;
 }
 
 .section {
-  padding-block: var(--section-y);
-  min-width: 0;
-}
-
-/* Consecutive sections share one rhythm: the space between them belongs to the
-   boundary, not to a doubled top + bottom padding. */
-.section + .section {
-  padding-top: calc(var(--section-y) * 0.62);
-}
-
-/* A band change already marks the boundary, so it keeps more air above. */
-.section + .section.section--paper {
-  padding-top: var(--section-y);
+  position: relative;
+  padding-block: var(--section);
+  border-top: 1px solid var(--line);
 }
 
 .section--tight {
-  padding-block: var(--section-y-tight);
-  min-width: 0;
+  padding-block: var(--section-tight);
 }
 
-.section--tight-2 {
-  padding-block: calc(var(--section-y-tight) * 0.82);
-  min-width: 0;
+.section--flush {
+  padding-block: 0;
 }
 
-.section + .section--tight-2 {
-  padding-top: calc(var(--section-y-tight) * 0.42);
+.section--surface {
+  background: var(--bg-2);
 }
 
-/* Raised band: a tonal step, not an inverted page or a gradient. */
-.section--paper {
-  background: var(--background-secondary);
-  border-block: 1px solid var(--separator);
+.section--accent {
+  background: var(--orange);
+  color: var(--ink);
+  --fg: var(--ink);
+  --fg-2: rgb(7 8 10 / 76%);
+  --fg-3: rgb(7 8 10 / 62%);
+  --line: rgb(7 8 10 / 22%);
+  --line-strong: rgb(7 8 10 / 44%);
+  --accent: var(--ink);
+  --accent-fill: var(--ink);
+  --accent-ink: var(--bone);
 }
 
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
+/* ---------- Type utilities ---------------------------------------------- */
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 400;
+  letter-spacing: 0.055em;
+  line-height: 1.55;
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--s-2);
-}
-
-/* ---------- Controls ---------------------------------------------------- */
-
-.btn {
-  position: relative;
+.label {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: var(--tap);
-  padding: 0 18px;
-  border: 1px solid var(--border-control);
-  border-radius: var(--r-md);
-  background: transparent;
-  color: var(--text-primary);
-  font-family: var(--font-ui);
-  font-size: 0.9375rem;
-  font-weight: 560;
-  line-height: 1.2;
-  letter-spacing: -0.004em;
-  text-align: center;
+  gap: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.label::before {
+  width: 1.6rem;
+  height: 1px;
+  content: '';
+  background: var(--accent);
+}
+
+.muted {
+  color: var(--fg-3);
+}
+
+.dim {
+  opacity: 0.62;
+}
+
+.italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  transition:
-    background-color var(--dur-2) var(--ease),
-    border-color var(--dur-2) var(--ease),
-    color var(--dur-2) var(--ease);
+  border: 0;
 }
 
-.btn:hover {
-  background: var(--surface-secondary);
-  border-color: var(--text-muted);
+.skip-link {
+  position: fixed;
+  z-index: 200;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.8rem 1rem;
+  transform: translateY(-160%);
+  background: var(--accent-fill);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
-.btn:active {
-  background: var(--surface-active);
+.skip-link:focus {
+  transform: translateY(0);
 }
 
-.btn--primary {
-  border-color: var(--interactive);
-  background: var(--interactive);
-  color: var(--interactive-ink);
-}
-
-/* Darker/lighter by tone, not by glow. */
-.btn--primary:hover {
-  border-color: var(--interactive-hover);
-  background: var(--interactive-hover);
-  color: var(--interactive-ink);
-}
-
-.btn--primary:active {
-  background: var(--interactive-active);
-  border-color: var(--interactive-active);
-}
-
-.btn--small {
-  min-height: var(--tap);
-  padding: 0 14px;
-  border-radius: var(--r-md);
-  font-size: var(--fs-sm);
-}
-
-.btn .arrow-icon {
-  flex: none;
-}
+/* ---------- Links -------------------------------------------------------- */
 
 .link {
   display: inline-flex;
   align-items: center;
-  min-height: var(--tap, 44px);
-  gap: 6px;
-  padding-block: 6px;
-  color: var(--text-primary);
-  font-weight: 540;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: var(--border-control);
-  text-underline-offset: 0.22em;
-  transition: text-decoration-color var(--dur-2) var(--ease),
-    text-decoration-thickness var(--dur-2) var(--ease);
+  gap: 0.55rem;
+  padding-block: 0.2rem;
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: color var(--dur-fast) ease, background-size var(--dur) var(--ease-out);
 }
 
-.link:hover {
-  text-decoration-color: currentColor;
-  text-decoration-thickness: 2px;
+.link:hover,
+.link:focus-visible {
+  color: var(--accent);
+  background-size: 0 1px;
+}
+
+.link .arrow-icon {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.link:hover .arrow-icon {
+  transform: translateX(0.3rem);
+}
+
+/* ---------- Buttons ------------------------------------------------------ */
+
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  --btn-line: var(--line-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 3rem;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid var(--btn-line);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, calc(100% - 0.6rem) 0, 100% 0.6rem, 100% 100%, 0.6rem 100%, 0 100%);
+  transition:
+    background var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    transform var(--dur) var(--ease-out);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  --btn-bg: var(--fg);
+  --btn-fg: var(--bg);
+  --btn-line: var(--fg);
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  --btn-bg: var(--accent-fill);
+  --btn-fg: var(--accent-ink);
+  --btn-line: var(--accent-fill);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  --btn-bg: var(--fg);
+  --btn-fg: var(--bg);
+  --btn-line: var(--fg);
+}
+
+.btn--small {
+  min-height: 2.4rem;
+  padding: 0.6rem 1rem;
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+}
+
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .arrow-icon {
   flex: none;
-  transition: transform var(--dur-2) var(--ease);
+  width: 1.1em;
+  height: 1.1em;
 }
 
-.link:hover .arrow-icon,
-.btn:hover .arrow-icon {
-  transform: translateX(3px);
-}
-
-.arrow-icon--down,
-.arrow-icon--up {
+.arrow-icon--down {
   transform: rotate(90deg);
 }
 
-/* ---------- Forms ------------------------------------------------------- */
+.arrow-icon--up {
+  transform: rotate(-90deg);
+}
+
+/* ---------- Forms -------------------------------------------------------- */
+
+.form-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
 label {
-  display: block;
-  color: var(--text-secondary);
-  font-size: var(--fs-sm);
-  font-weight: 560;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
 }
 
 input,
 select,
 textarea {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 1px solid var(--border-control);
-  border-radius: var(--r-sm);
-  background: var(--surface-sunken);
-  color: var(--text-primary);
-  /* Never below 16px: mobile browsers zoom the page when a focused field is
-     smaller, which then leaves the layout scrolled sideways. */
-  font-size: max(16px, var(--fs-base));
-  line-height: 1.4;
-  transition: border-color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
-}
-
-textarea {
-  min-height: 132px;
-  resize: vertical;
-  line-height: 1.55;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: var(--text-muted);
-  opacity: 1;
+  min-height: 3rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease;
 }
 
 input:hover,
 select:hover,
 textarea:hover {
-  border-color: var(--text-muted);
+  border-color: var(--line-strong);
 }
 
-/* Outline, not box-shadow: the focus ring is a real ring in both themes and
-   survives forced-colors mode. */
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 1px;
-  border-color: var(--text-primary);
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: var(--surface-2);
 }
 
-input:disabled,
-select:disabled,
-textarea:disabled,
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
+textarea {
+  resize: vertical;
 }
 
-@media (forced-colors: active) {
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible,
-  summary:focus-visible,
-  [tabindex]:focus-visible {
-    outline: 2px solid CanvasText;
-    outline-offset: 2px;
-  }
-}
-
-/* Native chevron: it follows color-scheme in both themes, needs no image
-   asset, and no palette value leaks out of tokens.css. */
 select {
-  appearance: auto;
-  padding-right: 12px;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--fg-3) 50%),
+    linear-gradient(135deg, var(--fg-3) 50%, transparent 50%);
+  background-position: calc(100% - 1.1rem) 1.25rem, calc(100% - 0.75rem) 1.25rem;
+  background-repeat: no-repeat;
+  background-size: 0.35rem 0.35rem;
+  padding-right: 2.4rem;
 }
 
-/* ---------- Motion ------------------------------------------------------ */
+.required-mark {
+  color: var(--accent);
+}
 
-/* No will-change: it promoted every reveal target on the page (dozens of
-   layers on /projects/) for the whole session. */
-.js [data-reveal] {
+.form-note {
+  color: var(--fg-3);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+}
+
+.form-status {
+  min-height: 1.4em;
+  color: var(--fg-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+}
+
+.form-status[data-state='error'] {
+  color: var(--danger);
+}
+
+.form-status[data-state='success'] {
+  color: var(--ok);
+}
+
+/* ---------- Status ------------------------------------------------------- */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+.status::before {
+  width: 0.45rem;
+  height: 0.45rem;
+  content: '';
+  background: var(--ok);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--ok-bg);
+}
+
+/* ---------- Motion layer ------------------------------------------------ */
+
+html.js [data-reveal] {
   opacity: 0;
-  transform: translateY(var(--reveal-y));
-  transition: opacity var(--dur-4) var(--ease-out), transform var(--dur-4) var(--ease-out);
+  transform: translateY(1.6rem);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
-.js [data-reveal].is-in {
+html.js [data-reveal].is-in {
   opacity: 1;
   transform: none;
 }
 
-/* Reduced motion: kill movement and looping, but keep short colour/opacity
-   transitions — those aid comprehension rather than causing vestibular load. */
+html.js [data-reveal='clip'] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1100ms var(--ease-out);
+}
+
+html.js [data-reveal='clip'].is-in {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-parallax] {
+  will-change: transform;
+}
+
+[data-tilt] {
+  transform: perspective(1100px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 600ms var(--ease-out);
+}
+
+.cursor {
+  position: fixed;
+  z-index: var(--z-cursor);
+  top: 0;
+  left: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--fg);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition:
+    width 220ms var(--ease-out),
+    height 220ms var(--ease-out),
+    background 220ms ease,
+    opacity 220ms ease;
+}
+
+body.cursor-ready .cursor {
+  opacity: 0.55;
+}
+
+body.cursor-active .cursor {
+  width: 3.8rem;
+  height: 3.8rem;
+  background: var(--accent);
+  border-color: var(--accent);
+  opacity: 0.9;
+  mix-blend-mode: difference;
+}
+
+.scroll-progress {
+  position: fixed;
+  z-index: calc(var(--z-header) + 1);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform: scaleX(var(--progress, 0));
+  transform-origin: 0 50%;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+/* ---------- Responsive -------------------------------------------------- */
+
+@media (max-width: 760px) {
+  :root {
+    --header-h: 64px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding-block: clamp(4rem, 12vw, 7rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -567,37 +602,18 @@ select {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-property: color, background-color, border-color, outline-color,
-      text-decoration-color, opacity !important;
-    transition-duration: 100ms !important;
     scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 
-  .js [data-reveal] {
+  html.js [data-reveal],
+  html.js [data-reveal='clip'] {
     opacity: 1;
     transform: none;
-  }
-}
-
-/* Android has no hover: any :hover transform would stick after a tap. */
-@media (hover: none) {
-  .btn:hover,
-  .link:hover,
-  .project-row:hover,
-  .journal-card:hover,
-  .capability:hover,
-  .filter-btn:hover,
-  .icon-btn:hover,
-  .menu-btn:hover,
-  .site-nav__link:hover,
-  .profile-links a:hover,
-  .theme-btn:hover {
-    transform: none;
+    clip-path: none;
   }
 
-  .link:hover .arrow-icon,
-  .btn:hover .arrow-icon,
-  .project-row:hover .project-row__arrow {
-    transform: none;
+  .cursor {
+    display: none;
   }
 }

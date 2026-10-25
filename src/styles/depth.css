@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Depth & Dimension — Kendal Signal
+   Pure CSS 3D depth, glow, grain overlays
+   ========================================================================== */
+
+:root {
+  --depth-1: translateZ(12px);
+  --depth-2: translateZ(24px);
+  --depth-3: translateZ(40px);
+  --depth-shadow-1: 0 4px 24px -8px rgb(7 8 10 / 0.5);
+  --depth-shadow-2: 0 12px 48px -16px rgb(7 8 10 / 0.6);
+  --depth-shadow-3: 0 24px 80px -24px rgb(7 8 10 / 0.7);
+  --glow-orange: 0 0 48px -8px rgb(255 90 31 / 0.35);
+  --glow-blue: 0 0 64px -12px rgb(59 91 255 / 0.25);
+  --rim-blue: 0 0 0 1px rgb(59 91 255 / 0.4);
+  --grain-opacity: 0.035;
+}
+
+/* Perspective containers */
+.depth-container {
+  perspective: 1000px;
+  perspective-origin: center center;
+}
+
+.depth-container--shallow { perspective: 600px; }
+.depth-container--deep { perspective: 1400px; }
+
+/* Card depth */
+.work-card,
+.capability-row,
+.featured-project__art,
+.about-portrait,
+.journal-card,
+.service-glyph {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-card:hover,
+.capability-row:hover,
+.featured-project__art:hover,
+.about-portrait:hover,
+.journal-card:hover {
+  transform: var(--depth-1) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  box-shadow: var(--depth-shadow-2), var(--glow-orange);
+}
+
+.work-card:active,
+.capability-row:active {
+  transform: var(--depth-2) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(0.99);
+}
+
+/* Rim highlight on cards */
+.work-card::before,
+.capability-row::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    transparent 40%,
+    rgb(59 91 255 / 0.15) 50%,
+    transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  z-index: -1;
+}
+
+.work-card:hover::before,
+.capability-row:hover::before {
+  opacity: 1;
+}
+
+/* Section glow separators */
+.section-glow::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgb(255 90 31 / 0.25),
+    transparent);
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+/* Grain overlay — full page */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay { opacity: calc(var(--grain-opacity) * 0.5); }
+}
+
+@media (prefers-contrast: more) {
+  .grain-overlay { opacity: calc(var(--grain-opacity) * 0.3); }
+}
+
+/* Aurora background — subtle animated gradient */
+.aurora-bg {
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgb(255 90 31 / 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 80% 90%, rgb(59 91 255 / 0.05), transparent),
+    radial-gradient(ellipse 40% 50% at 50% 50%, rgb(255 90 31 / 0.03), transparent);
+  animation: aurora-drift 40s ease-in-out infinite alternate;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aurora-bg { opacity: 1; }
+}
+
+@keyframes aurora-drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-2%, 1%) rotate(1deg); }
+  50% { transform: translate(1%, -1%) rotate(-0.5deg); }
+  75% { transform: translate(-1%, -2%) rotate(0.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Focus ring — global override */
+*:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline-offset: 4px;
+}
+
+/* Reduced motion — flatten depth */
+@media (prefers-reduced-motion: reduce) {
+  .work-card:hover,
+  .capability-row:hover,
+  .featured-project__art:hover,
+  .about-portrait:hover,
+  .journal-card:hover {
+    transform: none;
+    box-shadow: var(--depth-shadow-1);
+  }
+  .aurora-bg { display: none; }
+}

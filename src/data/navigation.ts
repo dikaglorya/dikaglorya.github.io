@@ -12,5 +12,6 @@ export const footerNavigation = [
   { href: '/journal/', label: 'Jurnal' },
   { href: '/about/', label: 'Tentang' },
   { href: '/services/', label: 'Layanan' },
+  { href: '/kendal/', label: 'Kendal' },
   { href: '/contact/', label: 'Kontak' },
 ] as const;

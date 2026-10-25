@@ -1,0 +1,207 @@
+/* ==========================================================================
+   Liquid Glass — iOS / Device Adaptive
+   Apple-style glassmorphism with progressive enhancement
+   ========================================================================== */
+
+:root {
+  --glass-blur: 18px;
+  --glass-saturate: 160%;
+  --glass-border: rgba(242 238 228 / 0.12);
+  --glass-inner: rgba(242 238 228 / 0.14);
+  --glass-bg: rgba(12 13 16 / 0.72);
+  --glass-bg-strong: rgba(12 13 16 / 0.88);
+}
+
+/* Base glass panel utility */
+.glass-panel {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    var(--glass-inner) 0%,
+    transparent 40%,
+    transparent 60%,
+    var(--glass-inner) 100%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-panel {
+    background: var(--surface-2);
+    border-color: var(--line-soft);
+  }
+  .glass-panel::before { display: none; }
+}
+
+/* iOS / Safari enhanced glass */
+@supports (-webkit-touch-callout: inherit) {
+  .glass-panel {
+    --glass-blur: 24px;
+    --glass-saturate: 190%;
+    --glass-bg: rgba(12 13 16 / 0.68);
+  }
+  .glass-panel::before { opacity: 0.8; }
+}
+
+/* Light mode glass */
+@media (prefers-color-scheme: light) {
+  :root {
+    --glass-bg: rgba(242 238 228 / 0.72);
+    --glass-bg-strong: rgba(242 238 228 / 0.88);
+    --glass-border: rgba(7 8 10 / 0.1);
+    --glass-inner: rgba(7 8 10 / 0.08);
+  }
+  @supports (-webkit-touch-callout: inherit) {
+    .glass-panel { --glass-bg: rgba(242 238 228 / 0.68); }
+  }
+}
+
+/* Reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel {
+    background: var(--surface-2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: var(--line);
+  }
+  .glass-panel::before { display: none; }
+}
+
+/* Component-specific glass patches — applied to existing classes */
+.header { /* Header.astro */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.marquee {
+  background: linear-gradient(180deg,
+    var(--glass-bg) 0%,
+    transparent 50%,
+    transparent 100%);
+  backdrop-filter: blur(calc(var(--glass-blur) * 0.5)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 0.5)) saturate(var(--glass-saturate));
+}
+
+.btn {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.btn--primary {
+  background: var(--orange);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: var(--orange);
+}
+
+.work-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.work-card__art {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cookieconsent {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.2)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.2)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.capability-row {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.about-portrait {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.journal-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.contact-block {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+}
+
+.local-band {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-top: 1px solid var(--glass-border);
+}
+
+/* Safe area handling for iOS */
+@supports (padding: max(0px, env(safe-area-inset-top))) {
+  .header {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+  .hero {
+    padding-top: max(4rem, env(safe-area-inset-top) + 2rem);
+  }
+  .footer {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom) + 1rem);
+  }
+}
+
+/* Dynamic viewport units for iOS Safari */
+.hero {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .hero { min-height: 100svh; }
+}
+
+/* Tap highlight removal for decorative elements */
+.hero-scene,
+.work-card__art,
+.marquee,
+.glass-panel::before {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Mobile glass — lighter */
+@media (pointer: coarse) and (max-width: 768px) {
+  :root {
+    --glass-blur: 12px;
+    --glass-saturate: 140%;
+  }
+  @supports (-webkit-touch-callout: inherit) {
+    :root { --glass-blur: 16px; }
+  }
+}

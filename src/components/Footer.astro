@@ -1,65 +1,84 @@
 ---
+import OrbitMark from './OrbitMark.astro';
 import { site, socialLinks } from '../data/site';
 import { footerNavigation } from '../data/navigation';
+import { services } from '../data/services';
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="container">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <a class="footer__wordmark" href="/">
-          <span class="brand__mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 3.9 19.4 8.2v7.6L12 20.1 4.6 15.8V8.2z"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linejoin="round"></path>
-              <circle cx="12" cy="12" r="2.1" fill="currentColor"></circle>
-            </svg>
-          </span>
-          obitoglory<span class="brand__dot">.</span>
-        </a>
-        <p class="footer__desc">
-          Karya DikaGlorya diterbitkan dengan identitas developer DikaCode. ObitoGlory adalah
-          portofolio resminya.
-        </p>
-        <p class="status">{site.availability}</p>
-      </div>
+  <div class="container footer-cta">
+    <p class="label">Next project</p>
+    <h2 class="footer-cta__title">Punya ide yang <em>layak</em> dibangun?</h2>
+    <a class="footer-cta__mail" href={`mailto:${site.email}`}>{site.email}</a>
+    <div class="footer-cta__links">
+      <a class="link" href="/contact/">Kirim brief</a>
+      <a class="link" href={site.telegramUrl} rel="me">Telegram @{site.telegram}</a>
+      <span class="mono muted">{site.availability}</span>
+    </div>
+  </div>
 
-      <nav class="footer__col" aria-label="Navigasi footer">
-        <h2 class="footer__title">Halaman</h2>
-        <ul class="footer__list">
-          {footerNavigation.map((item) => (
-            <li><a href={item.href}>{item.label}</a></li>
-          ))}
-        </ul>
-      </nav>
-
-      <div class="footer__col">
-        <h2 class="footer__title">Tautan</h2>
-        <ul class="footer__list">
-          {socialLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                rel={`noopener noreferrer ${link.rel}`}
-                target="_blank"
-                data-outbound={link.label.toLowerCase()}>{link.label}</a
-              >
-            </li>
-          ))}
-          <li><a href={`mailto:${site.email}`}>Email</a></li>
-        </ul>
-      </div>
+  <div class="container footer-grid">
+    <div class="footer__brand">
+      <a class="footer__wordmark" href="/">
+        <OrbitMark class="brand__mark" />
+        obitoglory<span class="brand__dot">.</span>
+      </a>
+      <p class="footer__desc">
+        DikaGlorya (DikaOfc, DikaCode), developer independen di Kendal. Website, bot, tools,
+        dan automasi yang dibuat untuk dipakai.
+      </p>
+      <p class="status">{site.availability}</p>
+      <p class="footer__local mono">
+        {site.location} · <a href="/kendal/">Jasa website Kendal</a>
+      </p>
     </div>
 
-    <div class="footer__bottom">
-      <p>© {year} ObitoGlory. DikaGlorya (DikaCode).</p>
-      <p>Dibuat dengan Astro, tanpa analytics atau tracking.</p>
-      <p><a href="#top">Kembali ke atas ↑</a></p>
+    <nav class="footer__col" aria-label="Navigasi footer">
+      <h2 class="footer__title">Halaman</h2>
+      <ul class="footer__list">
+        {footerNavigation.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li><a href="/kendal/">Kendal</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Layanan</h2>
+      <ul class="footer__list">
+        {services.map((service) => (
+          <li><a href={`/services/#${service.slug}`}>{service.name}</a></li>
+        ))}
+      </ul>
     </div>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Jejak</h2>
+      <ul class="footer__list">
+        {socialLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              rel={`noopener noreferrer ${link.rel}`}
+              target="_blank"
+              data-outbound={link.label.toLowerCase()}
+            >{link.label}</a>
+          </li>
+        ))}
+        <li><a href={`mailto:${site.email}`}>Email</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} ObitoGlory · DikaGlorya (DikaCode)</p>
+    <p>Kendal, Jawa Tengah, Indonesia · WIB</p>
+    <p>
+      <a href="/privacy/">Privasi &amp; cookie</a> ·
+      <button class="footer__consent" type="button" data-cookie-open>Preferensi</button> ·
+      <a href="#top">Ke atas</a>
+    </p>
   </div>
 </footer>

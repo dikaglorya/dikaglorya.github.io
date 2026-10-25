@@ -1,5 +1,5 @@
 ---
-import Arrow from './Arrow.astro';
+import OrbitMark from './OrbitMark.astro';
 import { mainNavigation } from '../data/navigation';
 import { articles } from '../data/articles';
 import { projects } from '../data/projects';
@@ -9,6 +9,7 @@ const path = Astro.url.pathname;
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const searchItems = [
   ...mainNavigation,
+  { href: '/kendal/', label: 'Jasa website Kendal' },
   { href: '/contact/', label: 'Kontak' },
   ...projects.map((project) => ({ href: `/projects/${project.slug}/`, label: project.name })),
   ...articles.map((article) => ({ href: `/journal/${article.slug}/`, label: article.title })),
@@ -20,34 +21,28 @@ const searchItems = [
 <header class="site-header" data-header>
   <div class="header-inner">
     <a class="brand" href="/">
-      <span class="brand__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 3.9 19.4 8.2v7.6L12 20.1 4.6 15.8V8.2z"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linejoin="round"></path>
-          <circle cx="12" cy="12" r="2.1" fill="currentColor"></circle>
-        </svg>
+      <OrbitMark class="brand__mark" />
+      <span class="brand__stack">
+        <span class="brand__name">obitoglory<span class="brand__dot">.</span></span>
+        <span class="brand__by">DikaGlorya · Kendal</span>
       </span>
-      <span class="brand__name">obitoglory<span class="brand__dot">.</span></span>
-      <span class="brand__by" aria-hidden="true">DikaOfc</span>
-      <span class="sr-only"> — beranda</span>
     </a>
 
     <nav class="site-nav" aria-label="Navigasi utama">
-      {mainNavigation.map((item) => (
+      {mainNavigation.map((item, index) => (
         <a
           class="site-nav__link"
           href={item.href}
           aria-current={isCurrent(item.href) ? 'page' : undefined}
         >
+          <span class="site-nav__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
           {item.label}
         </a>
       ))}
     </nav>
 
     <div class="header-tools">
+      <span class="header-time mono" data-clock>Kendal · --:-- WIB</span>
       <button
         class="icon-btn theme-btn"
         type="button"
@@ -69,13 +64,14 @@ const searchItems = [
         >
         <span class="sr-only">Cari halaman, proyek, dan tautan</span>
       </button>
-      <a class="btn btn--primary btn--small header-cta" href="/contact/">Kontak</a>
+      <a class="btn btn--primary btn--small header-cta" href="/contact/">Mulai proyek</a>
       <button
         class="menu-btn"
         type="button"
         aria-haspopup="dialog"
         aria-controls="mobile-menu"
         data-menu-open
+        aria-expanded="false"
       >
         <span>Menu</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
@@ -115,18 +111,8 @@ const searchItems = [
   <div class="mobile-menu__inner">
     <div class="mobile-menu__bar">
       <a class="brand" href="/">
-        <span class="brand__mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 3.9 19.4 8.2v7.6L12 20.1 4.6 15.8V8.2z"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linejoin="round"></path>
-            <circle cx="12" cy="12" r="2.1" fill="currentColor"></circle>
-          </svg>
-        </span>
+        <OrbitMark class="brand__mark" />
         <span class="brand__name">obitoglory<span class="brand__dot">.</span></span>
-        <span class="sr-only"> — beranda</span>
       </a>
       <h2 id="mobile-menu-title" class="sr-only">Menu</h2>
       <button class="mobile-menu__close" type="button" data-menu-close>
@@ -149,23 +135,20 @@ const searchItems = [
           <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
         </a>
       ))}
+      <a class="mobile-menu__link" href="/kendal/">
+        Kendal
+        <span aria-hidden="true">06</span>
+      </a>
     </nav>
 
     <div class="mobile-menu__foot">
-      <div>
-        <p class="status">{site.availability}</p>
-        <p class="mono dim mobile-menu__location">{site.locationShort}</p>
-      </div>
-      <button
-        class="theme-row"
-        type="button"
-        data-theme-toggle
-        aria-label="Tema: Gelap. Aktifkan tema terang"
-      >
+      <p class="status">{site.availability}</p>
+      <p class="mono mobile-menu__location">{site.location}</p>
+      <button class="theme-row" type="button" data-theme-toggle aria-label="Tema: Gelap. Aktifkan tema terang">
         <span>Tema</span>
         <span class="theme-row__value" data-theme-label>Gelap</span>
       </button>
-      <a class="btn btn--primary" href="/contact/">Hubungi saya <Arrow /></a>
+      <a class="btn btn--primary" href="/contact/">Mulai proyek</a>
       <div class="mobile-menu__socials">
         {socialLinks.map((link) => (
           <a href={link.href} rel={`noopener noreferrer ${link.rel}`} target="_blank">{link.label}</a>

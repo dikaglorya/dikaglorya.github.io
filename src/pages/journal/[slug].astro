@@ -1,7 +1,7 @@
 ---
 import ContactBlock from '../../components/ContactBlock.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import '../../styles/detail.css';
+import '../../styles/pages.css';
 import { articles, type Article } from '../../data/articles';
 import { site } from '../../data/site';
 
@@ -27,20 +27,31 @@ const sectionId = (heading: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  '@id': canonical,
-  headline: article.title,
-  description: article.description,
-  datePublished: article.date,
-  dateModified: article.date,
-  mainEntityOfPage: canonical,
-  author: { '@id': `${site.url}/#person` },
-  publisher: { '@id': `${site.url}/#website` },
-  keywords: article.tags.join(', '),
-  inLanguage: 'id',
-};
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': canonical,
+    headline: article.title,
+    description: article.description,
+    datePublished: article.date,
+    dateModified: article.date,
+    mainEntityOfPage: canonical,
+    author: { '@id': `${site.url}/#person` },
+    publisher: { '@id': `${site.url}/#website` },
+    keywords: article.tags.join(', '),
+    inLanguage: 'id',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Beranda', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Jurnal', item: `${site.url}/journal/` },
+      { '@type': 'ListItem', position: 3, name: article.title, item: canonical },
+    ],
+  },
+];
 ---
 
 <BaseLayout

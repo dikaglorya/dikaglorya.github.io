@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/pages.css';
+import { site } from '../data/site';
+
+const updated = '25 Oktober 2026';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Kebijakan privasi dan cookie ObitoGlory',
+  url: `${site.url}/privacy/`,
+  inLanguage: 'id',
+  dateModified: '2026-10-25',
+  isPartOf: { '@id': `${site.url}/#website` },
+  about: { '@id': `${site.url}/#person` },
+};
+---
+
+<BaseLayout
+  title="Kebijakan Privasi dan Cookie | ObitoGlory"
+  description="Kebijakan privasi dan cookie ObitoGlory: data apa yang diproses, penyimpanan lokal yang dipakai, dan pilihan yang tersedia."
+  schema={schema}
+>
+  <section class="page-hero" aria-labelledby="privacy-title">
+    <div class="container">
+      <p class="page-hero__eyebrow mono">Privasi · Cookie · Penyimpanan lokal</p>
+      <h1 id="privacy-title">Kebijakan privasi dan <em>cookie.</em></h1>
+      <p class="page-hero__lead">
+        Situs ini dibuat sesederhana mungkin: tidak ada akun, tidak ada pelacakan iklan, dan
+        formulir kontak tidak mengirim data ke server. Halaman ini menjelaskan apa yang benar-benar
+        tersimpan di perangkatmu.
+      </p>
+      <div class="page-hero__meta mono">
+        <span>Terakhir diperbarui {updated}</span>
+        <span>Berlaku untuk {site.name}</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="container privacy-layout">
+    <nav class="privacy-nav" aria-label="Daftar isi kebijakan privasi">
+      <a href="#ringkasan">Ringkasan</a>
+      <a href="#data">Data yang diproses</a>
+      <a href="#penyimpanan">Penyimpanan lokal</a>
+      <a href="#pihak-ketiga">Cookie dan pihak ketiga</a>
+      <a href="#pilihan">Pilihan kamu</a>
+      <a href="#hak">Hak dan pertanyaan</a>
+      <a href="#perubahan">Perubahan kebijakan</a>
+    </nav>
+
+    <div class="privacy-body">
+      <section class="privacy-section" id="ringkasan">
+        <h2>Ringkasan</h2>
+        <p>
+          {site.name} adalah portofolio dan halaman layanan DikaGlorya. Situs ini adalah HTML
+          statis. Tidak ada basis data pengguna, sistem komentar, atau akun yang bisa dibuat di
+          sini.
+        </p>
+        <ul>
+          <li>Tidak ada pixel iklan pihak ketiga yang dimuat saat ini.</li>
+          <li>Tidak ada analytics yang mengirim data ke server pihak ketiga.</li>
+          <li>Formulir kontak menyusun brief di browser dan menyalinnya ke clipboard.</li>
+          <li>Penyimpanan lokal hanya dipakai untuk tema dan pilihan consent.</li>
+        </ul>
+      </section>
+
+      <section class="privacy-section" id="data">
+        <h2>Data yang diproses</h2>
+        <p>
+          Saat kamu membuka halaman, server hosting GitHub Pages dapat mencatat data teknis standar
+          seperti alamat IP, waktu akses, dan user agent untuk keperluan keamanan dan penyajian
+          situs. Situs ini tidak menerima atau menyimpan log tersebut.
+        </p>
+        <p>
+          Isi formulir kontak tidak dikirim ke server mana pun. Brief disusun di perangkatmu, lalu
+          disalin ke clipboard agar bisa kamu tempel di aplikasi email. Kamu tetap bisa memeriksa
+          isinya sebelum mengirim.
+        </p>
+      </section>
+
+      <section class="privacy-section" id="penyimpanan">
+        <h2>Penyimpanan lokal</h2>
+        <p>
+          Situs memakai <code>localStorage</code>, bukan cookie iklan, untuk mengingat pilihan
+          tampilan. Data ini tetap berada di browser dan tidak dikirim ke mana pun.
+        </p>
+        <table class="privacy-table">
+          <thead>
+            <tr>
+              <th scope="col">Kunci</th>
+              <th scope="col">Isi</th>
+              <th scope="col">Tujuan</th>
+              <th scope="col">Masa simpan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>theme</code></td>
+              <td><code>light</code> atau <code>dark</code></td>
+              <td>Mengingat tema yang kamu pilih</td>
+              <td>Sampai dihapus</td>
+            </tr>
+            <tr>
+              <td><code>og-consent-v1</code></td>
+              <td>JSON pilihan consent</td>
+              <td>Mengingat apakah kamu menerima preferensi atau hanya yang perlu</td>
+              <td>Sampai dihapus</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Kamu bisa menghapusnya lewat pengaturan situs di browser: Site settings, Cookies and site
+          data, lalu hapus data untuk domain ini.
+        </p>
+      </section>
+
+      <section class="privacy-section" id="pihak-ketiga">
+        <h2>Cookie dan tag pihak ketiga</h2>
+        <p>
+          Situs ini tidak menetapkan cookie iklan, tidak memuat Meta Pixel, TikTok Pixel, atau
+          Google Ads, dan tidak menjual data ke pihak lain. Bila di masa depan analytics atau tag
+          pemasaran ditambahkan, tag tersebut hanya akan dimuat setelah kamu memberi izin, dan
+          daftar tag akan ditulis di halaman ini sebelum diaktifkan.
+        </p>
+        <p>
+          Tautan ke GitHub, Telegram, Instagram, dan TikTok membuka layanan pihak ketiga. Kebijakan
+          privasi masing-masing layanan berlaku setelah kamu keluar dari situs ini.
+        </p>
+      </section>
+
+      <section class="privacy-section" id="pilihan">
+        <h2>Pilihan kamu</h2>
+        <ul>
+          <li>Pilih "Hanya perlu" pada banner untuk menolak preferensi non-esensial.</li>
+          <li>Ubah tema kapan saja lewat tombol tema di header.</li>
+          <li>Hapus data situs dari browser untuk menghapus semua pilihan.</li>
+          <li>Kirim pertanyaan atau permintaan penghapusan lewat email di bawah.</li>
+        </ul>
+        <p>
+          Karena situs tidak memiliki akun atau basis data pengguna, tidak ada profil pengguna yang
+          bisa diminta, diekspor, atau dihapus dari server.
+        </p>
+      </section>
+
+      <section class="privacy-section" id="hak">
+        <h2>Hak dan pertanyaan</h2>
+        <p>
+          Untuk pertanyaan tentang halaman ini, hubungi
+          <a href={`mailto:${site.email}`}>{site.email}</a> atau
+          <a href={site.telegramUrl} rel="me">Telegram @{site.telegram}</a>. Sertakan halaman atau
+          data yang kamu maksud agar bisa dijawab dengan tepat.
+        </p>
+        <p>
+          Halaman ini adalah penjelasan informatif untuk portofolio pribadi, bukan nasihat hukum.
+        </p>
+      </section>
+
+      <section class="privacy-section" id="perubahan">
+        <h2>Perubahan kebijakan</h2>
+        <p>
+          Kebijakan ini dapat diperbarui bila ada fitur baru, misalnya analytics yang diaktifkan
+          dengan izin. Tanggal pembaruan akan diubah di bagian atas halaman. Versi ini berlaku
+          sejak {updated}.
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

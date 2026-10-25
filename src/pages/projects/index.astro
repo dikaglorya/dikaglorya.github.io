@@ -2,7 +2,7 @@
 import ContactBlock from '../../components/ContactBlock.astro';
 import ProjectRow from '../../components/ProjectRow.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import '../../styles/detail.css';
+import '../../styles/pages.css';
 import { projectCategories, projects } from '../../data/projects';
 import { site } from '../../data/site';
 
@@ -89,7 +89,7 @@ const schema = {
             {`${projects.length} proyek ditampilkan`}
           </p>
 
-          <div class="project-list" data-project-list>
+          <div class="project-list" data-project-list data-view="list">
             <div class="project-list__head mono" aria-hidden="true">
               <span>No.</span>
               <span>Proyek</span>

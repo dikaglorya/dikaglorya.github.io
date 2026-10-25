@@ -1,9 +1,10 @@
 ---
 import ContactBlock from '../../components/ContactBlock.astro';
+import ProjectArt from '../../components/ProjectArt.astro';
 import RouteDiagram from '../../components/RouteDiagram.astro';
 import StatusIndicator from '../../components/StatusIndicator.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import '../../styles/detail.css';
+import '../../styles/pages.css';
 import { getNextProject, projects, projectStatusLabel, type Project } from '../../data/projects';
 import { PROJECT_STATUS_STATES } from '../../lib/status-registry';
 import { site } from '../../data/site';
@@ -38,24 +39,40 @@ const availability = project.link
     : `Tautan publik tersedia: ${project.link.label}. Repositori sumber tidak ditautkan, jadi bagian dalamnya belum bisa dibaca di sini.`
   : 'Kode sumber dan demo publik belum ditautkan untuk proyek ini. Halaman ini menjelaskan ruang lingkup yang dimaksud; tanpa source atau demo publik, pengunjung belum dapat memeriksa atau menjalankan implementasinya sendiri.';
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'CreativeWork',
-  name: project.name,
-  description: project.summary,
-  url: `${site.url}/projects/${project.slug}/`,
-  author: {
-    '@id': `${site.url}/#person`,
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.name,
+    description: project.summary,
+    url: `${site.url}/projects/${project.slug}/`,
+    author: {
+      '@id': `${site.url}/#person`,
+    },
+    keywords: project.stack.join(', '),
+    genre: project.category,
+    inLanguage: 'id',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: site.name,
+      url: site.url,
+    },
   },
-  keywords: project.stack.join(', '),
-  genre: project.category,
-  inLanguage: 'id',
-  isPartOf: {
-    '@type': 'WebSite',
-    name: site.name,
-    url: site.url,
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Beranda', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Proyek', item: `${site.url}/projects/` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: project.name,
+        item: `${site.url}/projects/${project.slug}/`,
+      },
+    ],
   },
-};
+];
 ---
 
 <BaseLayout
@@ -92,6 +109,10 @@ const schema = {
             Diskusikan proyek serupa
           </a>
           <a class="btn" href="/projects/">Semua proyek</a>
+        </div>
+
+        <div class="project-hero__stage" data-tilt data-reveal>
+          <ProjectArt slug={project.slug} name={project.name} index={project.order} />
         </div>
       </div>
     </header>

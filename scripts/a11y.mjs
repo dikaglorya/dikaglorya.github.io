@@ -17,6 +17,8 @@ const pages = [
   '/about/',
   '/services/',
   '/contact/',
+  '/kendal/',
+  '/privacy/',
   '/404.html',
 ];
 

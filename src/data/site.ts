@@ -18,9 +18,9 @@ export const site = {
   // Follows astro.config.mjs (SITE_URL, else the GitHub Pages host), so no page
   // hardcodes a domain that is currently serving a different site.
   url: import.meta.env.SITE,
-  title: 'ObitoGlory — DikaOfc, developer independen di Kendal',
+  title: 'DikaGlorya (DikaOfc) | Developer & Jasa Website Kendal',
   description:
-    'Portofolio DikaGlorya (DikaOfc, DikaCode): developer independen di Kendal. Website, bot, developer tools, dan automasi yang dibuat untuk dipakai.',
+    'Portofolio DikaGlorya (DikaOfc, DikaCode): developer independen di Kendal. Jasa website, bot Telegram, tools, dan automasi yang dibuat untuk dipakai.',
   email: 'dikasukasukaa@gmail.com',
   telegram: 'dikaacode',
   telegramUrl: 'https://t.me/dikaacode',
@@ -30,11 +30,15 @@ export const site = {
   tiktok: 'https://www.tiktok.com/@dikasecx',
   location: 'Kendal, Jawa Tengah, Indonesia',
   locationShort: 'Kendal, ID',
+  geo: {
+    latitude: -6.921,
+    longitude: 110.202,
+  },
   locale: 'id_ID',
   lang: 'id',
-  ogImage: '/og-default.png',
+  ogImage: '/og-kendal-signal.png',
   ogImageAlt:
-    'Potret bertopeng DikaGlorya pada kartu sosial ObitoGlory berlatar gelap, dengan nama DikaOfc dan kalimat "Software berguna, dibuat oleh DikaOfc."',
+    'Kartu sosial gelap dengan objek 3D chrome dan tulisan DIKA GLORYA berwarna oranye, developer independen di Kendal.',
   profileImage: '/profile-portrait.jpg',
   availability: 'Terbuka untuk proyek pilihan',
   availabilityNote: 'Telegram adalah cara tercepat menghubungi saya.',

@@ -1,0 +1,616 @@
+/* ==========================================================================
+   Custom Controls — Kill Every Browser Default
+   Night-gallery theme: obsidian + bone + signal orange
+   ========================================================================== */
+
+:root {
+  --scrollbar-w: 10px;
+  --scrollbar-track: var(--ink-2);
+  --scrollbar-thumb: linear-gradient(180deg, var(--ink-3), var(--orange));
+  --scrollbar-thumb-hover: var(--orange);
+  --scrollbar-border: 3px solid var(--ink-2);
+  --focus-ring: 2px solid var(--focus);
+  --focus-offset: 3px;
+}
+
+/* ===== SCROLLBAR ===== */
+/* WebKit/Blink */
+*::-webkit-scrollbar {
+  width: var(--scrollbar-w);
+  height: var(--scrollbar-w);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-left: 1px solid var(--line-soft);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: var(--scrollbar-border);
+  border-radius: 8px;
+  min-height: 40px;
+  transition: background 0.2s;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+*::-webkit-scrollbar-corner {
+  background: var(--ink);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--orange) var(--ink-2);
+}
+
+/* Overlay scrollbars on macOS/iOS — let native handle */
+@media (pointer: coarse) {
+  * { scrollbar-width: auto; }
+}
+
+@supports (-webkit-touch-callout: inherit) {
+  *::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: auto; }
+}
+
+/* Thin scrollbars for specific containers */
+.work-rail::-webkit-scrollbar,
+.journal-card::-webkit-scrollbar,
+.code-block::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.work-rail::-webkit-scrollbar-thumb,
+.journal-card::-webkit-scrollbar-thumb,
+.code-block::-webkit-scrollbar-thumb {
+  border-width: 2px;
+  min-height: 30px;
+}
+
+/* ===== TEXT SELECTION ===== */
+::selection {
+  background: var(--orange);
+  color: var(--ink);
+  text-shadow: none;
+}
+
+::-moz-selection {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+/* ===== PLACEHOLDER ===== */
+::placeholder {
+  color: var(--fg-3);
+  opacity: 1;
+}
+
+::-webkit-input-placeholder { color: var(--fg-3); }
+::-moz-placeholder { color: var(--fg-3); opacity: 1; }
+:-ms-input-placeholder { color: var(--fg-3); }
+
+/* ===== AUTOFILL ===== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--bone) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ===== FOCUS RING — GLOBAL ===== */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline-offset: 4px;
+}
+
+/* ===== FORM CONTROLS ===== */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+textarea {
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  width: 100%;
+}
+
+input:hover,
+textarea:hover {
+  border-color: var(--line-strong);
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+  background: var(--surface-2);
+}
+
+/* Select — custom caret */
+select {
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238c877b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select:hover { border-color: var(--line-strong); }
+select:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ff5a1f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Option styling — limited to color-scheme */
+option {
+  background: var(--ink);
+  color: var(--bone);
+  padding: 0.5rem;
+}
+
+/* Checkbox — custom */
+input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:hover { border-color: var(--orange); }
+
+input[type="checkbox"]:checked {
+  background: var(--orange);
+  border-color: var(--orange);
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--ink);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Radio — custom */
+input[type="radio"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+input[type="radio"]:hover { border-color: var(--orange); }
+
+input[type="radio"]:checked {
+  border-color: var(--orange);
+}
+
+input[type="radio"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+input[type="radio"]:checked::before { transform: translate(-50%, -50%) scale(1); }
+
+input[type="radio"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Range slider */
+input[type="range"] {
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 8px -2px var(--orange);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: -7px;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 16px -2px var(--orange);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 8px -2px var(--orange);
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+}
+
+input[type="range"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Color input */
+input[type="color"] {
+  appearance: none;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+input[type="color"]::-moz-color-swatch { border: none; border-radius: 6px; }
+
+input[type="color"]:hover { border-color: var(--orange); }
+input[type="color"]:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+
+/* File input */
+input[type="file"] {
+  appearance: none;
+  padding: 0.5rem;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  appearance: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+  border-color: var(--orange);
+}
+
+input[type="file"]::file-selector-button {
+  appearance: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+input[type="file"]::file-selector-button:hover { border-color: var(--orange); }
+
+/* Details / Summary */
+details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+summary {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  user-select: none;
+  list-style: none;
+}
+
+summary::-webkit-details-marker { display: none; }
+
+summary::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238c877b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size: contain;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+details[open] summary::before { transform: rotate(90deg); }
+
+details[open] summary { border-bottom: 1px solid var(--line); }
+
+details > *:not(summary) {
+  padding: 1rem 1.25rem;
+  animation: details-open 0.3s ease-out;
+}
+
+@keyframes details-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details > *:not(summary) { animation: none; }
+}
+
+/* Dialog */
+dialog {
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--depth-shadow-3), var(--glow-orange);
+  max-width: 90vw;
+  padding: 0;
+}
+
+dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: backdrop-in 0.2s ease-out;
+}
+
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  dialog::backdrop { animation: none; }
+}
+
+dialog[open] { animation: dialog-in 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: scale(0.95) translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Progress / Meter */
+progress {
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar { background: var(--surface-2); border-radius: 4px; }
+progress::-webkit-progress-value {
+  background: linear-gradient(90deg, var(--orange), var(--orange-2));
+  border-radius: 4px;
+  transition: width 0.3s ease-out;
+}
+progress::-moz-progress-bar {
+  background: linear-gradient(90deg, var(--orange), var(--orange-2));
+  border-radius: 4px;
+}
+
+meter {
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+meter::-webkit-meter-optimum-value { background: linear-gradient(90deg, var(--ok), var(--ok-bg)); border-radius: 4px; }
+meter::-webkit-meter-suboptimum-value { background: linear-gradient(90deg, var(--warn), var(--warn-bg)); border-radius: 4px; }
+meter::-webkit-meter-even-less-good-value { background: linear-gradient(90deg, var(--danger), var(--danger-bg)); border-radius: 4px; }
+meter::-moz-meter-bar { background: linear-gradient(90deg, var(--orange), var(--orange-2)); border-radius: 4px; }
+
+/* Fieldset / Legend */
+fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; }
+legend { color: var(--fg-2); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 0.5rem; }
+
+/* Abbr, kbd, code, pre, mark, blockquote, hr */
+abbr[title] { text-decoration: underline dotted var(--line-strong); cursor: help; }
+
+kbd {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--fg);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--orange);
+  background: var(--accent-soft);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--ink-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+pre code { background: none; padding: 0; color: var(--fg); font-size: inherit; }
+
+pre::-webkit-scrollbar { height: 8px; }
+pre::-webkit-scrollbar-track { background: var(--ink); border: none; }
+pre::-webkit-scrollbar-thumb { background: var(--orange); border: 2px solid var(--ink); border-radius: 4px; min-height: 30px; }
+
+mark {
+  background: var(--accent-soft);
+  color: var(--orange);
+  padding: 0.05em 0.2em;
+  border-radius: 2px;
+}
+
+blockquote {
+  border-left: 3px solid var(--orange);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  color: var(--fg-2);
+  font-style: italic;
+  font-family: var(--font-serif);
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  margin: 3rem 0;
+}
+
+/* Emoji — prevent colored emoji breaking dark theme */
+emoji-picker, emoji-mart { filter: grayscale(100%) contrast(1.2); }
+
+/* ===== CURSOR SYSTEM HOOK ===== */
+html[data-cursor="on"] * {
+  cursor: none !important;
+}
+
+html[data-cursor="on"] a,
+html[data-cursor="on"] button,
+html[data-cursor="on"] [role="button"],
+html[data-cursor="on"] input,
+html[data-cursor="on"] textarea,
+html[data-cursor="on"] select,
+html[data-cursor="on"] label {
+  cursor: none !important;
+}
+
+/* Wait cursor */
+html[data-loading="true"] * { cursor: wait !important; }
+
+/* Reduced motion — flatten all transitions */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  details > *:not(summary) { animation: none; }
+  dialog[open] { animation: none; }
+  dialog::backdrop { animation: none; }
+}
+
+/* ===== NOTES: UNSTYLEABLE BROWSER CHROME =====
+ * Cannot be styled (OS-level):
+ * - Context menu (right-click)
+ * - Address bar / browser UI
+ * - Native date/time picker popup (outer)
+ * - Native <select> dropdown list (options)
+ * - alert()/confirm()/prompt() dialogs
+ * - Print dialog
+ * - File picker native dialog
+ * - Video player native controls (play, fullscreen, etc.)
+ * - Color picker native popup
+ *
+ * Workarounds used:
+ * - Custom dialog component replaces alert/confirm/prompt
+ * - Custom select with datalist/autocomplete replaces native dropdown
+ * - Custom date picker using input[type=text] + JS calendar
+ * - Custom video player controls
+ * - Custom color picker
+ */

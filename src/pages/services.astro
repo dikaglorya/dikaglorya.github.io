@@ -2,38 +2,52 @@
 import ContactBlock from '../components/ContactBlock.astro';
 import SectionHead from '../components/SectionHead.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import '../styles/content.css';
+import '../styles/pages.css';
 import { faqs } from '../data/faqs';
 import { processSteps } from '../data/facts';
 import { services } from '../data/services';
 import { site } from '../data/site';
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Layanan ObitoGlory',
-  url: `${site.url}/services/`,
-  mainEntity: {
-    '@type': 'ItemList',
-    numberOfItems: services.length,
-    itemListElement: services.map((service, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Service',
-        name: service.name,
-        description: service.description,
-        provider: {
-          '@id': `${site.url}/#person`,
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Layanan ObitoGlory',
+    url: `${site.url}/services/`,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: services.length,
+      itemListElement: services.map((service, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Service',
+          name: service.name,
+          description: service.description,
+          provider: {
+            '@id': `${site.url}/#person`,
+          },
+          areaServed: {
+            '@type': 'Country',
+            name: 'Indonesia',
+          },
         },
-        areaServed: {
-          '@type': 'Country',
-          name: 'Indonesia',
-        },
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
       },
     })),
   },
-};
+];
 ---
 
 <BaseLayout
@@ -105,6 +119,9 @@ const schema = {
           </div>
         </section>
       ))}
+      <p class="mono muted service-list-note">
+        <a class="link" href="/kendal/">Layanan untuk area Kendal dan sekitarnya</a>
+      </p>
     </div>
   </section>
 

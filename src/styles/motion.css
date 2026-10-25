@@ -1,0 +1,239 @@
+/* ==========================================================================
+   Cinematic Motion — Kendal Signal
+   Keyframes & utilities for GSAP-driven choreography
+   ========================================================================== */
+
+/* Cinematic Intro */
+.intro-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-mono);
+  overflow: hidden;
+}
+
+.intro-layer__kicker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0;
+  color: var(--fg-3);
+}
+
+.intro-layer__title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(3rem, 12vw, 9rem);
+  font-weight: 200;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: pre;
+  overflow: hidden;
+}
+
+.intro-layer__line {
+  display: block;
+  overflow: hidden;
+}
+
+.intro-layer__word {
+  display: inline-block;
+  transform: translateY(120%);
+  opacity: 0;
+}
+
+.intro-layer__word--italic {
+  font-style: italic;
+  font-family: var(--font-serif);
+  font-weight: 300;
+}
+
+.intro-layer__slash {
+  color: var(--orange);
+  margin: 0 0.15em;
+}
+
+.intro-layer__tag {
+  font-size: 0.28em;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  vertical-align: 0.15em;
+  color: var(--fg-2);
+}
+
+.intro-layer__curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+
+.intro-layer__skip {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.intro-layer__skip:hover,
+.intro-layer__skip:focus-visible {
+  border-color: var(--orange);
+  color: var(--orange);
+  outline: none;
+}
+
+/* Reveal utilities (GSAP ScrollTrigger driven) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal].is-in[data-reveal-delay="1"] { transition-delay: 0.1s; }
+[data-reveal].is-in[data-reveal-delay="2"] { transition-delay: 0.2s; }
+[data-reveal].is-in[data-reveal-delay="3"] { transition-delay: 0.3s; }
+[data-reveal].is-in[data-reveal-delay="4"] { transition-delay: 0.4s; }
+
+/* Split text chars */
+.char {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.char.is-in {
+  transform: none;
+  opacity: 1;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Magnetic CTA */
+.btn--magnetic {
+  position: relative;
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn--magnetic .btn__label {
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom Cursor */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  will-change: transform, width, height, opacity;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--orange);
+  mix-blend-mode: difference;
+  transition: width 0.2s, height 0.2s, background 0.3s;
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--bone);
+  mix-blend-mode: difference;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s;
+}
+
+.cursor-dot.hover,
+.cursor-ring.hover {
+  width: 60px;
+  height: 60px;
+  border-color: var(--orange);
+}
+
+.cursor-ring.hover {
+  width: 80px;
+  height: 80px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-layer,
+  [data-reveal],
+  .char,
+  .btn--magnetic,
+  .cursor-dot,
+  .cursor-ring {
+    animation: none !important;
+    transition: none !important;
+  }
+  [data-reveal], .char { opacity: 1; transform: none; }
+  .intro-layer { display: none; }
+}
+
+@media (pointer: coarse) {
+  .cursor-dot, .cursor-ring { display: none !important; }
+}
+
+/* Marquee velocity reactive */
+.marquee__track {
+  will-change: transform;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-2));
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 9998;
+  pointer-events: none;
+}
+
+/* Counter animation */
+.counter {
+  display: inline-block;
+}
+
+/* Parallax helper */
+[data-parallax] {
+  will-change: transform;
+}

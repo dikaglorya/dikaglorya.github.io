@@ -1,172 +1,224 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
+import HeroScene from '../components/HeroScene.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
-import ProjectRow from '../components/ProjectRow.astro';
-import RouteDiagram from '../components/RouteDiagram.astro';
+import ProjectArt from '../components/ProjectArt.astro';
 import SectionHead from '../components/SectionHead.astro';
+import ServiceGlyph from '../components/ServiceGlyph.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/home.css';
-import Arrow from '../components/Arrow.astro';
+import { articles } from '../data/articles';
 import { facts } from '../data/facts';
 import { projects } from '../data/projects';
+import { services } from '../data/services';
 import { site } from '../data/site';
-import { technologyGroups } from '../data/technologies';
-import { articles } from '../data/articles';
 
+const rail = projects.filter((project) => project.featured).slice(0, 5);
 const featured = projects.find((project) => project.slug === 'dikaroute');
-const selected = projects.filter((project) => project.slug !== 'dikaroute').slice(0, 4);
-
-const capabilities = [
-  {
-    title: 'Website',
-    body: 'Website responsif dan aplikasi web kecil dengan struktur jelas, diuji sebelum diserahkan.',
-  },
-  {
-    title: 'Bot dan integrasi',
-    body: 'Otomasi alur kerja dan integrasi Telegram, WhatsApp, serta Discord.',
-  },
-  {
-    title: 'Tools developer',
-    body: 'Utilitas, skrip, dan eksperimen untuk membantu workflow developer, termasuk AI agent lokal.',
-  },
-];
+const glyphByService: Record<string, 'website' | 'bot' | 'tools' | 'repairs'> = {
+  website: 'website',
+  bot: 'bot',
+  tools: 'tools',
+  repairs: 'repairs',
+};
 
 const homeSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
-  name: 'ObitoGlory',
+  name: 'ObitoGlory, portofolio DikaGlorya',
   url: site.url,
-  mainEntity: {
-    '@type': 'Person',
-    '@id': `${site.url}/#person`,
-    name: site.personName,
-    alternateName: site.alternateNames,
-    url: site.url,
-    image: new URL(site.profileImage, site.url).href,
-    jobTitle: 'Developer independen',
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Kendal',
-      addressRegion: 'Jawa Tengah',
-      addressCountry: 'ID',
-    },
-  },
+  inLanguage: 'id',
+  mainEntity: { '@id': `${site.url}/#person` },
+  about: { '@id': `${site.url}/#studio` },
+  hasPart: rail.map((project, index) => ({
+    '@type': 'CreativeWork',
+    position: index + 1,
+    name: project.name,
+    url: `${site.url}/projects/${project.slug}/`,
+  })),
 };
 ---
 
 <BaseLayout
-  title={site.title}
-  description={site.description}
+  title="DikaGlorya (DikaOfc) | Developer & Jasa Website Kendal"
+  description="Portofolio DikaGlorya (DikaOfc, DikaCode), developer independen di Kendal. Website, bot Telegram, tools, automasi, dan jasa pembuatan website di Kendal."
   schema={homeSchema}
+  bodyClass="home"
 >
   <section class="hero" aria-labelledby="hero-title">
-    <div class="container hero__grid">
-      <div class="hero__body">
-        <p class="hero__pill">
-          <span class="status">{site.availability}</span>
-        </p>
-
-        <h1 class="hero__title" id="hero-title">Dibuat untuk <em>dipakai.</em></h1>
-
-        <p class="hero__lead">
-          Website, bot, dan developer tools dari <strong>Kendal, Indonesia</strong>. Dikerjakan
-          oleh DikaGlorya — dikenal juga sebagai DikaOfc dan DikaCode.
-        </p>
-
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="/projects/">Lihat proyek <Arrow /></a>
-          <a class="btn" href="/contact/">Mulai percakapan</a>
-        </div>
+    <HeroScene />
+    <div class="container hero__inner">
+      <div class="hero__meta">
+        <span class="label">Independent developer · Kendal, ID</span>
+        <span class="hero__coords">6°55′S 110°12′E · WIB</span>
       </div>
 
-      <div class="hero__stage">
-        <PortraitFrame
-          class="hero__portrait"
-          sizes="(max-width: 900px) 78vw, 360px"
-          caption="DikaGlorya"
-          index="Kendal, ID"
-          priority
-        />
-        <div class="hero__chip">
-          <span class="status" aria-hidden="true"></span>
-          <span>
-            <strong>Developer independen</strong>
-            Kendal, Jawa Tengah · WIB
-          </span>
+      <h1 class="hero__title" id="hero-title" data-parallax="-0.05">
+        <span class="hero__line">
+          <span class="hero__word" data-split>DIKA</span>
+          <span class="hero__tag">/ 01</span>
+        </span>
+        <span class="hero__line hero__line--offset">
+          <span class="hero__word hero__word--italic" data-split>GLORYA</span>
+          <span class="hero__slash">/</span>
+          <span class="hero__tag">DEVELOPER</span>
+        </span>
+      </h1>
+
+      <div class="hero__bottom">
+        <p class="hero__lead">
+          Software yang <em>dipakai</em>, bukan cuma dipamerkan. Website, bot, tools, dan
+          automasi dari Kendal, Jawa Tengah.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#work">Lihat karya</a>
+          <a class="btn" href="/contact/">Mulai proyek</a>
         </div>
+        <div class="hero__status">
+          <span class="status">{site.availability}</span>
+          <span class="mono muted">Balasan tercepat lewat Telegram</span>
+        </div>
+      </div>
+    </div>
+    <a class="hero__scroll" href="#work">Gulir</a>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__group">
+        <span>Website</span><span>Bot</span><span>Tools</span><span><em>Automasi</em></span>
+        <span>Kendal</span><span>AI</span><span>Android</span>
+      </div>
+      <div class="marquee__group">
+        <span>Website</span><span>Bot</span><span>Tools</span><span><em>Automasi</em></span>
+        <span>Kendal</span><span>AI</span><span>Android</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="manifesto" aria-labelledby="manifesto-title">
+    <div class="container manifesto__grid">
+      <p class="label">01 / Pendekatan</p>
+      <p class="manifesto__text" id="manifesto-title">
+        Saya membuat software yang <em>selesai</em>, bukan demo yang berhenti di mockup.
+        Struktur jelas, alur diuji, dan hasilnya bisa dipakai.
+      </p>
+      <p class="manifesto__meta">
+        <span>Kendal, Jawa Tengah</span>
+        <span>Web / Bot / Tools</span>
+        <span>Terbuka untuk proyek</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="section work" id="work" aria-labelledby="work-title">
+    <div class="container">
+      <SectionHead
+        id="work-title"
+        index="02 / Karya"
+        title="Objek yang dipakai."
+        meta="Proyek pilihan, dari gateway AI sampai tools Termux. Setiap objek punya alasan untuk ada."
+        link={{ href: '/projects/', label: 'Semua proyek' }}
+      />
+
+      <div class="work-rail">
+        {rail.map((project, index) => (
+          <a class="work-card" href={`/projects/${project.slug}/`} data-tilt>
+            <div class="work-card__art">
+              <span class="work-card__index mono">{String(index + 1).padStart(2, '0')}</span>
+              <ProjectArt slug={project.slug} name={project.name} index={index + 1} />
+            </div>
+            <div class="work-card__body">
+              <div class="work-card__title">
+                {project.name}
+                <span>{project.type}</span>
+              </div>
+              <p class="work-card__tagline">{project.tagline}</p>
+              <p class="work-card__stack">{project.stack.join(' / ')}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="work-footer">
+        <a class="link" href="/projects/">Lihat semua proyek</a>
+        <span class="mono muted">05 objek / {projects.length} total</span>
       </div>
     </div>
   </section>
 
-  <div class="identity-strip" role="list" aria-label="Bidang kerja">
-    <div class="container identity-strip__row mono">
-      <span role="listitem">Pengembangan web</span>
-      <span role="listitem">Bot dan automasi</span>
-      <span role="listitem">Tools developer</span>
-      <span role="listitem">AI dan keamanan</span>
-    </div>
-  </div>
+  {featured && (
+    <section class="section featured-project" aria-labelledby="featured-title">
+      <div class="container featured-project__grid">
+        <div class="featured-project__copy" data-reveal>
+          <p class="label">Studi kasus / 01</p>
+          <h2 class="featured-project__title" id="featured-title">{featured.name}</h2>
+          <p class="featured-project__summary">{featured.summary}</p>
+          <ul class="featured-project__features">
+            {featured.features.slice(0, 4).map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+          <a class="link" href={`/projects/${featured.slug}/`}>Baca studi kasus</a>
+        </div>
+        <div class="featured-project__art" data-tilt data-reveal>
+          <ProjectArt slug={featured.slug} name={featured.name} index={featured.order} />
+        </div>
+      </div>
+    </section>
+  )}
 
-  <section class="section" id="work" aria-labelledby="work-title">
+  <section class="section" aria-labelledby="capabilities-title">
     <div class="container">
       <SectionHead
-        id="work-title"
-        index="01 / Selected work"
-        title="Proyek pilihan"
-        meta="Proyek, eksperimen, dan tools yang dijelaskan lewat keputusan teknisnya."
-        link={{ href: '/projects/', label: 'Semua proyek' }}
+        id="capabilities-title"
+        index="03 / Kapabilitas"
+        title="Yang bisa dibangun."
+        meta="Empat area kerja, dari halaman pertama sampai perbaikan sistem yang sudah berjalan."
       />
 
-      {featured && (
-        <article class="featured" data-reveal>
-          <div class="featured__copy">
-            <p class="featured__label mono">
-              Studi kasus · source belum publik · {featured.type}
-            </p>
-            <h3>{featured.name}</h3>
-            <p>{featured.summary}</p>
-            <p class="mono">{featured.stack.join(' · ')}</p>
-            <a class="link" href={`/projects/${featured.slug}/`}>
-              Baca studi kasus <Arrow />
-            </a>
-          </div>
-          <figure class="featured__diagram">
-            <RouteDiagram />
-            <figcaption class="mono">
-              Ilustrasi alur request dan pemilihan provider; bukan status koneksi langsung.
-            </figcaption>
-          </figure>
-        </article>
-      )}
-
-      <div class="project-list">
-        {selected.map((project, index) => (
-          <div data-reveal>
-            <ProjectRow project={project} index={index + 2} />
-          </div>
+      <div class="capability-list">
+        {services.map((service, index) => (
+          <article class="capability-row" data-reveal>
+            <div class="capability-row__glyph">
+              <ServiceGlyph kind={glyphByService[service.slug] ?? 'tools'} />
+            </div>
+            <div class="capability-row__body">
+              <span class="capability-row__index mono">0{index + 1}</span>
+              <h3 class="capability-row__title">{service.name}</h3>
+              <p class="capability-row__copy">{service.description}</p>
+            </div>
+            <ul class="capability-row__list">
+              {service.includes.slice(0, 4).map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section section--paper" aria-labelledby="about-title">
+  <section class="section about-band" aria-labelledby="about-title">
     <div class="container about-grid">
       <PortraitFrame
         class="about-portrait"
-        sizes="(max-width: 900px) 100vw, 42vw"
+        sizes="(max-width: 900px) 100vw, 38vw"
         caption="DikaGlorya, developer"
         index="Portrait / 01"
       />
 
-      <div class="about-grid__body">
-        <h2 id="about-title">Lebih sedikit noise, software lebih baik.</h2>
+      <div class="about-grid__body" data-reveal>
+        <p class="label">04 / Tentang</p>
+        <h2 id="about-title">Lebih sedikit noise, <em>lebih banyak</em> yang dipakai.</h2>
         <p>
-          Saya DikaGlorya, developer independen dari Kendal. DikaCode adalah identitas untuk karya
-          software; ObitoGlory adalah rumah untuk proyek, catatan teknis, dan cara saya bekerja.
+          Saya DikaGlorya, developer independen dari Kendal. DikaCode adalah identitas untuk
+          karya software; ObitoGlory adalah rumah untuk proyek, catatan teknis, dan cara saya
+          bekerja.
         </p>
         <p>
-          Setiap hal dibuat untuk kebutuhan nyata, bukan sekadar demo. Struktur dibuat mudah
-          dipahami dan dirawat; perbaikan dimulai dengan memahami alurnya.
+          Setiap hal dibuat untuk kebutuhan nyata. Struktur dibuat mudah dipahami dan dirawat;
+          perbaikan dimulai dengan memahami alurnya.
         </p>
 
         <dl class="about-facts">
@@ -178,37 +230,8 @@ const homeSchema = {
           ))}
         </dl>
 
-        <div class="about-actions">
-          <a class="btn" href="/about/">
-            Tentang DikaGlorya <Arrow />
-          </a>
-        </div>
+        <a class="link" href="/about/">Kenali cara kerja</a>
       </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="capabilities-title">
-    <div class="container">
-      <SectionHead
-        id="capabilities-title"
-        index="02 / Capabilities"
-        title="Yang saya buat"
-        meta="Tiga area utama, dikerjakan dari sketsa sampai serah terima."
-      />
-
-      <div class="capability-grid">
-        {capabilities.map((capability, index) => (
-          <article class="capability" data-reveal>
-            <p class="capability__index mono" aria-hidden="true">{`0${index + 1}`}</p>
-            <h3>{capability.title}</h3>
-            <p>{capability.body}</p>
-          </article>
-        ))}
-      </div>
-
-      <p class="capability-more mono">
-        <a class="link" href="/services/">Detail layanan <Arrow /></a>
-      </p>
     </div>
   </section>
 
@@ -216,47 +239,43 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="journal-title"
-        index="03 / Journal"
-        title="Catatan teknis"
-        meta="Detail implementasi dan pelajaran dari prosesnya."
+        index="05 / Jurnal"
+        title="Catatan dari proses."
+        meta="Detail implementasi dan keputusan teknis yang bisa diperiksa."
         link={{ href: '/journal/', label: 'Semua catatan' }}
       />
-      <div class="journal-list">
+
+      <div class="home-journal">
         {articles.slice(0, 2).map((article) => (
-          <article class="journal-card" data-reveal>
-            <p class="mono journal-card__meta">
-              <time datetime={article.date}>{article.date}</time> · {article.readingTime} menit baca
+          <a class="journal-card" href={`/journal/${article.slug}/`} data-reveal>
+            <p class="journal-card__meta">
+              <time datetime={article.date}>{article.date}</time>
+              <span>{article.readingTime} menit baca</span>
             </p>
-            <h3>
-              <a href={`/journal/${article.slug}/`}>{article.title}</a>
-            </h3>
+            <h3>{article.title}</h3>
             <p>{article.description}</p>
-            <a class="link" href={`/journal/${article.slug}/`}>Baca catatan <Arrow /></a>
-          </article>
+            <ul class="journal-tags" aria-label="Topik">
+              {article.tags.map((tag) => (
+                <li class="mono">{tag}</li>
+              ))}
+            </ul>
+          </a>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="stack-title">
-    <div class="container">
-      <SectionHead
-        id="stack-title"
-        index="04 / Toolkit"
-        title="Teknologi"
-        meta="Tools dikelompokkan berdasarkan penggunaan nyata, bukan skor kemampuan."
-      />
-      <div class="stack-grid">
-        {technologyGroups.map((group) => (
-          <div class="stack-group">
-            <h3>{group.title}</h3>
-            <ul>
-              {group.items.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+  <section class="local-band" aria-labelledby="local-title">
+    <div class="container local-band__inner">
+      <h2 class="local-band__title" id="local-title">
+        Dari Kendal, untuk <em>yang dipakai.</em>
+      </h2>
+      <div class="local-band__copy">
+        <p>
+          Menerima proyek website, bot, dan tools dari Kendal dan sekitarnya. Konsultasi awal
+          lewat Telegram, lingkup dan harga disepakati sebelum mulai.
+        </p>
+        <a class="link" href="/kendal/">Jasa website Kendal</a>
       </div>
     </div>
   </section>
