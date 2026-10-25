@@ -1,0 +1,46 @@
+---
+---
+<div class="asset-explorer" data-asset-explorer role="group" aria-label="Eksplorasi model 3D interaktif">
+  <div class="asset-explorer__canvas" data-explorer-canvas aria-label="Model 3D. Seret atau gunakan tombol panah untuk memutar; scroll atau tombol plus/minus untuk zoom." role="group" tabindex="0">
+    <div class="asset-explorer__loading" data-explorer-loading>
+      <span class="asset-explorer__loading-spinner" aria-hidden="true"></span>
+      <span>Menyiapkan objek 3D…</span>
+    </div>
+    <div class="asset-explorer__error" data-explorer-error role="status" hidden>
+      <strong>Pratinjau 3D tidak tersedia.</strong>
+      <span>Konten tetap dapat diakses; coba muat ulang halaman.</span>
+    </div>
+    <div class="asset-explorer__hud">
+      <span class="asset-explorer__hud-item"><span class="asset-explorer__hud-label">OBJEK</span><span class="asset-explorer__hud-value">01 / HELMET</span></span>
+      <span class="asset-explorer__hud-item"><span class="asset-explorer__hud-label">POLYGON</span><span class="asset-explorer__hud-value" data-explorer-polys>—</span></span>
+      <span class="asset-explorer__hud-item"><span class="asset-explorer__hud-label">DRAW / FPS</span><span class="asset-explorer__hud-value"><span data-explorer-draws>—</span> / <span data-explorer-fps>—</span></span></span>
+      <span class="asset-explorer__hud-item"><span class="asset-explorer__hud-label">MODE</span><span class="asset-explorer__hud-value" data-explorer-mode>CHROME</span></span>
+    </div>
+    <p class="asset-explorer__hint">DRAG TO ROTATE <span aria-hidden="true">·</span> SCROLL TO ZOOM <span class="sr-only">· Tombol panah untuk memutar, plus dan minus untuk zoom.</span></p>
+  </div>
+  <div class="asset-explorer__toolbar" role="toolbar" aria-label="Pengaturan tampilan model">
+    <span class="asset-explorer__toolbar-label">MATERIAL</span>
+    <button class="asset-explorer__btn" type="button" data-explorer-material="chrome" aria-pressed="true">Chrome</button>
+    <button class="asset-explorer__btn" type="button" data-explorer-material="clay" aria-pressed="false">Clay</button>
+    <button class="asset-explorer__btn" type="button" data-explorer-material="wireframe" aria-pressed="false">Wire</button>
+    <button class="asset-explorer__btn" type="button" data-explorer-material="holo" aria-pressed="false">Holo</button>
+    <span class="asset-explorer__toolbar-spacer"></span>
+    <button class="asset-explorer__btn" type="button" data-explorer-explode aria-pressed="false">Explode</button>
+    <button class="asset-explorer__btn" type="button" data-explorer-reset>Reset view</button>
+  </div>
+</div>
+<p class="asset-explorer__credit">Model CC0 · <a href="/asset-credits.md">kredit & lisensi aset</a></p>
+<script>
+  const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-asset-explorer]'));
+  const loadExplorer = () => import('../scripts/asset-explorer');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      void loadExplorer();
+    }, { rootMargin: '320px' });
+    roots.forEach((root) => observer.observe(root));
+  } else {
+    void loadExplorer();
+  }
+</script>

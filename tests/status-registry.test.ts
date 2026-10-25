@@ -165,31 +165,18 @@ test('danger states are the only ones marked for announcement', () => {
 const tokensPath = path.join(import.meta.dirname, '../src/styles/tokens.css');
 const tokens = await readFile(tokensPath, 'utf8');
 
-// Split at the light-theme media query so each theme can be checked alone.
-const lightStart = tokens.indexOf('@media (prefers-color-scheme: light)');
+// Split the design-token file at the explicit theme override used by this site.
+const lightStart = tokens.indexOf("[data-theme='light']");
 assert.ok(lightStart > 0, 'light theme block not found');
 const darkBlock = tokens.slice(0, lightStart);
 const lightBlock = tokens.slice(lightStart);
 
 const REQUIRED = [
-  '--status-success',
-  '--status-success-bg',
-  '--status-success-border',
-  '--status-warning',
-  '--status-warning-bg',
-  '--status-warning-border',
-  '--status-danger',
-  '--status-danger-bg',
-  '--status-danger-border',
-  '--status-info',
-  '--status-info-bg',
-  '--status-info-border',
-  '--status-neutral',
-  '--status-neutral-bg',
-  '--status-neutral-border',
-  '--status-pending',
-  '--status-pending-bg',
-  '--status-pending-border',
+  '--ok', '--ok-bg', '--ok-border',
+  '--warn', '--warn-bg', '--warn-border',
+  '--danger', '--danger-bg', '--danger-border',
+  '--info', '--info-bg', '--info-border',
+  '--neutral', '--neutral-bg', '--neutral-border',
 ];
 
 test('every status token exists in both themes', () => {
@@ -208,9 +195,9 @@ test('no status token resolves to a literal colour in the light block twice', ()
     lightValues.set(token, match[1].trim());
   }
   assert.notEqual(
-    lightValues.get('--status-success'),
-    darkBlock.match(/--status-success:\s*([^;]+);/)?.[1].trim(),
-    'light --status-success equals the dark value',
+    lightValues.get('--ok'),
+    darkBlock.match(/--ok:\s*([^;]+);/)?.[1].trim(),
+    'light --ok equals the dark value',
   );
 });
 
@@ -258,8 +245,11 @@ test('the component derives colour from the variant, not from props', () => {
 });
 
 test('the status stylesheet declares no shadow', async () => {
-  const css = await readFile(path.join(import.meta.dirname, '../src/styles/status.css'), 'utf8');
-  assert.doesNotMatch(css, /box-shadow|text-shadow|drop-shadow|filter:\s*blur/);
+  const css = await readFile(path.join(import.meta.dirname, '../src/styles/components.css'), 'utf8');
+  const start = css.indexOf('.status-indicator {');
+  const end = css.indexOf('/* ---------- Service glyph', start);
+  assert.ok(start >= 0 && end > start, 'status indicator stylesheet block not found');
+  assert.doesNotMatch(css.slice(start, end), /box-shadow|text-shadow|drop-shadow|filter:\s*blur/);
 });
 
 // Keep the type import used so a future edit cannot drop it silently.

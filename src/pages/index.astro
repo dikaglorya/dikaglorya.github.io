@@ -1,5 +1,6 @@
 ---
 import ContactBlock from '../components/ContactBlock.astro';
+import AssetExplorer from '../components/AssetExplorer.astro';
 import HeroScene from '../components/HeroScene.astro';
 import PortraitFrame from '../components/PortraitFrame.astro';
 import ProjectArt from '../components/ProjectArt.astro';
@@ -71,8 +72,8 @@ const homeSchema = {
           automasi dari Kendal, Jawa Tengah.
         </p>
         <div class="hero__actions">
-          <a class="btn btn--primary" href="#work">Lihat karya</a>
-          <a class="btn" href="/contact/">Mulai proyek</a>
+          <a class="btn btn--primary btn--magnetic" href="#work">Lihat karya</a>
+          <a class="btn btn--magnetic" href="/contact/">Mulai proyek</a>
         </div>
         <div class="hero__status">
           <span class="status">{site.availability}</span>
@@ -168,11 +169,23 @@ const homeSchema = {
     </section>
   )}
 
+  <section class="section asset-explorer-section" aria-labelledby="explorer-title">
+    <div class="container">
+      <SectionHead
+        id="explorer-title"
+        index="03 / Eksplorasi"
+        title="Objek yang bisa disentuh."
+        meta="Model 3D interaktif — ganti material, putar, dan bongkar bentuknya."
+      />
+      <AssetExplorer />
+    </div>
+  </section>
+
   <section class="section" aria-labelledby="capabilities-title">
     <div class="container">
       <SectionHead
         id="capabilities-title"
-        index="03 / Kapabilitas"
+        index="04 / Kapabilitas"
         title="Yang bisa dibangun."
         meta="Empat area kerja, dari halaman pertama sampai perbaikan sistem yang sudah berjalan."
       />
@@ -209,7 +222,7 @@ const homeSchema = {
       />
 
       <div class="about-grid__body" data-reveal>
-        <p class="label">04 / Tentang</p>
+        <p class="label">05 / Tentang</p>
         <h2 id="about-title">Lebih sedikit noise, <em>lebih banyak</em> yang dipakai.</h2>
         <p>
           Saya DikaGlorya, developer independen dari Kendal. DikaCode adalah identitas untuk
@@ -239,7 +252,7 @@ const homeSchema = {
     <div class="container">
       <SectionHead
         id="journal-title"
-        index="05 / Jurnal"
+        index="06 / Jurnal"
         title="Catatan dari proses."
         meta="Detail implementasi dan keputusan teknis yang bisa diperiksa."
         link={{ href: '/journal/', label: 'Semua catatan' }}

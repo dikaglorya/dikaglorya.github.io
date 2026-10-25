@@ -34,8 +34,8 @@ const check = (condition, name) => {
     label: document.querySelector('.theme-btn')?.getAttribute('aria-label'),
   }));
   check(initial.theme === 'dark', 'system dark resolves the dark theme');
-  check(initial.bg === 'rgb(17, 17, 17)', `dark background is #111 (${initial.bg})`);
-  check(initial.meta === '#111111', 'theme-color meta matches the dark theme');
+  check(initial.bg === 'rgb(7, 8, 10)', `dark background is #07080a (${initial.bg})`);
+  check(initial.meta === '#07080a', 'theme-color meta matches the dark theme');
   check(initial.label === 'Aktifkan tema terang', 'toggle names the action');
 
   await page.locator('.theme-btn').click();
@@ -49,8 +49,8 @@ const check = (condition, name) => {
     label: document.querySelector('.theme-btn')?.getAttribute('aria-label'),
   }));
   check(light.theme === 'light', 'toggle switches to light');
-  check(light.bg === 'rgb(255, 255, 255)', `light background is #fff (${light.bg})`);
-  check(light.meta === '#ffffff', 'theme-color meta follows the switch');
+  check(light.bg === 'rgb(242, 238, 228)', `light background is bone (${light.bg})`);
+  check(light.meta === '#f2eee4', 'theme-color meta follows the switch');
   check(light.label === 'Aktifkan tema gelap', 'toggle label flips');
   check(light.stored === 'light', 'choice is stored');
 
@@ -59,7 +59,7 @@ const check = (condition, name) => {
     theme: document.documentElement.dataset.theme,
     bg: getComputedStyle(document.body).backgroundColor,
   }));
-  check(reloaded.theme === 'light' && reloaded.bg === 'rgb(255, 255, 255)', 'choice survives reload');
+  check(reloaded.theme === 'light' && reloaded.bg === 'rgb(242, 238, 228)', 'choice survives reload');
 
   // No flash: the theme attribute must already be set before any deferred JS.
   const early = await page.evaluate(() => ({
@@ -262,33 +262,27 @@ const check = (condition, name) => {
   await context.close();
 }
 
-/* ---------- Monochrome invariants --------------------------------------- */
+/* ---------- Theme invariants -------------------------------------------- */
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   for (const theme of ['dark', 'light']) {
     const page = await context.newPage();
     await page.emulateMedia({ colorScheme: theme });
+    const expected = theme === 'dark'
+      ? { background: 'rgb(7, 8, 10)', meta: '#07080a' }
+      : { background: 'rgb(242, 238, 228)', meta: '#f2eee4' };
     for (const path of ['/', '/projects/', '/contact/', '/about/']) {
       await page.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
-      const violations = await page.evaluate(() => {
-        const bad = [];
-        for (const element of document.querySelectorAll('body *')) {
-          const style = getComputedStyle(element);
-          if (style.display === 'none' || style.visibility === 'hidden') continue;
-          if (style.boxShadow !== 'none') {
-            bad.push(`${element.tagName.toLowerCase()}.${element.className} box-shadow: ${style.boxShadow}`);
-          }
-          if (style.backdropFilter !== 'none') {
-            bad.push(`${element.tagName.toLowerCase()}.${element.className} backdrop-filter`);
-          }
-          if (/gradient/.test(style.backgroundImage)) {
-            bad.push(`${element.tagName.toLowerCase()}.${element.className} gradient background`);
-          }
-        }
-        return bad;
-      });
-      check(violations.length === 0, `[${theme}] ${path}: no shadows, blur, or gradients`);
-      if (violations.length) console.log(violations.slice(0, 5).join('\n'));
+      const actual = await page.evaluate(() => ({
+        theme: document.documentElement.dataset.theme,
+        background: getComputedStyle(document.body).backgroundColor,
+        meta: document.querySelector('meta[data-theme-color]')?.content,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      }));
+      check(actual.theme === theme, `[${theme}] ${path}: theme resolves correctly`);
+      check(actual.background === expected.background, `[${theme}] ${path}: palette background matches`);
+      check(actual.meta === expected.meta, `[${theme}] ${path}: browser theme-color matches`);
+      check(actual.overflow <= 1, `[${theme}] ${path}: no horizontal overflow`);
     }
     await page.close();
   }

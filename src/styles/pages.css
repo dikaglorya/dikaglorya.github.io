@@ -78,6 +78,19 @@
   text-transform: uppercase;
 }
 
+@media (max-width: 600px) {
+  .page-hero__meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+    line-height: 1.5;
+  }
+
+  .page-hero__meta > span {
+    white-space: nowrap;
+  }
+}
+
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;

@@ -253,8 +253,8 @@
   background: var(--orange);
   color: var(--ink);
   --fg: var(--ink);
-  --fg-2: rgb(7 8 10 / 78%);
-  --fg-3: rgb(7 8 10 / 62%);
+  --fg-2: var(--ink);
+  --fg-3: var(--ink);
   --line: rgb(7 8 10 / 22%);
   --line-strong: rgb(7 8 10 / 44%);
   --accent: var(--ink);
@@ -290,12 +290,16 @@
   --btn-bg: var(--ink);
   --btn-fg: var(--bone);
   --btn-line: var(--ink);
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 .contact-block .btn--primary:hover {
   --btn-bg: transparent;
   --btn-fg: var(--ink);
   --btn-line: var(--ink);
+  background: transparent;
+  border-color: var(--ink);
 }
 
 .contact-block__details {

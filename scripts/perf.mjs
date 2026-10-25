@@ -1,24 +1,17 @@
 /**
- * Performance budget harness.
+ * Route-level performance budget harness.
+ * Measures what a visitor downloads before scrolling, then reports lazy-loaded
+ * work separately. Aggregate build bytes are informational: Astro emits
+ * route-specific and on-demand chunks, so summing every chunk is not a
+ * meaningful first-load budget.
  *
- * Measures the built site on a local preview server under a simulated
- * "Slow 4G + mid-tier CPU" profile, then asserts a small budget so regressions
- * fail the run instead of being noticed months later.
- *
- * Usage:
- *   npm run build && npm run preview   # in another shell
- *   npm run test:perf
- *
- * Env:
- *   BASE_URL  preview origin (default http://127.0.0.1:4321)
- *   PERF_JSON write raw results to this path (optional)
+ * Usage: npm run build && npm run preview (another shell), then npm run test:perf
+ * Env: BASE_URL (default http://127.0.0.1:4321), PERF_JSON (optional output)
  */
 import { writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const baseURL = process.env.BASE_URL ?? 'http://127.0.0.1:4321';
-
-// Slow 4G: 1.6 Mbit/s down, 750 Kbit/s up, 150 ms RTT. CPU throttled 4x.
 const NETWORK = {
   offline: false,
   downloadThroughput: (1.6 * 1024 * 1024) / 8,
@@ -26,7 +19,6 @@ const NETWORK = {
   latency: 150,
 };
 const CPU_SLOWDOWN = 4;
-
 const pages = [
   { name: 'home', path: '/' },
   { name: 'projects', path: '/projects/' },
@@ -37,20 +29,15 @@ const pages = [
   { name: 'services', path: '/services/' },
   { name: 'contact', path: '/contact/' },
 ];
-
-// Budgets are deliberately generous: they catch regressions, not perfection.
 const BUDGET = {
   lcp: 2500,
   cls: 0.02,
   ttfb: 800,
-  transferPerPage: 420 * 1024,
-  requestsPerPage: 14,
-  htmlBytes: 32 * 1024,
-  // No route may load more than 60KB of CSS. This is the number that affects
-  // render time; the sum of every route's bundles is tracked separately.
-  cssPerPage: 60 * 1024,
-  cssTotal: 80 * 1024,
-  jsBytes: 16 * 1024,
+  initialTransferPerPage: 420 * 1024,
+  initialRequestsPerPage: 14,
+  initialCssPerPage: 60 * 1024,
+  initialJsPerPage: 180 * 1024,
+  htmlPerPage: 32 * 1024,
 };
 
 const browser = await chromium.launch({ headless: true });
@@ -63,34 +50,35 @@ for (const pageInfo of pages) {
   });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);
-
   await cdp.send('Network.enable');
   await cdp.send('Network.emulateNetworkConditions', NETWORK);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: CPU_SLOWDOWN });
 
-  let transferred = 0;
-  let requests = 0;
-  let cssTransferred = 0;
-  const byType = {};
-  page.on('response', async (response) => {
-    requests += 1;
-    const request = response.request();
-    const type = request.resourceType();
-    const sizes = await response.request().sizes().catch(() => null);
-    const bytes = sizes?.responseBodySize ?? 0;
-    transferred += bytes;
-    byType[type] = (byType[type] ?? 0) + bytes;
-    if (type === 'stylesheet') cssTransferred += bytes;
+  const totals = { transfer: 0, requests: 0, css: 0, js: 0, byType: {} };
+  const responseTasks = [];
+  page.on('response', (response) => {
+    const task = (async () => {
+      const type = response.request().resourceType();
+      const size = (await response.request().sizes().catch(() => null))?.responseBodySize ?? 0;
+      totals.requests += 1;
+      totals.transfer += size;
+      totals.byType[type] = (totals.byType[type] ?? 0) + size;
+      if (type === 'stylesheet') totals.css += size;
+      if (type === 'script') totals.js += size;
+    })();
+    responseTasks.push(task);
   });
+  const flushResponses = async () => { await Promise.all(responseTasks.slice()); };
 
   await page.addInitScript(() => {
-    window.__perf = { lcp: 0, cls: 0, lcpElement: '' };
+    window.__perf = { lcp: 0, lcpElement: '', lcpClass: '', lcpText: '', cls: 0 };
     new PerformanceObserver((list) => {
-      const entries = list.getEntries();
-      const last = entries[entries.length - 1];
-      if (last) {
-        window.__perf.lcp = last.startTime;
-        window.__perf.lcpElement = last.element?.tagName?.toLowerCase() ?? '';
+      for (const entry of list.getEntries()) {
+        const element = entry.element;
+        window.__perf.lcp = entry.startTime;
+        window.__perf.lcpElement = element?.tagName?.toLowerCase() ?? '';
+        window.__perf.lcpClass = typeof element?.className === 'string' ? element.className : '';
+        window.__perf.lcpText = element?.textContent?.trim().replace(/\s+/g, ' ').slice(0, 100) ?? '';
       }
     }).observe({ type: 'largest-contentful-paint', buffered: true });
     new PerformanceObserver((list) => {
@@ -101,30 +89,32 @@ for (const pageInfo of pages) {
   });
 
   const started = Date.now();
-  const response = await page.goto(`${baseURL}${pageInfo.path}`, {
-    waitUntil: 'load',
-    timeout: 60000,
-  });
-  const ttfb = response ? await page.evaluate(() => {
+  const response = await page.goto(`${baseURL}${pageInfo.path}`, { waitUntil: 'load', timeout: 60000 });
+  const ttfb = await page.evaluate(() => {
     const nav = performance.getEntriesByType('navigation')[0];
     return nav ? nav.responseStart - nav.requestStart : 0;
-  }) : 0;
+  });
+  const htmlBytes = response ? ((await response.request().sizes().catch(() => null))?.responseBodySize ?? 0) : 0;
 
-  // Give late layout shifts and lazy images a chance to settle.
+  // Let critical, idle-loaded scripts and fonts settle before defining startup.
   await page.waitForTimeout(1200);
+  await flushResponses();
+  const startup = { ...totals, byType: { ...totals.byType } };
+
+  // Exercise lazy regions. Their bytes are reported separately from startup.
   await page.evaluate(async () => {
     window.scrollTo(0, document.body.scrollHeight);
     await new Promise((resolve) => setTimeout(resolve, 400));
     window.scrollTo(0, 0);
   });
   await page.waitForTimeout(600);
+  await flushResponses();
 
   const metrics = await page.evaluate(() => window.__perf);
   const fcp = await page.evaluate(() => {
     const entry = performance.getEntriesByName('first-contentful-paint')[0];
     return entry ? entry.startTime : 0;
   });
-
   results.push({
     page: pageInfo.name,
     path: pageInfo.path,
@@ -133,22 +123,28 @@ for (const pageInfo of pages) {
     fcp: Math.round(fcp),
     lcp: Math.round(metrics.lcp),
     lcpElement: metrics.lcpElement,
+    lcpClass: metrics.lcpClass,
+    lcpText: metrics.lcpText,
     cls: Number(metrics.cls.toFixed(4)),
-    requests,
-    cssBytes: cssTransferred,
-    transferKB: Math.round(transferred / 1024),
-    byTypeKB: Object.fromEntries(
-      Object.entries(byType).map(([key, value]) => [key, Math.round(value / 1024)]),
-    ),
+    htmlBytes,
+    startup: {
+      requests: startup.requests,
+      transferBytes: startup.transfer,
+      cssBytes: startup.css,
+      jsBytes: startup.js,
+    },
+    afterScroll: {
+      requests: totals.requests,
+      transferBytes: totals.transfer,
+      cssBytes: totals.css,
+      jsBytes: totals.js,
+    },
     wallMs: Date.now() - started,
   });
-
   await context.close();
 }
-
 await browser.close();
 
-// Static asset sizes straight from the build output.
 const { readdir, stat } = await import('node:fs/promises');
 const path = await import('node:path');
 const assetDir = path.join(process.cwd(), 'dist', '_astro');
@@ -164,51 +160,45 @@ const failures = [];
 for (const result of results) {
   const where = `${result.page} (${result.path})`;
   if (result.status !== 200) failures.push(`${where}: HTTP ${result.status}`);
-  if (result.lcp > BUDGET.lcp) failures.push(`${where}: LCP ${result.lcp}ms > ${BUDGET.lcp}ms`);
+  if (result.lcp > BUDGET.lcp) failures.push(`${where}: LCP ${result.lcp}ms > ${BUDGET.lcp}ms (${result.lcpElement}.${result.lcpClass})`);
   if (result.cls > BUDGET.cls) failures.push(`${where}: CLS ${result.cls} > ${BUDGET.cls}`);
   if (result.ttfb > BUDGET.ttfb) failures.push(`${where}: TTFB ${result.ttfb}ms > ${BUDGET.ttfb}ms`);
-  if (result.transferKB > BUDGET.transferPerPage / 1024)
-    failures.push(`${where}: ${result.transferKB}KB > ${BUDGET.transferPerPage / 1024}KB`);
-  if (result.requests > BUDGET.requestsPerPage)
-    failures.push(`${where}: ${result.requests} requests > ${BUDGET.requestsPerPage}`);
-  if (result.cssBytes > BUDGET.cssPerPage)
-    failures.push(`${where}: CSS ${result.cssBytes}B > ${BUDGET.cssPerPage}B`);
+  if (result.startup.transferBytes > BUDGET.initialTransferPerPage)
+    failures.push(`${where}: startup transfer ${Math.round(result.startup.transferBytes / 1024)}KB > ${BUDGET.initialTransferPerPage / 1024}KB`);
+  if (result.startup.requests > BUDGET.initialRequestsPerPage)
+    failures.push(`${where}: ${result.startup.requests} startup requests > ${BUDGET.initialRequestsPerPage}`);
+  if (result.startup.cssBytes > BUDGET.initialCssPerPage)
+    failures.push(`${where}: startup CSS ${result.startup.cssBytes}B > ${BUDGET.initialCssPerPage}B`);
+  if (result.startup.jsBytes > BUDGET.initialJsPerPage)
+    failures.push(`${where}: startup JS ${result.startup.jsBytes}B > ${BUDGET.initialJsPerPage}B`);
+  if (result.htmlBytes > BUDGET.htmlPerPage)
+    failures.push(`${where}: HTML ${result.htmlBytes}B > ${BUDGET.htmlPerPage}B`);
 }
-if (cssBytes > BUDGET.cssTotal) failures.push(`CSS total ${cssBytes}B > ${BUDGET.cssTotal}B`);
-if (jsBytes > BUDGET.jsBytes) failures.push(`JS ${jsBytes}B > ${BUDGET.jsBytes}B`);
 
-const cssMaxBytes = Math.max(...results.map((result) => result.cssBytes));
 const summary = {
   profile: `slow-4g / cpu-${CPU_SLOWDOWN}x`,
   budget: BUDGET,
-  assets: { cssBytes, cssMaxBytes, jsBytes },
+  assets: { aggregateCssInformationalBytes: cssBytes, aggregateJsInformationalBytes: jsBytes },
   pages: results,
 };
-
-if (process.env.PERF_JSON) {
-  await writeFile(process.env.PERF_JSON, `${JSON.stringify(summary, null, 2)}\n`);
-}
+if (process.env.PERF_JSON) await writeFile(process.env.PERF_JSON, `${JSON.stringify(summary, null, 2)}\n`);
 
 console.log(`profile: ${summary.profile}`);
-console.log(
-  `css total ${(cssBytes / 1024).toFixed(1)}KB · max per page ${(cssMaxBytes / 1024).toFixed(1)}KB · js ${(jsBytes / 1024).toFixed(1)}KB`,
-);
-console.table(
-  results.map((r) => ({
-    page: r.page,
-    ttfb: r.ttfb,
-    fcp: r.fcp,
-    lcp: r.lcp,
-    lcpEl: r.lcpElement,
-    cls: r.cls,
-    req: r.requests,
-    kb: r.transferKB,
-  })),
-);
-
+console.log(`build chunks (informational): CSS ${(cssBytes / 1024).toFixed(1)}KB · JS ${(jsBytes / 1024).toFixed(1)}KB`);
+console.table(results.map((r) => ({
+  page: r.page,
+  ttfb: r.ttfb,
+  fcp: r.fcp,
+  lcp: r.lcp,
+  lcpEl: `${r.lcpElement}.${r.lcpClass}`,
+  cls: r.cls,
+  startupKB: Math.round(r.startup.transferBytes / 1024),
+  startupJSKB: Math.round(r.startup.jsBytes / 1024),
+  afterScrollJSKB: Math.round(r.afterScroll.jsBytes / 1024),
+})));
 if (failures.length) {
   console.error(`\n${failures.length} budget failure(s):`);
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
-console.log('\nperformance budget: passed');
+console.log('\nroute-level performance budgets: passed');

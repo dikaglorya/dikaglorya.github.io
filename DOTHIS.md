@@ -1,10 +1,10 @@
-# DOTHIS.md — RAW COMPLETE PORTFOLIO BUILD LOG
+# DOTHIS.md — PORTFOLIO BUILD NOTES & HANDOVER
 > **Target**: Production-ready, cinematic 3D portfolio for DikaGlorya (DikaOfc/DikaCode) — independent developer from Kendal, Jawa Tengah, Indonesia.
 > **Stack**: Astro 7 + TypeScript + Three.js (vanilla) + GSAP 3.15 + Lenis 1.3 + hand-rolled WebGL (no React, no R3F, no Tailwind).
 > **Design System**: "Kendal Signal" — obsidian (#07080a), bone (#f2eee4), signal orange (#ff5a1f), electric blue rim (#3b5bff).
 > **CSP**: Strict 'self' only — all assets self-hosted, no CDN.
 > **Deploy**: GitHub Pages (dikaglorya.github.io), canonical obitoglory.tech (when ready).
-> **Note**: Semua isi file dan prompt mentah-mentah dari percakapan lengkap, bukan ringkasan.
+> **Note**: Arsip ini mencampur kutipan, ringkasan, dan placeholder; blok bertanda `[VERBATIM ...]` bukan teks prompt lengkap.
 
 ---
 ## SESSION 0: ORIGINAL REQUESTS (Awal Percakapan)
@@ -520,7 +520,7 @@ DOTHIS.md                           ← THIS FILE (raw complete log)
 ```
 
 ---
-## SESSION 15: RAW PROMPTS SUMMARY (MENTAH)
+## SESSION 15: PROMPT INDEX (RINGKASAN/PLACEHOLDER)
 
 **User original prompt about website**: [VERBATIM - the entire long message about 23 portfolio examples, Figma, design systems, cookie consent, California privacy law, etc.]
 
@@ -542,9 +542,9 @@ DOTHIS.md                           ← THIS FILE (raw complete log)
 
 **Definition of done**: [VERBATIM - user's full definition]
 
-**Everything above is copied word-for-word from the conversation history, no summarization, no filtering, complete raw text.**
+**Catatan arsip:** Placeholder di atas perlu diganti dari sumber percakapan asli jika transkrip verbatim dibutuhkan; teks yang tidak tersedia tidak direkonstruksi.
 
 ---
 ## AKHIR DOTHIS.md
 
-Semua isi di atas adalah catatan mentah dan lengkap dari percakapan lengkap, mulai dari permintaan opencode.json, brief portfolio, instruksi ke agent sesi lain, rekomendasi stack, skills yang terinstall, file-file yang dibuat, dan semua detail teknis untuk build portofolio cinematic 3D ini. Agent atau developer lain bisa langsung baca file ini dan mengikuti setiap instruksi tanpa perlu berpikir lagi.
+Dokumen ini berfungsi sebagai catatan build dan handover portofolio cinematic 3D; bagian yang memakai placeholder bukan spesifikasi lengkap dan sebaiknya dilengkapi dari percakapan sumber sebelum dijadikan arsip verbatim.

@@ -11,6 +11,16 @@
   isolation: isolate;
 }
 
+.asset-explorer [hidden] { display: none !important; }
+.asset-explorer-section { overflow: hidden; background: var(--bg-2); }
+.asset-explorer__toolbar-label { align-self: center; padding: 0 0.55rem; color: var(--fg); font: 0.58rem var(--font-mono); letter-spacing: 0.12em; }
+.asset-explorer__toolbar-spacer { width: 1px; margin: 0.2rem 0.15rem; background: var(--glass-border); }
+.asset-explorer__canvas canvas { touch-action: none; }
+.asset-explorer__canvas:focus-visible { outline: 2px solid var(--focus); outline-offset: -3px; }
+.asset-explorer__credit { margin: 0.65rem 0 0; color: var(--fg-3); font: 0.65rem var(--font-mono); text-align: right; }
+.asset-explorer__credit a { color: var(--fg-2); text-underline-offset: 0.2em; }
+.asset-explorer__credit a:hover, .asset-explorer__credit a:focus-visible { color: var(--orange); }
+
 .asset-explorer__canvas {
   position: relative;
   width: 100%;
@@ -50,7 +60,7 @@
   appearance: none;
   border: none;
   background: transparent;
-  color: var(--fg-2);
+  color: var(--fg);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.1em;
@@ -64,14 +74,14 @@
 
 .asset-explorer__btn:hover,
 .asset-explorer__btn:focus-visible {
-  color: var(--bone);
-  background: rgba(255 90 31 / 0.15);
+  color: var(--fg);
+  background: var(--surface-2);
   outline: none;
 }
 
 .asset-explorer__btn[aria-pressed="true"] {
-  color: var(--orange);
-  background: var(--accent-soft);
+  color: var(--accent-ink);
+  background: var(--orange);
 }
 
 .asset-explorer__btn:focus-visible {
@@ -89,7 +99,7 @@
   z-index: 10;
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--fg-3);
+  color: var(--fg);
   pointer-events: none;
 }
 
@@ -106,8 +116,8 @@
   white-space: nowrap;
 }
 
-.asset-explorer__hud-label { opacity: 0.7; }
-.asset-explorer__hud-value { color: var(--bone); font-variant-numeric: tabular-nums; }
+.asset-explorer__hud-label { color: var(--fg); }
+.asset-explorer__hud-value { color: var(--fg); font-variant-numeric: tabular-nums; }
 
 .asset-explorer__loading {
   position: absolute;
@@ -116,7 +126,7 @@
   place-items: center;
   background: var(--ink);
   z-index: 5;
-  color: var(--fg-3);
+  color: var(--bone);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   transition: opacity 0.3s, visibility 0.3s;
@@ -174,7 +184,6 @@
   font-size: 0.8rem;
   text-align: center;
   padding: 2rem;
-  display: none;
 }
 
 .asset-explorer__error.visible { display: grid; }

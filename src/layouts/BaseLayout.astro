@@ -4,6 +4,12 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/chrome.css';
 import '../styles/components.css';
+import '../styles/pages.css';
+import '../styles/motion.css';
+import '../styles/depth.css';
+import '../styles/glass.css';
+import '../styles/controls.css';
+import '../styles/explorer.css';
 
 import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import newsreaderFont from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
@@ -261,10 +267,27 @@ const pageSchemas = [
     </main>
     <Footer />
     <CookieConsent />
+    <div class="intro-layer" data-cinematic-intro role="dialog" aria-modal="true" aria-labelledby="intro-title" aria-hidden="true" hidden>
+      <div class="intro-layer__inner">
+        <p class="intro-layer__kicker">INDEPENDENT DEVELOPER · KENDAL, ID</p>
+        <p class="intro-layer__title" id="intro-title"><span>DIKA</span> <em>GLORYA</em></p>
+        <span class="intro-layer__rule"></span>
+      </div>
+      <button class="intro-layer__skip" type="button" data-intro-skip>Lewati intro <kbd>↵</kbd></button>
+    </div>
     <div class="cursor" data-cursor aria-hidden="true"></div>
     <script>
+      import { initCinematicIntro } from '../scripts/cinematic';
       import '../scripts/ui';
-      import '../scripts/motion';
+      initCinematicIntro();
+      if (document.body.classList.contains('home')) {
+        const loadCinematicMotion = () => void import('../scripts/motion');
+        const idleWindow = window as Window & { requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number };
+        if (idleWindow.requestIdleCallback) idleWindow.requestIdleCallback(loadCinematicMotion, { timeout: 900 });
+        else window.setTimeout(loadCinematicMotion, 250);
+      } else {
+        void import('../scripts/motion-lite');
+      }
     </script>
   </body>
 </html>
